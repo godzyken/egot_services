@@ -83,7 +83,7 @@ class HomeView extends GetView<HomeController> {
         ),
         decoration: const BoxDecoration(
             image: DecorationImage(
-          image: ExactAssetImage("assets/image/carrelage_background.jpg"),
+          image: ExactAssetImage("assets/lottie/image/carrelage_background.jpg"),
           fit: BoxFit.cover,
         )),
       ),

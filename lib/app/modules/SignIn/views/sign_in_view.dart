@@ -14,7 +14,7 @@ class SignInView extends GetView<SignInController> {
        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset("assets/image/logo_bat_services.png",),
+          Image.asset("assets/lottie/image/logo_bat_services.png",),
           const SizedBox(height: 20,),
           const Text("Google SignIn",
           style: TextStyle(fontSize: 40, color: Colors.white),),
