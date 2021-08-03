@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
   var isLoading = true.obs;
   var menuList = <Menu>[].obs;
   int selectedMenu = 0;
@@ -12,6 +11,7 @@ class HomeController extends GetxController {
   late final googleSign;
   var isSignIn = false.obs;
   FirebaseAuth firebaseAuth = GetxFire.auth;
+
 
   @override
   void onInit() {

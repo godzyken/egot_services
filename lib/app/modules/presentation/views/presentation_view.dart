@@ -25,63 +25,82 @@ class PresentationView extends GetView<PresentationController> {
 
   Widget _buildBody(BuildContext context) {
     if (controller.user != null) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            'User Profile',
-            style: TextStyle(fontSize: 30, color: Colors.blue),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          CircleAvatar(
-            radius: 70,
-            backgroundImage: NetworkImage(controller.user!.photoURL!),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            'Display Name : ${controller.user!.displayName!}',
-            style: const TextStyle(fontSize: 18, color: Colors.blue),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            controller.user!.email!,
-            style: const TextStyle(fontSize: 16, color: Colors.blue),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          ConstrainedBox(
-            constraints: const BoxConstraints.tightFor(width: 120),
-            child: ElevatedButton(
-              child: const Text(
-                "REFRESH",
-                style: TextStyle(fontSize: 16, color: Colors.black),
+      return GetBuilder<PresentationController>(
+        assignId: true,
+        builder: (_) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'User Profile',
+                style: TextStyle(fontSize: 30, color: Colors.blue),
               ),
-              onPressed: () {
-                controller.handleGetContact(controller.user);
-              },
-            ),
-          ),
-          ConstrainedBox(
-            constraints: const BoxConstraints.tightFor(width: 120),
-            child: ElevatedButton(
-              child: const Text(
-                "Logout",
-                style: TextStyle(fontSize: 16, color: Colors.black),
+              const SizedBox(
+                height: 16,
               ),
-              onPressed: () {
-                controller.logout();
-              },
-            ),
-          ),
-        ],
+              CircleAvatar(
+                radius: 70,
+                backgroundImage: NetworkImage(_.user!.photoURL!),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Display Name : ${_.user!.displayName!}',
+                style: const TextStyle(fontSize: 18, color: Colors.blue),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                _.user!.email!,
+                style: const TextStyle(fontSize: 16, color: Colors.blue),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(width: 120),
+                child: ElevatedButton(
+                  child: const Text(
+                    "Add Contact",
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                  onPressed: () {
+                    print("test d'\ajout de contact");
+                    _.addContact();
+                  },
+                ),
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(width: 120),
+                child: ElevatedButton(
+                  child: const Text(
+                    "REFRESH",
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                  onPressed: () {
+                    print('action refresh');
+                    _.handleGetContact(controller.user);
+                  },
+                ),
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(width: 120),
+                child: ElevatedButton(
+                  child: const Text(
+                    "Logout",
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                  onPressed: () {
+                    _.logout();
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       );
     } else {
       return GetBuilder<SignInController>(

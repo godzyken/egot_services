@@ -80,7 +80,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PRESENTATION,
-      page: () => PresentationView(),
+      page: () => const PresentationView(),
       binding: PresentationBinding(),
     ),
     GetPage(
@@ -90,7 +90,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SIGN_IN,
-      page: () => SignInView(),
+      page: () => const SignInView(),
       binding: SignInBinding(),
     ),
   ];
