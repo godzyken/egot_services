@@ -16,14 +16,119 @@ class PresentationView extends GetView<PresentationController> {
         title: const Text('Presentation EGOTE'),
         centerTitle: true,
       ),
-      body: ConstrainedBox(
-        constraints: const BoxConstraints.expand(),
-        child: _buildBody(context),
+      body: buildMainContenair,
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.greenAccent,
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => Get.toNamed('/home'),
+          label: const Text('Get home')),
+    );
+  }
+
+  ConstrainedBox get buildMainContenair {
+    return ConstrainedBox(
+      constraints: const BoxConstraints.expand(),
+      child: Center(
+        child: LayoutBuilder(
+          builder: (context, constraints) => constraints.maxWidth > 600
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Container(
+                          color: Colors.greenAccent,
+                          height: constraints.maxHeight < 450
+                              ? constraints.maxHeight * 0.5
+                              : constraints.maxHeight * 0.24,
+                          width: constraints.maxWidth < 450
+                              ? constraints.maxWidth * 0.24
+                              : constraints.maxWidth * 0.5,
+                          child: Center(
+                            child: _avatarBody(context),
+                          ),
+                        ),
+                        Container(
+                          color: Colors.blueAccent,
+                          height: constraints.maxHeight * 0.24,
+                          width: constraints.maxWidth * 0.5,
+                          child: FractionallySizedBox(
+                            heightFactor: 0.7,
+                            widthFactor: 0.7,
+                            child: Center(
+                              child: _infoContact(context),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(),
+                    Container(
+                      color: Colors.yellowAccent,
+                      height: 300.0,
+                      width: constraints.maxWidth * 0.5,
+                      child: Center(
+                        child: _optionContact(context),
+                      ),
+                    ),
+/*                      const SizedBox(),
+                    Container(
+                      width: constraints.maxWidth * 0.5,
+                      height: constraints.maxHeight * 0.24,
+                      color: Colors.pink,
+                      child: const Center(
+                        child: Text('Right Sidebar'),
+                      ),
+                    ),*/
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Container(
+                          color: Colors.greenAccent,
+                          height: constraints.maxHeight < 450
+                              ? constraints.maxHeight * 0.5
+                              : constraints.maxHeight * 0.24,
+                          width: constraints.maxWidth < 450
+                              ? constraints.maxWidth * 0.24
+                              : constraints.maxWidth * 0.5,
+                          child: Center(
+                            child: _avatarBody(context),
+                          ),
+                        ),
+                        Container(
+                          color: Colors.blueAccent,
+                          height: constraints.maxHeight * 0.24,
+                          width: constraints.maxWidth * 0.5,
+                          child: Center(
+                            child: _infoContact(context),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(),
+                    Container(
+                      color: Colors.yellowAccent,
+                      height: 300.0,
+                      width: constraints.maxWidth * 0.5,
+                      child: Center(
+                        child: _optionContact(context),
+                      ),
+                    )
+                  ],
+                ),
+        ),
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _avatarBody(BuildContext context) {
     if (controller.user != null) {
       return GetBuilder<PresentationController>(
         assignId: true,
@@ -32,39 +137,97 @@ class PresentationView extends GetView<PresentationController> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              const Text(
-                'User Profile',
-                style: TextStyle(fontSize: 30, color: Colors.blue),
+              Expanded(
+                flex: 2,
+                child: CircleAvatar(
+                  radius: 70,
+                  backgroundImage: NetworkImage(_.user!.photoURL!),
+                ),
               ),
-              const SizedBox(
-                height: 16,
+            ],
+          );
+        },
+      );
+    } else {
+      return GetBuilder<SignInController>(
+        builder: (controller) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              const Text("You are not currently signed in."),
+              ElevatedButton(
+                onPressed: controller.login(context),
+                child: const Text('Sign In'),
               ),
-              CircleAvatar(
-                radius: 70,
-                backgroundImage: NetworkImage(_.user!.photoURL!),
-              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  Widget _infoContact(BuildContext context) {
+    if (controller.user != null) {
+      return GetBuilder<PresentationController>(
+        assignId: true,
+        builder: (_) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
               const SizedBox(
                 height: 10,
               ),
               Text(
-                'Display Name : ${_.user!.displayName!}',
-                style: const TextStyle(fontSize: 18, color: Colors.blue),
+                _.user!.displayName!,
+                style: const TextStyle(fontSize: 18, color: Colors.black87),
               ),
               const SizedBox(
                 height: 10,
               ),
               Text(
                 _.user!.email!,
-                style: const TextStyle(fontSize: 16, color: Colors.blue),
+                style: const TextStyle(fontSize: 16, color: Colors.black45),
               ),
               const SizedBox(
                 height: 10,
               ),
+            ],
+          );
+        },
+      );
+    } else {
+      return GetBuilder<SignInController>(
+        builder: (_) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              const Text("You are not currently signed in."),
+              ElevatedButton(
+                onPressed: _.login(context),
+                child: const Text('Sign In'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  Widget _optionContact(BuildContext context) {
+    if (controller.user != null) {
+      return GetBuilder<PresentationController>(
+        assignId: true,
+        builder: (_) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
               ConstrainedBox(
-                constraints: const BoxConstraints.tightFor(width: 120),
+                constraints: const BoxConstraints.tightFor(width: 100),
                 child: ElevatedButton(
                   child: const Text(
-                    "Add Contact",
+                    "Add+",
                     style: TextStyle(fontSize: 16, color: Colors.black),
                   ),
                   onPressed: () {
@@ -74,7 +237,7 @@ class PresentationView extends GetView<PresentationController> {
                 ),
               ),
               ConstrainedBox(
-                constraints: const BoxConstraints.tightFor(width: 120),
+                constraints: const BoxConstraints.tightFor(width: 100),
                 child: ElevatedButton(
                   child: const Text(
                     "REFRESH",
@@ -82,12 +245,12 @@ class PresentationView extends GetView<PresentationController> {
                   ),
                   onPressed: () {
                     print('action refresh');
-                    _.handleGetContact(controller.user);
+                    _.handleGetContact(_.user);
                   },
                 ),
               ),
               ConstrainedBox(
-                constraints: const BoxConstraints.tightFor(width: 120),
+                constraints: const BoxConstraints.tightFor(width: 100),
                 child: ElevatedButton(
                   child: const Text(
                     "Logout",

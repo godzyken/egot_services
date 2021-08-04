@@ -126,8 +126,6 @@ class PresentationController extends SuperController<Store> {
     print('onResume called');
   }
 
-
-
 /*  Future<void> driveConnectionToMedia() async {
     try {
       var media = drive.Media;

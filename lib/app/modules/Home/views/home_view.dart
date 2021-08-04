@@ -89,7 +89,7 @@ class HomeView extends GetView<HomeController> {
       ),
       backgroundColor: ThemeData.light().backgroundColor,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.toNamed('/sign-in'),
+        onPressed: () => Get.toNamed('/devis'),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15.0),
           clipBehavior: Clip.hardEdge,

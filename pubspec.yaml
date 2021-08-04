@@ -11,6 +11,8 @@ dependencies:
   getxfire: ^0.1.9
   firebase_storage: any
   google_sign_in: any
+  animated_text_kit: 4.2.1
+  flutter_signin_button: 2.0.0
   flutter: 
     sdk: flutter
 

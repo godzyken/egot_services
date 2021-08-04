@@ -12,11 +12,31 @@ class DevisView extends GetView<DevisController> {
         title: const Text('DevisView'),
         centerTitle: true,
       ),
-      body: const Center(
-        child: Text(
-          'DevisView is working',
-          style: TextStyle(fontSize: 20),
-        ),
+      body: GetBuilder<DevisController>(
+        assignId: true,
+        builder: (_) {
+          return SafeArea(
+              child: Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Obx(() {
+                  print('rebuild TextFormField ${_.errorText!.value}');
+                  return TextFormField(
+                    onChanged: _.usernameChanged,
+                    decoration: InputDecoration(
+                        labelText: 'Username', errorText: _.errorText!.value),
+                  );
+                }),
+                Obx(() => ElevatedButton(
+                    onPressed: _.submitFunc.value,
+                    child: const Text('Submit'))),
+              ],
+            ),
+          ));
+        },
       ),
     );
   }
