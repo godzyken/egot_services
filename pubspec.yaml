@@ -7,7 +7,7 @@ environment:
 
 dependencies: 
   cupertino_icons: ^1.0.3
-  get: ^4.3.0
+  get: ^4.3.4
   getxfire: ^0.1.9
   firebase_storage: any
   google_sign_in: any
@@ -28,6 +28,8 @@ flutter:
     - assets/lottie/image/logo_bat_services.png
     - assets/lottie/image/digital-transformation-teaser.jpg
     - assets/lottie/image/digital_transf.jpg
+    - assets/lottie/image/maison_indiv.png
+    - assets/lottie/image/appartement.png
     - assets/lottie/archive/amenagement/interrieur/sol/matière/pvc/sol_pvc_holywell.png
     - assets/lottie/archive/amenagement/exterieur/piscines/piscine_sussargue_1.jpg
   uses-material-design: true

@@ -31,48 +31,49 @@ class PresentationView extends GetView<PresentationController> {
       constraints: const BoxConstraints.expand(),
       child: Center(
         child: LayoutBuilder(
-          builder: (context, constraints) => constraints.maxWidth > 600
+          builder: (context, constraints) =>
+          constraints.maxWidth > 600
               ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Container(
-                          color: Colors.greenAccent,
-                          height: constraints.maxHeight < 450
-                              ? constraints.maxHeight * 0.5
-                              : constraints.maxHeight * 0.24,
-                          width: constraints.maxWidth < 450
-                              ? constraints.maxWidth * 0.24
-                              : constraints.maxWidth * 0.5,
-                          child: Center(
-                            child: _avatarBody(context),
-                          ),
-                        ),
-                        Container(
-                          color: Colors.blueAccent,
-                          height: constraints.maxHeight * 0.24,
-                          width: constraints.maxWidth * 0.5,
-                          child: FractionallySizedBox(
-                            heightFactor: 0.7,
-                            widthFactor: 0.7,
-                            child: Center(
-                              child: _infoContact(context),
-                            ),
-                          ),
-                        ),
-                      ],
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    color: Colors.greenAccent,
+                    height: constraints.maxHeight < 450
+                        ? constraints.maxHeight * 0.5
+                        : constraints.maxHeight * 0.24,
+                    width: constraints.maxWidth < 450
+                        ? constraints.maxWidth * 0.24
+                        : constraints.maxWidth * 0.5,
+                    child: Center(
+                      child: _avatarBody(context),
                     ),
-                    const SizedBox(),
-                    Container(
-                      color: Colors.yellowAccent,
-                      height: 300.0,
-                      width: constraints.maxWidth * 0.5,
+                  ),
+                  Container(
+                    color: Colors.blueAccent,
+                    height: constraints.maxHeight * 0.24,
+                    width: constraints.maxWidth * 0.5,
+                    child: FractionallySizedBox(
+                      heightFactor: 0.7,
+                      widthFactor: 0.7,
                       child: Center(
-                        child: _optionContact(context),
+                        child: _infoContact(context),
                       ),
                     ),
+                  ),
+                ],
+              ),
+              const SizedBox(),
+              Container(
+                color: Colors.yellowAccent,
+                height: 300.0,
+                width: constraints.maxWidth * 0.5,
+                child: Center(
+                  child: _optionContact(context),
+                ),
+              ),
 /*                      const SizedBox(),
                     Container(
                       width: constraints.maxWidth * 0.5,
@@ -82,47 +83,47 @@ class PresentationView extends GetView<PresentationController> {
                         child: Text('Right Sidebar'),
                       ),
                     ),*/
-                  ],
-                )
+            ],
+          )
               : Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Container(
-                          color: Colors.greenAccent,
-                          height: constraints.maxHeight < 450
-                              ? constraints.maxHeight * 0.5
-                              : constraints.maxHeight * 0.24,
-                          width: constraints.maxWidth < 450
-                              ? constraints.maxWidth * 0.24
-                              : constraints.maxWidth * 0.5,
-                          child: Center(
-                            child: _avatarBody(context),
-                          ),
-                        ),
-                        Container(
-                          color: Colors.blueAccent,
-                          height: constraints.maxHeight * 0.24,
-                          width: constraints.maxWidth * 0.5,
-                          child: Center(
-                            child: _infoContact(context),
-                          ),
-                        )
-                      ],
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    color: Colors.greenAccent,
+                    height: constraints.maxHeight < 450
+                        ? constraints.maxHeight * 0.5
+                        : constraints.maxHeight * 0.24,
+                    width: constraints.maxWidth < 450
+                        ? constraints.maxWidth * 0.24
+                        : constraints.maxWidth * 0.5,
+                    child: Center(
+                      child: _avatarBody(context),
                     ),
-                    const SizedBox(),
-                    Container(
-                      color: Colors.yellowAccent,
-                      height: 300.0,
-                      width: constraints.maxWidth * 0.5,
-                      child: Center(
-                        child: _optionContact(context),
-                      ),
-                    )
-                  ],
+                  ),
+                  Container(
+                    color: Colors.blueAccent,
+                    height: constraints.maxHeight * 0.24,
+                    width: constraints.maxWidth * 0.5,
+                    child: Center(
+                      child: _infoContact(context),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(),
+              Container(
+                color: Colors.yellowAccent,
+                height: 300.0,
+                width: constraints.maxWidth * 0.5,
+                child: Center(
+                  child: _optionContact(context),
                 ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -132,21 +133,22 @@ class PresentationView extends GetView<PresentationController> {
     if (controller.user != null) {
       return GetBuilder<PresentationController>(
         assignId: true,
-        builder: (_) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: CircleAvatar(
-                  radius: 70,
-                  backgroundImage: NetworkImage(_.user!.photoURL!),
-                ),
+        builder: (_) =>
+        _.user!.uid == null
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: CircleAvatar(
+                radius: 70,
+                backgroundImage: NetworkImage(_.user!.photoURL!),
               ),
-            ],
-          );
-        },
+            ),
+          ],
+        )
       );
     } else {
       return GetBuilder<SignInController>(

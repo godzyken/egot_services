@@ -20,8 +20,8 @@ class DevisModel {
       this.travauxModel,
       this.contactClientModel,
       this.missionModel}) {
-    this._listMissions;
-    this._listTravaux;
+    _listMissions;
+    _listTravaux;
   }
 
   DevisModel.fromJson(Map<String, dynamic> json) {
@@ -125,9 +125,14 @@ class TravauxModel {
   TravauxModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     denomination = json['denomination'];
+    mission = json['mission'];
   }
 
-  Map<String, dynamic> toJson() => {'id': id, 'denomination': denomination};
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'denomination': denomination,
+        'mission': mission,
+      };
 }
 
 class ContactClientModel {

@@ -9,12 +9,12 @@ class ArchivesView extends GetView<ArchivesController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ArchivesView'),
+        title: const Text('ArchivesView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
-          'ArchivesView is working',
+          'Archives View is working',
           style: TextStyle(fontSize: 20),
         ),
       ),

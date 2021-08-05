@@ -6,7 +6,7 @@ class Menu {
   String subtitle;
   String? routeName;
 
-  Menu({this.icon, this.routeName,required this.title, required this.subtitle});
+  Menu({this.icon, this.routeName, required this.title, required this.subtitle});
 }
 
 final menus = [

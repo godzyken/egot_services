@@ -5,17 +5,17 @@ import 'package:getxfire/getxfire.dart';
 
 class HomeController extends GetxController {
   var isLoading = true.obs;
-  var menuList = <Menu>[].obs;
-  int selectedMenu = 0;
+  var menuList = menus.obs;
+  var selectedMenu = 0.obs;
 
   late final googleSign;
   var isSignIn = false.obs;
   FirebaseAuth firebaseAuth = GetxFire.auth;
 
-
   @override
   void onInit() {
     print('>>> HomeController init');
+
     super.onInit();
   }
 
@@ -39,7 +39,7 @@ class HomeController extends GetxController {
 
   void handleAuthStateChanged(isSignIn) {
     if (isSignIn) {
-      Get.offAllNamed(Routes.PRESENTATION, arguments: firebaseAuth.currentUser);
+      Get.offAllNamed(Routes.HOME, arguments: firebaseAuth.currentUser);
     } else {
       Get.offAllNamed(Routes.SIGN_IN);
     }
