@@ -1,0 +1,42 @@
+{
+  "kind": "drive#drive",
+  "id": string,
+  "name": string,
+  "themeId": string,
+  "colorRgb": string,
+  "backgroundImageFile": {
+    "id": string,
+    "xCoordinate": float,
+    "yCoordinate": float,
+    "width": float
+  },
+  "backgroundImageLink": string,
+  "capabilities": {
+    "canAddChildren": boolean,
+    "canChangeCopyRequiresWriterPermissionRestriction": boolean,
+    "canChangeDomainUsersOnlyRestriction": boolean,
+    "canChangeDriveBackground": boolean,
+    "canChangeDriveMembersOnlyRestriction": boolean,
+    "canComment": boolean,
+    "canCopy": boolean,
+    "canDeleteChildren": boolean,
+    "canDeleteDrive": boolean,
+    "canDownload": boolean,
+    "canEdit": boolean,
+    "canListChildren": boolean,
+    "canManageMembers": boolean,
+    "canReadRevisions": boolean,
+    "canRename": boolean,
+    "canRenameDrive": boolean,
+    "canShare": boolean,
+    "canTrashChildren": boolean
+  },
+  "createdTime": datetime,
+  "hidden": boolean,
+  "restrictions": {
+    "adminManagedRestrictions": boolean,
+    "copyRequiresWriterPermission": boolean,
+    "domainUsersOnly": boolean,
+    "driveMembersOnly": boolean
+  }
+}

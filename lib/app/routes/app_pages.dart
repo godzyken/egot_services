@@ -85,7 +85,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ARCHIVES,
-      page: () => ArchivesView(),
+      page: () => const ArchivesView(),
       binding: ArchivesBinding(),
     ),
     GetPage(

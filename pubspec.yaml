@@ -7,12 +7,18 @@ environment:
 
 dependencies: 
   cupertino_icons: ^1.0.3
-  get: ^4.3.4
+  get: ^4.3.8
   getxfire: ^0.1.9
   firebase_storage: any
   google_sign_in: any
   animated_text_kit: 4.2.1
   flutter_signin_button: 2.0.0
+  ar_flutter_plugin: 0.4.3
+  geoflutterfire2: ^2.3.9
+  flutter_launcher_icons: 0.9.1
+  google_maps_flutter: 2.0.6
+  location: 4.3.0
+  get_storage: 2.0.3
   flutter: 
     sdk: flutter
 
@@ -20,6 +26,11 @@ dev_dependencies:
   flutter_lints: ^1.0.4
   flutter_test: 
     sdk: flutter
+
+flutter_icons: 
+  image_path: assets/lottie/image/godzy_logo.png
+  android: true
+  ios: true
 
 flutter: 
   assets: 
@@ -32,5 +43,23 @@ flutter:
     - assets/lottie/image/appartement.png
     - assets/lottie/archive/amenagement/interrieur/sol/matière/pvc/sol_pvc_holywell.png
     - assets/lottie/archive/amenagement/exterieur/piscines/piscine_sussargue_1.jpg
+    - assets/lottie/models/Android Robot.gif
+    - assets/lottie/models/AndroidRobot.gif
+    - assets/lottie/models/Arctic Fox (Sitting).gif
+    - assets/lottie/models/ArcticFox.gif
+    - assets/lottie/models/Toco Toucan.gif
+    - assets/lottie/models/TocoToucan.gif
+    - assets/lottie/models/fox_face_mesh_texture.png
+    - assets/lottie/models/prova_texture.png
+    - assets/lottie/models/venom.jpg
+    - assets/lottie/models/venom_with_eyes.jpg
+    - assets/lottie/models/earth.jpg
+    - assets/lottie/models/earth (2).jpg
+    - assets/lottie/models/earth_augmented_image.jpg
+    - assets/lottie/models/copertina.jpg
+    - assets/lottie/models/umano_digitale.png
+    - assets/lottie/models/myimages.imgdb
+    - assets/lottie/models/topolino.jpg
+    - assets/lottie/models/
   uses-material-design: true
 

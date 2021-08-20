@@ -5,12 +5,12 @@ class ContactModel {
       {this.id, this.name, this.email, this.number, this.role, this.status});
 
   ContactModel.fromJson(Map<String, dynamic> json) {
-    this.id = json['id'];
-    this.name = json['name'];
-    this.email = json['email'];
-    this.number = json['number'];
-    this.role = json['role'];
-    this.status = json['status'];
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    number = json['number'];
+    role = json['role'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toJson() => {

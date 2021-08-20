@@ -1,4 +1,5 @@
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -21,59 +22,64 @@ class PresentationView extends GetView<PresentationController> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.greenAccent,
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => Get.toNamed('/home'),
-          label: const Text('Get home')),
+          onPressed: () => Get.toNamed('/home'), label: const Text('Get home')),
     );
   }
 
   ConstrainedBox get buildMainContenair {
     return ConstrainedBox(
-      constraints: const BoxConstraints.expand(),
+      constraints: const BoxConstraints.expand(width: 196.4, height: 199.0),
       child: Center(
         child: LayoutBuilder(
-          builder: (context, constraints) =>
-          constraints.maxWidth > 600
+          builder: (context, constraints) => constraints.maxWidth > 600
               ? Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    color: Colors.greenAccent,
-                    height: constraints.maxHeight < 450
-                        ? constraints.maxHeight * 0.5
-                        : constraints.maxHeight * 0.24,
-                    width: constraints.maxWidth < 450
-                        ? constraints.maxWidth * 0.24
-                        : constraints.maxWidth * 0.5,
-                    child: Center(
-                      child: _avatarBody(context),
-                    ),
-                  ),
-                  Container(
-                    color: Colors.blueAccent,
-                    height: constraints.maxHeight * 0.24,
-                    width: constraints.maxWidth * 0.5,
-                    child: FractionallySizedBox(
-                      heightFactor: 0.7,
-                      widthFactor: 0.7,
-                      child: Center(
-                        child: _infoContact(context),
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Container(
+                            color: Colors.greenAccent,
+                            height: constraints.maxHeight < 450
+                                ? constraints.maxHeight * 0.5
+                                : constraints.maxHeight * 0.24,
+                            width: constraints.maxWidth < 450
+                                ? constraints.maxWidth * 0.24
+                                : constraints.maxWidth * 0.5,
+                            child: Center(
+                              child: _avatarBody(context),
+                            ),
+                          ),
+                          Container(
+                            color: Colors.blueAccent,
+                            height: constraints.maxHeight * 0.24,
+                            width: constraints.maxWidth * 0.5,
+                            child: FractionallySizedBox(
+                              heightFactor: 0.7,
+                              widthFactor: 0.7,
+                              child: Center(
+                                child: _infoContact(context),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(),
-              Container(
-                color: Colors.yellowAccent,
-                height: 300.0,
-                width: constraints.maxWidth * 0.5,
-                child: Center(
-                  child: _optionContact(context),
-                ),
-              ),
+                    Expanded(
+                      child: SizedBox(),
+                    ),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                          color: Colors.yellowAccent,
+                          height: constraints.maxHeight * 0.24,
+                          width: constraints.maxWidth * 0.5,
+                          child: Center(
+                            child: _optionContact(context),
+                          ),
+                        )),
 /*                      const SizedBox(),
                     Container(
                       width: constraints.maxWidth * 0.5,
@@ -83,47 +89,47 @@ class PresentationView extends GetView<PresentationController> {
                         child: Text('Right Sidebar'),
                       ),
                     ),*/
-            ],
-          )
+                  ],
+                )
               : Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    color: Colors.greenAccent,
-                    height: constraints.maxHeight < 450
-                        ? constraints.maxHeight * 0.5
-                        : constraints.maxHeight * 0.24,
-                    width: constraints.maxWidth < 450
-                        ? constraints.maxWidth * 0.24
-                        : constraints.maxWidth * 0.5,
-                    child: Center(
-                      child: _avatarBody(context),
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Container(
+                          color: Colors.greenAccent,
+                          height: constraints.maxHeight < 450
+                              ? constraints.maxHeight * 0.5
+                              : constraints.maxHeight * 0.24,
+                          width: constraints.maxWidth < 450
+                              ? constraints.maxWidth * 0.24
+                              : constraints.maxWidth * 0.5,
+                          child: Center(
+                            child: _avatarBody(context),
+                          ),
+                        ),
+                        Container(
+                          color: Colors.blueAccent,
+                          height: constraints.maxHeight * 0.24,
+                          width: constraints.maxWidth * 0.5,
+                          child: Center(
+                            child: _infoContact(context),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                  Container(
-                    color: Colors.blueAccent,
-                    height: constraints.maxHeight * 0.24,
-                    width: constraints.maxWidth * 0.5,
-                    child: Center(
-                      child: _infoContact(context),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(),
-              Container(
-                color: Colors.yellowAccent,
-                height: 300.0,
-                width: constraints.maxWidth * 0.5,
-                child: Center(
-                  child: _optionContact(context),
+                    const SizedBox(),
+                    Container(
+                      color: Colors.yellowAccent,
+                      height: constraints.maxHeight * 0.24,
+                      width: constraints.maxWidth * 0.5,
+                      child: Center(
+                        child: _optionContact(context),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
         ),
       ),
     );
@@ -132,24 +138,22 @@ class PresentationView extends GetView<PresentationController> {
   Widget _avatarBody(BuildContext context) {
     if (controller.user != null) {
       return GetBuilder<PresentationController>(
-        assignId: true,
-        builder: (_) =>
-        _.user!.uid == null
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: CircleAvatar(
-                radius: 70,
-                backgroundImage: NetworkImage(_.user!.photoURL!),
-              ),
-            ),
-          ],
-        )
-      );
+          assignId: true,
+          builder: (_) => _.user!.uid == null
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 2,
+                      child: CircleAvatar(
+                        radius: 70,
+                        backgroundImage: NetworkImage(_.user!.photoURL!),
+                      ),
+                    ),
+                  ],
+                ));
     } else {
       return GetBuilder<SignInController>(
         builder: (controller) {

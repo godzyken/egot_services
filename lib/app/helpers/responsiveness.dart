@@ -38,10 +38,10 @@ class ResponsiveWidget extends StatelessWidget {
         return largeScreen;
       }
       else if(_with < largeScreenSize && _with >= mediumScreenSize) {
-        return mediumScreen ?? largeScreen;
+        return mediumScreen;
       }
       else {
-        return smallScreen ?? largeScreen;
+        return smallScreen;
       }
     });
   }
