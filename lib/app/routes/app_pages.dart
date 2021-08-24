@@ -16,6 +16,8 @@ import 'package:egot_services/app/modules/MentionsLegals/bindings/mentions_legal
 import 'package:egot_services/app/modules/MentionsLegals/views/mentions_legals_view.dart';
 import 'package:egot_services/app/modules/Ouvrage/bindings/ouvrage_binding.dart';
 import 'package:egot_services/app/modules/Ouvrage/views/ouvrage_view.dart';
+import 'package:egot_services/app/modules/Register/bindings/register_binding.dart';
+import 'package:egot_services/app/modules/Register/views/register_view.dart';
 import 'package:egot_services/app/modules/SignIn/bindings/sign_in_binding.dart';
 import 'package:egot_services/app/modules/SignIn/views/sign_in_view.dart';
 import 'package:egot_services/app/modules/SketchMyWishes/bindings/sketch_my_wishes_binding.dart';
@@ -92,6 +94,11 @@ class AppPages {
       name: _Paths.SIGN_IN,
       page: () => const SignInView(),
       binding: SignInBinding(),
+    ),
+    GetPage(
+      name: _Paths.REGISTER,
+      page: () => RegisterView(),
+      binding: RegisterBinding(),
     ),
   ];
 }

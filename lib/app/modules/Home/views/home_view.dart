@@ -56,7 +56,7 @@ class DraggableListMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints.expand(),
+      constraints: const BoxConstraints.expand(),
       child: GetBuilder<HomeController>(
         init: HomeController(),
         builder: (c) =>

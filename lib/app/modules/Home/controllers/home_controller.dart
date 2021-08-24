@@ -1,4 +1,5 @@
 import 'package:egot_services/app/models/menus_model.dart';
+import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -11,10 +12,10 @@ class HomeController extends GetxController {
   var menu = <Menu>[].obs;
   var scrollController = ScrollController();
 
-  late final googleSign;
   var isSignIn = false.obs;
 
-  FirebaseAuth firebaseAuth = GetxFire.auth;
+  var firebaseAuthController = SignInController();
+
 
   @override
   void onInit() {
@@ -24,11 +25,10 @@ class HomeController extends GetxController {
   }
 
   @override
-  void onReady() async {
-    googleSign = GetxFire.signInWithGoogle();
+  void onReady() {
     ever(isSignIn, handleAuthStateChanged);
-    isSignIn.value = await firebaseAuth.currentUser != null;
-    firebaseAuth.authStateChanges().listen((event) {
+    isSignIn.value = firebaseAuthController.firebaseAuth.currentUser != null;
+    firebaseAuthController.firebaseAuth.authStateChanges().listen((event) {
       isSignIn.value = event != null;
     });
 
@@ -43,14 +43,10 @@ class HomeController extends GetxController {
 
   void handleAuthStateChanged(isSignIn) {
     if (isSignIn) {
-      Get.offAllNamed(Routes.HOME, arguments: firebaseAuth.currentUser);
+      Get.offAllNamed(Routes.HOME, arguments: firebaseAuthController.firebaseAuth.currentUser);
     } else {
-      Get.offAllNamed(Routes.SIGN_IN);
+      Get.offAllNamed(Routes.REGISTER);
     }
-  }
-
-  isSelected() async {
-
   }
 
 }

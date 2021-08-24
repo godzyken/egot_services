@@ -20,8 +20,8 @@ class PresentationProvider extends BaseServiceProvider implements IPresentationP
   /// for get requests.
   FutureOr<Store> getPersonData() async {
     var res = await get("/person_url");
-    debugPrint(res.body);
-    return res.body;
+    debugPrint(res.body!);
+    return res.body!;
   }
   /// for post requests.
   FutureOr<Store> postPersonData(dynamic body) async {
@@ -45,7 +45,7 @@ class PresentationProvider extends BaseServiceProvider implements IPresentationP
   @override
   FutureOr<Response<Store>> getNews() async {
     var response = await get("/storage");
-    var data = Store.fromJson(response.body);
+    var data = Store.fromJson(response.body!);
     return Response(
       statusCode: response.statusCode,
       statusText: response.statusText,

@@ -1,3 +1,6 @@
+import 'package:egot_services/app/models/use_x_models.dart';
+import 'package:getxfire/getxfire.dart';
+
 class ContactModel {
   String? id, name, email, number, role, status;
 
@@ -11,6 +14,16 @@ class ContactModel {
     number = json['number'];
     role = json['role'];
     status = json['status'];
+  }
+
+  ContactModel.fromDocumentSnapshot(DocumentSnapshot? documentSnapshot) {
+    id = documentSnapshot!.id;
+    name = documentSnapshot["name"];
+    email = documentSnapshot["email"];
+    number = documentSnapshot["number"];
+    role = documentSnapshot["role"];
+    status = documentSnapshot["status"];
+
   }
 
   Map<String, dynamic> toJson() => {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:egot_services/app/models/store_model.dart';
 import 'package:egot_services/app/modules/Home/controllers/home_controller.dart';
+import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/modules/presentation/repository/repository.dart';
 import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
@@ -22,7 +23,7 @@ class PresentationController extends SuperController<Store> {
   
   final IStoreRepository repository;
 
-  late User? user;
+  User? user;
 
   String? _pickFirstNamedContact(Map<String, dynamic> data) {
     final List<dynamic>? connections = data['connections'];
@@ -77,7 +78,7 @@ class PresentationController extends SuperController<Store> {
   }
 
   void logout() async {
-    await homeController.firebaseAuth.signOut();
+    await SignInController().firebaseAuth.signOut();
   }
 
   Future<void> handleGetContact(User? user) async {
