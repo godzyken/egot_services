@@ -1,4 +1,5 @@
 import 'package:egot_services/app/models/use_x_models.dart';
+import 'package:egot_services/app/modules/AddCompany/controllers/add_company_controller.dart';
 import 'package:egot_services/app/modules/Register/controllers/user_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
@@ -9,20 +10,14 @@ import 'package:getxfire/getxfire.dart';
 
 class RegisterController extends GetxController {
   var formKey = GlobalKey<FormState>();
-  final companyNameController = TextEditingController();
-  final activityController = TextEditingController();
-  final matriculationController = TextEditingController();
-  final lengthController = TextEditingController();
-  final locationController = TextEditingController();
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final statusController = TextEditingController();
-  final assuranceController = TextEditingController();
-  final specialisationController = TextEditingController();
+
   bool success = false;
   String? userEmail;
 
-  final userModel = UserModel();
+  final userModel = UserModel().obs;
 
   var isSignIn = false.obs;
   var firebaseAuthController = SignInController();
@@ -60,24 +55,20 @@ class RegisterController extends GetxController {
         });
   }
 
-  void createNewUser(String? email, String? companyName) async {
+  void createNewUser() async {
     try {
-      var _authResult = await firebaseAuthController.firebaseAuth
-          .createUserWithEmailAndPassword(
-              email: emailController.text.trim(),
-              password: passwordController.text);
-
+      final fbCompany = Get.find<AddCompanyController>();
       var _user = UserModel(
-        id: _authResult.user!.uid,
-        email: email,
-        companyName: companyName,
-        activity: activityController,
-        matriculation: matriculationController,
-        length: lengthController,
-        location: locationController,
-        status: statusController,
-        assurance: assuranceController,
-        specialisation: specialisationController,
+        id: fbCompany.userModel.value.id,
+        email: emailController,
+        companyName: fbCompany.companyNameController,
+        activity: fbCompany.activityController,
+        matriculation: fbCompany.matriculationController,
+        length: fbCompany.lengthController,
+        location: fbCompany.locationController,
+        status: fbCompany.statusController,
+        assurance: fbCompany.assuranceController,
+        specialisation: fbCompany.specialisationController,
       );
       if (await RegisterServices().createNewUser(_user)) {
         Get.find<UserController>().user = _user;

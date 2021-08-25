@@ -1,11 +1,13 @@
-import 'package:egot_services/app/modules/Register/controllers/register_controller.dart';
+import 'package:egot_services/app/modules/Register/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 
 import 'package:get/get.dart';
 
-class CompanyView extends GetView<RegisterController> {
-  const CompanyView({Key? key}) : super(key: key);
+import '../controllers/add_company_controller.dart';
+
+class AddCompanyView extends GetView<AddCompanyController> {
+  const AddCompanyView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,46 +19,46 @@ class CompanyView extends GetView<RegisterController> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-          child: GetBuilder<RegisterController>(builder: (_) {
-        return Form(
-          key: _.formKey,
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Wrap(
+          child: GetBuilder<AddCompanyController>(builder: (_) {
+            return Form(
+              key: _.formKey,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      buildCompanyName(_),
-                      buildActivity(_),
-                      buildSpecialisation(_),
-                      buildMatriculation(_),
-                      buildLocation(_),
-                      buildStatus(_),
-                      buildAssurance(_),
+                      Wrap(
+                        children: <Widget>[
+                          buildCompanyName(_),
+                          buildActivity(_),
+                          buildSpecialisation(_),
+                          buildMatriculation(_),
+                          buildLocation(_),
+                          buildStatus(_),
+                          buildAssurance(_),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        alignment: Alignment.center,
+                        child: Text(_.success == null
+                            ? ''
+                            : (_.success
+                            ? 'Successfully registered ${_.userModel.value.email}'
+                            : 'Registration failed')),
+                      )
                     ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    alignment: Alignment.center,
-                    child: Text(_.success == null
-                        ? ''
-                        : (_.success
-                            ? 'Successfully registered ${_.userEmail}'
-                            : 'Registration failed')),
-                  )
-                ],
+                ),
               ),
-            ),
-          ),
-        );
-      })),
+            );
+          })),
       floatingActionButton: buildRegister(controller),
     );
   }
 
-  Container buildRegister(RegisterController _) {
+  Container buildRegister(AddCompanyController _) {
     return Container(
       width: 110,
       height: 40,
@@ -70,14 +72,14 @@ class CompanyView extends GetView<RegisterController> {
         onPressed: () async {
           if (_.formKey.currentState!.validate()) {
             _.formKey.currentState!.save();
-            return Get.toNamed("/register", arguments: _.formKey.currentContext!.owner);
+            return Get.to(const RegisterView(), arguments: [_.formKey.currentContext!.owner]);
           }
         },
       ),
     );
   }
 
-  TextFormField buildAssurance(RegisterController _) {
+  TextFormField buildAssurance(AddCompanyController _) {
     return TextFormField(
       controller: _.assuranceController,
       decoration: const InputDecoration(labelText: 'Company assurance'),
@@ -88,12 +90,12 @@ class CompanyView extends GetView<RegisterController> {
         return null;
       },
       onSaved: (value) {
-        _.userModel.assurance = value;
+        _.userModel.value.assurance = value;
       },
     );
   }
 
-  TextFormField buildStatus(RegisterController _) {
+  TextFormField buildStatus(AddCompanyController _) {
     return TextFormField(
       controller: _.statusController,
       decoration: const InputDecoration(labelText: 'Company status'),
@@ -104,12 +106,12 @@ class CompanyView extends GetView<RegisterController> {
         return null;
       },
       onSaved: (value) {
-        _.userModel.status = value;
+        _.userModel.value.status = value;
       },
     );
   }
 
-  TextFormField buildLocation(RegisterController _) {
+  TextFormField buildLocation(AddCompanyController _) {
     return TextFormField(
       controller: _.locationController,
       decoration: const InputDecoration(labelText: 'Company location'),
@@ -120,12 +122,12 @@ class CompanyView extends GetView<RegisterController> {
         return null;
       },
       onSaved: (value) {
-        _.userModel.location = value;
+        _.userModel.value.location = value;
       },
     );
   }
 
-  TextFormField buildMatriculation(RegisterController _) {
+  TextFormField buildMatriculation(AddCompanyController _) {
     return TextFormField(
       controller: _.matriculationController,
       decoration: const InputDecoration(labelText: 'Company identity'),
@@ -136,12 +138,12 @@ class CompanyView extends GetView<RegisterController> {
         return null;
       },
       onSaved: (value) {
-        _.userModel.matriculation = value;
+        _.userModel.value.matriculation = value;
       },
     );
   }
 
-  TextFormField buildSpecialisation(RegisterController _) {
+  TextFormField buildSpecialisation(AddCompanyController _) {
     return TextFormField(
       controller: _.specialisationController,
       decoration: const InputDecoration(labelText: 'specialisation'),
@@ -152,12 +154,12 @@ class CompanyView extends GetView<RegisterController> {
         return null;
       },
       onSaved: (value) {
-        _.userModel.specialisation = value;
+        _.userModel.value.specialisation = value;
       },
     );
   }
 
-  TextFormField buildActivity(RegisterController _) {
+  TextFormField buildActivity(AddCompanyController _) {
     return TextFormField(
       controller: _.activityController,
       decoration: const InputDecoration(labelText: 'activity'),
@@ -168,13 +170,13 @@ class CompanyView extends GetView<RegisterController> {
         return null;
       },
       onSaved: (value) {
-        _.userModel.activity = value;
+        _.userModel.value.activity = value;
       },
       onEditingComplete: () => GetUtils.isLengthGreaterOrEqual(_.activityController, 3) ? print("Activity valid") : print("Activity not valid"),
     );
   }
 
-  TextFormField buildCompanyName(RegisterController _) {
+  TextFormField buildCompanyName(AddCompanyController _) {
     return TextFormField(
       controller: _.companyNameController,
       decoration: const InputDecoration(labelText: 'Company Name'),
@@ -185,7 +187,7 @@ class CompanyView extends GetView<RegisterController> {
         return null;
       },
       onSaved: (value) {
-        _.userModel.companyName = value;
+        _.userModel.value.companyName = value;
       },
     );
   }

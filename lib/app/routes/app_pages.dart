@@ -1,7 +1,11 @@
 import 'package:get/get.dart';
 
+import 'package:egot_services/app/modules/AddCompany/bindings/add_company_binding.dart';
+import 'package:egot_services/app/modules/AddCompany/views/add_company_view.dart';
 import 'package:egot_services/app/modules/Atelier/bindings/atelier_binding.dart';
 import 'package:egot_services/app/modules/Atelier/views/atelier_view.dart';
+import 'package:egot_services/app/modules/CompanyCard/bindings/company_card_binding.dart';
+import 'package:egot_services/app/modules/CompanyCard/views/company_card_view.dart';
 import 'package:egot_services/app/modules/Devis/bindings/devis_binding.dart';
 import 'package:egot_services/app/modules/Devis/views/devis_view.dart';
 import 'package:egot_services/app/modules/EgotInfos/bindings/egot_infos_binding.dart';
@@ -12,6 +16,8 @@ import 'package:egot_services/app/modules/GodzyLogo/bindings/godzy_logo_binding.
 import 'package:egot_services/app/modules/GodzyLogo/views/godzy_logo_view.dart';
 import 'package:egot_services/app/modules/Home/bindings/home_binding.dart';
 import 'package:egot_services/app/modules/Home/views/home_view.dart';
+import 'package:egot_services/app/modules/ListCompany/bindings/list_company_binding.dart';
+import 'package:egot_services/app/modules/ListCompany/views/list_company_view.dart';
 import 'package:egot_services/app/modules/MentionsLegals/bindings/mentions_legals_binding.dart';
 import 'package:egot_services/app/modules/MentionsLegals/views/mentions_legals_view.dart';
 import 'package:egot_services/app/modules/Ouvrage/bindings/ouvrage_binding.dart';
@@ -47,7 +53,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HOME,
-      page: () => HomeView(),
+      page: () => const HomeView(),
       binding: HomeBinding(),
     ),
     GetPage(
@@ -97,8 +103,23 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.REGISTER,
-      page: () => RegisterView(),
+      page: () => const RegisterView(),
       binding: RegisterBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_COMPANY,
+      page: () => const AddCompanyView(),
+      binding: AddCompanyBinding(),
+    ),
+    GetPage(
+      name: _Paths.LIST_COMPANY,
+      page: () => const ListCompanyView(),
+      binding: ListCompanyBinding(),
+    ),
+    GetPage(
+      name: _Paths.COMPANY_CARD,
+      page: () => CompanyCardView(company: Get.arguments,),
+      binding: CompanyCardBinding(),
     ),
   ];
 }

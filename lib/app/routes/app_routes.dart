@@ -17,6 +17,9 @@ abstract class Routes {
   static const ARCHIVES = _Paths.ARCHIVES;
   static const SIGN_IN = _Paths.SIGN_IN;
   static const REGISTER = _Paths.REGISTER;
+  static const ADD_COMPANY = _Paths.ADD_COMPANY;
+  static const LIST_COMPANY = _Paths.LIST_COMPANY;
+  static const COMPANY_CARD = _Paths.COMPANY_CARD;
 }
 
 abstract class _Paths {
@@ -33,4 +36,7 @@ abstract class _Paths {
   static const ARCHIVES = '/archives';
   static const SIGN_IN = '/sign-in';
   static const REGISTER = '/register';
+  static const ADD_COMPANY = '/add-company';
+  static const LIST_COMPANY = '/list-company';
+  static const COMPANY_CARD = '/company-card';
 }

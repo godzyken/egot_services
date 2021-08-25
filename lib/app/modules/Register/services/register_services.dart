@@ -39,12 +39,28 @@ class RegisterServices {
     }
   }
 
-  Stream<QuerySnapshot<Object?>> streamUsers(String? uid) {
+  Stream<QuerySnapshot<Object?>> streamGetUsers(String? uid) {
     return _firestore.streamData(
       collection: "users",
       collectionChild: "agents",
       idChild: uid!,
     );
+  }
+
+  Stream<List<UserModel>> usersStream(String uid) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .collection("agents")
+        .orderBy("dateCreated", descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<UserModel> retVal = []..length = 500;
+      for (var element in query.docs) {
+        retVal.add(UserModel.fromDocumentSnapshot(element));
+      }
+      return retVal;
+    });
   }
 
   Future<void> addAgent(String? content, String? uid) async {

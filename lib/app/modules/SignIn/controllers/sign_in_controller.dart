@@ -27,7 +27,7 @@ class SignInController extends GetxController {
   final tokenController = TextEditingController();
   final tokenSecretController = TextEditingController();
 
-  final formKey = GlobalKey<FormState>();
+  var formKey = GlobalKey<FormState>();
 
   @override
   void onInit() {

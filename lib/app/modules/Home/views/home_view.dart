@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:egot_services/app/modules/GodzyLogo/views/godzy_logo_view.dart';
+import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/themes/app_theme_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class HomeView extends GetView<HomeController> {
         backgroundColor: Colors.blueGrey,
         leading: TextButton(
           child: const Icon(Icons.arrow_back),
-          onPressed: () => print('exit'),
+          onPressed: () => controller.firebaseAuthController.logout(),
         ),
       ),
       body: Stack(
