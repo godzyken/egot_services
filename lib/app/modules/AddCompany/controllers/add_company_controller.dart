@@ -2,20 +2,24 @@ import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/Register/controllers/register_controller.dart';
 import 'package:egot_services/app/modules/Register/controllers/user_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
-import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddCompanyController extends GetxController {
+  static AddCompanyController? get to => Get.find();
   var formKey = GlobalKey<FormState>();
-  final statusController = TextEditingController();
-  final assuranceController = TextEditingController();
-  final specialisationController = TextEditingController();
-  final companyNameController = TextEditingController();
-  final activityController = TextEditingController();
-  final matriculationController = TextEditingController();
-  final lengthController = TextEditingController();
-  final locationController = TextEditingController();
+  final pageController = PageController(
+    initialPage: 1, viewportFraction: 1.0, keepPage: true
+  );
+
+  var statusController = TextEditingController();
+  var assuranceController = TextEditingController();
+  var specialisationController = TextEditingController();
+  var companyNameController = TextEditingController();
+  var activityController = TextEditingController();
+  var matriculationController = TextEditingController();
+  var lengthController = TextEditingController();
+  var locationController = TextEditingController();
 
   bool success = false;
   final userModel = UserModel().obs;

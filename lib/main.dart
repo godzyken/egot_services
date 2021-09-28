@@ -23,5 +23,3 @@ Future<void> main() async {
     themeMode: AppThemeData.INITIAL,
   ));
 }
-
-

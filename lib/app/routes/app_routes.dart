@@ -4,6 +4,9 @@ part of 'app_pages.dart';
 abstract class Routes {
   Routes._();
 
+  static String LOGIN_THEN(String afterSuccessfulLogin) =>
+      '$SIGN_IN?then=${Uri.encodeQueryComponent(afterSuccessfulLogin)}';
+
   static const EGOT_SERVICES = _Paths.EGOT_SERVICES;
   static const DEVIS = _Paths.DEVIS;
   static const HOME = _Paths.HOME;

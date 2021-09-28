@@ -8,15 +8,15 @@ environment:
 dependencies: 
   cupertino_icons: ^1.0.3
   get: ^4.3.8
-  getxfire: ^0.1.9
+  getxfire: ^0.3.1
   firebase_storage: any
   google_sign_in: any
   animated_text_kit: 4.2.1
   flutter_signin_button: 2.0.0
-  ar_flutter_plugin: 0.4.3
-  geoflutterfire2: ^2.3.9
-  flutter_launcher_icons: 0.9.1
-  google_maps_flutter: 2.0.6
+  ar_flutter_plugin: ^0.5.0
+  geoflutterfire2: ^2.3.10
+  flutter_launcher_icons: ^0.9.2
+  google_maps_flutter: ^2.0.10
   location: 4.3.0
   get_storage: 2.0.3
   flutter: 

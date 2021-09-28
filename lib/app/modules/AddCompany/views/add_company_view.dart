@@ -18,42 +18,31 @@ class AddCompanyView extends GetView<AddCompanyController> {
         title: const Text('Add your Company'),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-          child: GetBuilder<AddCompanyController>(builder: (_) {
+      body: GetBuilder<AddCompanyController>(
+          init: AddCompanyController(),
+          builder: (_) {
             return Form(
               key: _.formKey,
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Wrap(
-                        children: <Widget>[
-                          buildCompanyName(_),
-                          buildActivity(_),
-                          buildSpecialisation(_),
-                          buildMatriculation(_),
-                          buildLocation(_),
-                          buildStatus(_),
-                          buildAssurance(_),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        alignment: Alignment.center,
-                        child: Text(_.success == null
-                            ? ''
-                            : (_.success
-                            ? 'Successfully registered ${_.userModel.value.email}'
-                            : 'Registration failed')),
-                      )
+                  child: PageView(
+                    controller: _.pageController,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      buildCompanyName(_),
+                      buildActivity(_),
+                      buildSpecialisation(_),
+                      buildMatriculation(_),
+                      buildLocation(_),
+                      buildStatus(_),
+                      buildAssurance(_),
                     ],
                   ),
                 ),
               ),
             );
-          })),
+          }),
       floatingActionButton: buildRegister(controller),
     );
   }
@@ -72,123 +61,279 @@ class AddCompanyView extends GetView<AddCompanyController> {
         onPressed: () async {
           if (_.formKey.currentState!.validate()) {
             _.formKey.currentState!.save();
-            return Get.to(const RegisterView(), arguments: [_.formKey.currentContext!.owner]);
+            return Get.to(const RegisterView(),
+                arguments: [_.formKey.currentContext!.owner]);
           }
         },
       ),
     );
   }
 
-  TextFormField buildAssurance(AddCompanyController _) {
-    return TextFormField(
-      controller: _.assuranceController,
-      decoration: const InputDecoration(labelText: 'Company assurance'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Please enter your assurance';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        _.userModel.value.assurance = value;
-      },
+  Card buildAssurance(AddCompanyController _) {
+    return Card(
+      key: key,
+      semanticContainer: true,
+      elevation: 12.0,
+      color: Colors.lightBlueAccent,
+      margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+      borderOnForeground: true,
+      shadowColor: Colors.black12,
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Obx(() {
+              return Text(
+                  "Your company assurance is : ${_.userModel.value.assurance}");
+            }),
+            const SizedBox(),
+            TextFormField(
+              controller: _.assuranceController,
+              decoration: const InputDecoration(labelText: 'Company assurance',
+                  filled: true),
+              validator: (String? value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your assurance';
+                }
+                return null;
+              },
+              onSaved: (value) {
+                _.userModel.value.assurance = value;
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 
-  TextFormField buildStatus(AddCompanyController _) {
-    return TextFormField(
-      controller: _.statusController,
-      decoration: const InputDecoration(labelText: 'Company status'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Please enter your company status';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        _.userModel.value.status = value;
-      },
+  Card buildStatus(AddCompanyController _) {
+    return Card(
+      key: key,
+      semanticContainer: true,
+      elevation: 12.0,
+      color: Colors.lightBlueAccent,
+      margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+      borderOnForeground: true,
+      shadowColor: Colors.black12,
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Obx(() {
+              return Text(
+                  "Your company status is : ${_.userModel.value.status}");
+            }),
+            const SizedBox(),
+            TextFormField(
+              controller: _.statusController,
+              textAlign: TextAlign.center,
+              decoration: const InputDecoration(labelText: 'Company status',
+                  filled: true),
+              validator: (String? value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your company status';
+                }
+                return null;
+              },
+              onSaved: (value) {
+                _.userModel.value.status = value;
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 
-  TextFormField buildLocation(AddCompanyController _) {
-    return TextFormField(
-      controller: _.locationController,
-      decoration: const InputDecoration(labelText: 'Company location'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Please enter your company location';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        _.userModel.value.location = value;
-      },
+  Card buildLocation(AddCompanyController _) {
+    return Card(
+      key: key,
+      semanticContainer: true,
+      elevation: 12.0,
+      color: Colors.lightBlueAccent,
+      margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+      borderOnForeground: true,
+      shadowColor: Colors.black12,
+      child: Center(child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Obx(() {
+            return Text(
+                "Your company location : ${_.userModel.value.location}");
+          }),
+          const SizedBox(),
+          TextFormField(
+            controller: _.locationController,
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(labelText: 'Company location',
+                filled: true),
+            validator: (String? value) {
+              if (value!.isEmpty) {
+                return 'Please enter your company location';
+              }
+              return null;
+            },
+            onSaved: (value) {
+              _.userModel.value.location = value;
+            },
+          )
+        ],
+      ),),
     );
   }
 
-  TextFormField buildMatriculation(AddCompanyController _) {
-    return TextFormField(
-      controller: _.matriculationController,
-      decoration: const InputDecoration(labelText: 'Company identity'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Please enter your company identity';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        _.userModel.value.matriculation = value;
-      },
+  Card buildMatriculation(AddCompanyController _) {
+    return Card(
+      key: key,
+      semanticContainer: true,
+      elevation: 12.0,
+      color: Colors.lightBlueAccent,
+      margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+      borderOnForeground: true,
+      shadowColor: Colors.black12,
+      child: Center(child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Obx(() {
+            return Text(
+                "Your company matriculate : ${_.userModel.value.matriculation}");
+          }),
+          const SizedBox(),
+          TextFormField(
+            controller: _.matriculationController,
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(labelText: 'Company identity',
+                filled: true),
+            validator: (String? value) {
+              if (value!.isEmpty) {
+                return 'Please enter your company identity';
+              }
+              return null;
+            },
+            onSaved: (value) {
+              _.userModel.value.matriculation = value;
+            },
+          ),
+        ],
+      ))
     );
   }
 
-  TextFormField buildSpecialisation(AddCompanyController _) {
-    return TextFormField(
-      controller: _.specialisationController,
-      decoration: const InputDecoration(labelText: 'specialisation'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Please enter your specialisation';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        _.userModel.value.specialisation = value;
-      },
+  Card buildSpecialisation(AddCompanyController _) {
+    return Card(
+      key: key,
+      semanticContainer: true,
+      elevation: 12.0,
+      color: Colors.lightBlueAccent,
+      margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+      borderOnForeground: true,
+      shadowColor: Colors.black12,
+      child: Center(child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Obx(() {
+            return Text(
+                "Your company specialisation is : ${_.userModel.value.specialisation}");
+          }),
+          const SizedBox(),
+          TextFormField(
+            controller: _.specialisationController,
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(labelText: 'specialisation',
+                filled: true),
+            validator: (String? value) {
+              if (value!.isEmpty) {
+                return 'Please enter your specialisation';
+              }
+              return null;
+            },
+            onSaved: (value) {
+              _.userModel.value.specialisation = value;
+            },
+          ),
+        ],
+      ),),
     );
   }
 
-  TextFormField buildActivity(AddCompanyController _) {
-    return TextFormField(
-      controller: _.activityController,
-      decoration: const InputDecoration(labelText: 'activity'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Please enter your activity';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        _.userModel.value.activity = value;
-      },
-      onEditingComplete: () => GetUtils.isLengthGreaterOrEqual(_.activityController, 3) ? print("Activity valid") : print("Activity not valid"),
+  Card buildActivity(AddCompanyController _) {
+    return Card(
+      key: key,
+      semanticContainer: true,
+      elevation: 12.0,
+      color: Colors.lightBlueAccent,
+      margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+      borderOnForeground: true,
+      shadowColor: Colors.black12,
+      child: Center(child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Obx(() {
+            return Text(
+                "Your company activity is : ${_.userModel.value.activity}");
+          }),
+          const SizedBox(),
+          TextFormField(
+            controller: _.activityController,
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(labelText: 'activity',
+                filled: true),
+            validator: (String? value) {
+              if (value!.isEmpty) {
+                return 'Please enter your activity';
+              }
+              return null;
+            },
+            onSaved: (value) {
+              _.userModel.value.activity = value;
+            },
+            onEditingComplete: () =>
+            GetUtils.isLengthGreaterOrEqual(_.activityController, 3)
+                ? const Text("Activity valid")
+                : const Text("Activity not valid"),
+          )
+        ],
+      ),),
     );
   }
 
-  TextFormField buildCompanyName(AddCompanyController _) {
-    return TextFormField(
-      controller: _.companyNameController,
-      decoration: const InputDecoration(labelText: 'Company Name'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Please enter your company name';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        _.userModel.value.companyName = value;
-      },
+  Card buildCompanyName(AddCompanyController _) {
+    return Card(
+      key: key,
+      semanticContainer: true,
+      elevation: 12.0,
+      color: Colors.lightBlueAccent,
+      margin: const EdgeInsets.symmetric(),
+      borderOnForeground: true,
+      shadowColor: Colors.black12,
+      child: Center(child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Obx(() {
+            return Text(
+                "Your company name's is : ${_.userModel.value.companyName}");
+          }),
+          const SizedBox(),
+          TextFormField(
+            controller: _.companyNameController,
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+                labelText: 'Company Name',
+              filled: true
+            ),
+            validator: (String? value) {
+              if (value!.isEmpty) {
+                return 'Please enter your company name';
+              }
+              return null;
+            },
+            onSaved: (value) {
+              _.userModel.value.companyName = value;
+            },
+          ),
+        ],
+      )),
     );
   }
 }

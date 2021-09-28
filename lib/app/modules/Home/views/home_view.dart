@@ -1,7 +1,7 @@
 import 'dart:ui';
 
+import 'package:egot_services/app/modules/CompanyCard/views/company_card_view.dart';
 import 'package:egot_services/app/modules/GodzyLogo/views/godzy_logo_view.dart';
-import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/themes/app_theme_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +32,11 @@ class HomeView extends GetView<HomeController> {
       ),
       body: Stack(
         alignment: AlignmentDirectional.topStart,
-        fit: StackFit.expand,
         clipBehavior: Clip.hardEdge,
-        children: const <Widget>[DraggableListMenu()],
+        children: <Widget>[
+          CompanyCardView(company: Get.arguments,),
+          const DraggableListMenu()
+        ],
       ),
       backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton(
@@ -49,10 +51,8 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-class DraggableListMenu extends StatelessWidget {
-  const DraggableListMenu({
-    Key? key,
-  }) : super(key: key);
+class DraggableListMenu extends GetView<HomeController> {
+  const DraggableListMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

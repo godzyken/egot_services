@@ -1,3 +1,4 @@
+import 'package:egot_services/app/middleswares/auth_middleware.dart';
 import 'package:get/get.dart';
 
 import 'package:egot_services/app/modules/AddCompany/bindings/add_company_binding.dart';
@@ -42,6 +43,17 @@ class AppPages {
 
   static final routes = [
     GetPage(
+      name: _Paths.HOME,
+      page: () => const HomeView(),
+      binding: HomeBinding(),
+      participatesInRootNavigator: true,
+      // preventDuplicates: true,
+      // opaque: true,
+      // maintainState: true,
+      middlewares: [EnsureAuthMiddleware(), EnsureProfileMiddleware()],
+      popGesture: true,
+    ),
+    GetPage(
       name: _Paths.EGOT_SERVICES,
       page: () => EgotServicesView(),
       binding: EgotServicesBinding(),
@@ -50,11 +62,6 @@ class AppPages {
       name: _Paths.DEVIS,
       page: () => DevisView(),
       binding: DevisBinding(),
-    ),
-    GetPage(
-      name: _Paths.HOME,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
     ),
     GetPage(
       name: _Paths.SKETCH_MY_WISHES,

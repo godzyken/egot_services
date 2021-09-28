@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
 
 class SignInController extends GetxController {
+  static SignInController? get to => Get.find();
+
   bool success = false;
   bool showAuthSecretTextField = false;
   bool showProviderTokenField = true;

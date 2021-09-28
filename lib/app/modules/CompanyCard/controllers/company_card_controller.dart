@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 class CompanyCardController extends GetxController {
   late final String? uid;
-  final userModel = UserModel();
+  final userModel = UserModel().obs;
 
   final count = 0.obs;
   @override

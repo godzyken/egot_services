@@ -9,10 +9,10 @@ import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
 
 class RegisterController extends GetxController {
-  var formKey = GlobalKey<FormState>();
+  static RegisterController? get to => Get.find();
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController().obs;
+  final passwordController = TextEditingController().obs;
 
   bool success = false;
   String? userEmail;
@@ -22,10 +22,11 @@ class RegisterController extends GetxController {
   var isSignIn = false.obs;
   var firebaseAuthController = SignInController();
 
+  ///[Stream] user on fireStore with GetXfire
+  Stream<User?> get user => GetxFire.userChanges();
+
   @override
   void onInit() {
-    print('>>> RegisterController init');
-
     super.onInit();
   }
 
@@ -39,13 +40,16 @@ class RegisterController extends GetxController {
 
   Future<void> register() async {
     await GetxFire.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+        email: emailController.value.text,
+        password: passwordController.value.text,
         isSuccessDialog: true,
         onSuccess: (userCredential) {
           if (userCredential!.user != null) {
             success = true;
             userEmail = userCredential.user!.email;
+            createNewUser(userEmail);
+            isSignIn.value = true;
+
           } else {
             success = false;
           }
@@ -55,12 +59,12 @@ class RegisterController extends GetxController {
         });
   }
 
-  void createNewUser() async {
+  Future<void> createNewUser(String? userEmail) async {
     try {
-      final fbCompany = Get.find<AddCompanyController>();
+      final fbCompany = AddCompanyController();
       var _user = UserModel(
         id: fbCompany.userModel.value.id,
-        email: emailController,
+        email: userEmail,
         companyName: fbCompany.companyNameController,
         activity: fbCompany.activityController,
         matriculation: fbCompany.matriculationController,
