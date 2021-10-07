@@ -5,7 +5,6 @@ class BaseServiceProvider extends GetConnect {
   @override
   void onInit() {
 
-
     httpClient.defaultDecoder = (data) => Store.fromJson(data);
     httpClient.baseUrl = 'http://192.168.1.12:3000';
     httpClient.defaultContentType = "application/json";

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:egot_services/app/models/store_model.dart';
+import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/Home/controllers/home_controller.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/modules/presentation/repository/repository.dart';
@@ -62,7 +63,7 @@ class PresentationController extends SuperController<Store> {
 
   @override
   void onInit() {
-    user = Get.arguments;
+    user = homeController.firebaseAuthController.user;
     super.onInit();
   }
 

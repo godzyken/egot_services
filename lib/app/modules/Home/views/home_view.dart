@@ -25,19 +25,37 @@ class HomeView extends GetView<HomeController> {
         ),
         centerTitle: true,
         backgroundColor: Colors.blueGrey,
-        leading: TextButton(
-          child: const Icon(Icons.arrow_back),
-          onPressed: () => controller.firebaseAuthController.logout(),
-        ),
+        leading: Builder(
+            builder: (BuildContext context) =>
+                GetBuilder<HomeController>(builder: (_) {
+                  return TextButton(
+                    child: const Icon(Icons.arrow_back),
+                    onPressed: () => _.firebaseAuthController.logout(),
+                  );
+                })),
       ),
-      body: Stack(
-        alignment: AlignmentDirectional.topStart,
-        clipBehavior: Clip.hardEdge,
-        children: <Widget>[
-          CompanyCardView(company: Get.arguments,),
-          const DraggableListMenu()
-        ],
-      ),
+      body: GetBuilder<HomeController>(
+          init: HomeController(),
+          builder: (_) {
+            return Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                  image: ExactAssetImage(
+                      "assets/lottie/image/carrelage_background.jpg"),
+                  fit: BoxFit.fill,
+                )),
+                child: Stack(
+                  alignment: AlignmentDirectional.topEnd,
+                  clipBehavior: Clip.hardEdge,
+                  fit: StackFit.loose,
+                  children: <Widget>[
+                    CompanyCardView(
+                      company: _.userModel!,
+                    ),
+                    const DraggableListMenu()
+                  ],
+                ));
+          }),
       backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton(
         onPressed: () => Get.toNamed('/godzy-logo'),
@@ -57,79 +75,73 @@ class DraggableListMenu extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints.expand(),
+      constraints: BoxConstraints.expand(),
       child: GetBuilder<HomeController>(
         init: HomeController(),
-        builder: (c) =>
-          DraggableScrollableSheet(
-              initialChildSize: .3,
-              minChildSize: .10,
-              maxChildSize: 0.9,
-              expand: true,
-              builder: (BuildContext buildContext, _) {
-                return ListView.builder(
-                  controller: c.scrollController,
-                  itemCount: c.menuList.value.length + 2,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index == 0) {
-                      return const SizedBox(height: 15.0);
-                    } else if (index == c.menuList.length + 1) {
-                      return const SizedBox(height: 20.0);
-                    } else {
-                      return Container(
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.all(10.0),
-                        width: double.infinity,
-                        height: 80.0,
-                        decoration: BoxDecoration(
-                          color: Colors.cyanAccent,
-                          borderRadius: BorderRadius.circular(10.0),
-                          border: Border.all(color: Colors.black26),
-                        ),
-                        child: Obx(() => ListTile(
-                              leading: c.menuList[index - 1].icon,
-                              title: Text(
-                                c.menuList[index - 1].title,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: AppThemes.fontFamily,
+        builder: (c) => DraggableScrollableSheet(
+            initialChildSize: .3,
+            minChildSize: .10,
+            maxChildSize: 0.9,
+            expand: true,
+            builder: (BuildContext buildContext, _) {
+              return ListView.builder(
+                controller: c.scrollController,
+                itemCount: c.menuList.value.length + 2,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index == 0) {
+                    return const SizedBox(height: 15.0);
+                  } else if (index == c.menuList.length + 1) {
+                    return const SizedBox(height: 20.0);
+                  } else {
+                    return Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.all(10.0),
+                      width: double.infinity,
+                      height: 80.0,
+                      decoration: BoxDecoration(
+                        color: Colors.cyanAccent,
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(color: Colors.black26),
+                      ),
+                      child: Obx(() => ListTile(
+                            leading: c.menuList[index - 1].icon,
+                            title: Text(
+                              c.menuList[index - 1].title,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: AppThemes.fontFamily,
+                                color: c.selectedMenu.value == index - 1
+                                    ? Colors.black
+                                    : Colors.grey[600],
+                              ),
+                            ),
+                            subtitle: Text(
+                              c.menuList[index - 1].subtitle,
+                              style: TextStyle(
+                                  fontSize: 11,
                                   color: c.selectedMenu.value == index - 1
                                       ? Colors.black
-                                      : Colors.grey[600],
-                                ),
-                              ),
-                              subtitle: Text(
-                                c.menuList[index - 1].subtitle,
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    color: c.selectedMenu.value == index - 1
-                                        ? Colors.black
-                                        : Colors.grey),
-                              ),
-                              selectedTileColor: Get.currentRoute ==
-                                      c.menuList[index - 1].routeName
-                                  ? Colors.grey[300]
-                                  : null,
-                              selected: c.selectedMenu.value == index - 1,
-                              onTap: () => c.selectedMenu.value = index - 1,
-                              visualDensity:
-                                  VisualDensity.adaptivePlatformDensity,
-                              enabled: true,
-                              tileColor: Colors.yellowAccent,
-                              onLongPress: () => Get.toNamed(
-                                  "${c.menuList.value.elementAt(index - 1).routeName}"),
-                            )),
-                      );
-                    }
-                  },
-                );
-              }),
+                                      : Colors.grey),
+                            ),
+                            selectedTileColor: Get.currentRoute ==
+                                    c.menuList[index - 1].routeName
+                                ? Colors.grey[300]
+                                : null,
+                            selected: c.selectedMenu.value == index - 1,
+                            onTap: () => c.selectedMenu.value = index - 1,
+                            visualDensity:
+                                VisualDensity.adaptivePlatformDensity,
+                            enabled: true,
+                            tileColor: Colors.yellowAccent,
+                            onLongPress: () => Get.toNamed(
+                                "${c.menuList.value.elementAt(index - 1).routeName}"),
+                          )),
+                    );
+                  }
+                },
+              );
+            }),
       ),
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-        image: ExactAssetImage("assets/lottie/image/carrelage_background.jpg"),
-        fit: BoxFit.cover,
-      )),
     );
   }
 }

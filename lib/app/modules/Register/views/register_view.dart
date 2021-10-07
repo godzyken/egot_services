@@ -22,15 +22,19 @@ class RegisterView extends GetView<RegisterController> {
           init: RegisterController(),
           autoRemove: true,
           builder: (_) {
-            var _formKey = GlobalKey<FormState>();
             return Form(
-              key: _formKey,
-              onChanged: () => Get.arguments,
+              // key: _.formKey,
+              onChanged: () => _.addCompanyC!.validateInputs,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              onWillPop: () async {
+                return await _.onWillPop();
+              },
               child: Card(
+                key: key,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.start,
                     children: <Widget>[
                       InkWell(
                         onTap: () => Get.toNamed('/add-company',
@@ -66,17 +70,25 @@ class RegisterView extends GetView<RegisterController> {
                         },
                         obscureText: true,
                       ),
+                      Obx(() {
+                        return CheckboxListTile(
+                          value: _.rememberme.value,
+                          onChanged: (value) => _.rememberme.toggle(),
+                          title: const Text('Remember me'),
+                          controlAffinity: ListTileControlAffinity.leading,
+                        );
+                      }),
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         alignment: Alignment.center,
-                        child: SignInButtonBuilder(
+                        child: _.auth.currentUser != null ? Text('${_.auth.currentUser!.displayName}') : SignInButtonBuilder(
                           icon: Icons.add_business,
                           backgroundColor: Colors.blueGrey,
                           text: 'Register',
                           onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              return await _.register();
+                            if (_.emailController.value.text != '') {
 
+                              return await _.register();
                             } else {
                               return Get.toNamed('/add-company');
                             }
@@ -87,7 +99,7 @@ class RegisterView extends GetView<RegisterController> {
                         alignment: Alignment.center,
                         child: Text(_.success == null
                             ? ''
-                            : (_.success
+                            : (_.success.isTrue
                                 ? 'Successfully registered ${_.userModel.value.email}'
                                 : 'Registration failed')),
                       )
@@ -124,207 +136,247 @@ class RegisterView extends GetView<RegisterController> {
         init: AddCompanyController(),
         builder: (_) {
           return Obx(() {
-            return _.userModel.value.id != null ? modelCard(_) : CompanyCardView(company: _.userModel.value.companyName);
+            return Container(
+              color: Colors.transparent,
+                child: _.userModel.value.id != null
+                    ? modelCard(_)
+                    : CompanyCardView(company: _.userModel.value.companyName));
           });
         });
   }
 
   Card modelCard(AddCompanyController _) {
     return Card(
-              color: Colors.white38,
-              shadowColor: Colors.yellow,
-              margin:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-              clipBehavior: Clip.antiAlias,
-              elevation: 2.0,
-              borderOnForeground: true,
-              child: Card(
-                  color: Colors.tealAccent,
-                  shadowColor: Colors.yellow,
-                  margin:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                  clipBehavior: Clip.antiAlias,
-                  elevation: 2.0,
-                  borderOnForeground: true,
-                  child: Table(
-                    border: TableBorder.all(
-                      borderRadius: BorderRadius.circular(8.0),
-                      color: Colors.white,
-                      width: 1.0,
-                      style: BorderStyle.solid,
+        color: Colors.tealAccent,
+        shadowColor: Colors.yellow,
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        clipBehavior: Clip.antiAlias,
+        elevation: 2.0,
+        borderOnForeground: true,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        child: Table(
+          border: TableBorder.all(
+            borderRadius: BorderRadius.circular(8.0),
+            color: Colors.white,
+            width: 1.0,
+            style: BorderStyle.solid,
+          ),
+          columnWidths: const <int, TableColumnWidth>{
+            0: FlexColumnWidth(10.0),
+            1: IntrinsicColumnWidth(flex: 10.0),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          defaultColumnWidth: const FlexColumnWidth(3.0),
+          children: <TableRow>[
+            TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.cyanAccent,
+                  borderRadius: BorderRadius.circular(16.0),
+                  shape: BoxShape.rectangle,
+                ),
+                children: [
+                  Container(
+                    height: 32,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 0.5, horizontal: 0.5),
+                    child: Text(
+                      '${_.userModel.value.matriculation}',
+                      style: textStyleName,
                     ),
-                    columnWidths: const <int, TableColumnWidth>{
-                      0: FlexColumnWidth(10.0),
-                      1: IntrinsicColumnWidth(flex: 10.0),
-                    },
-                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                    defaultColumnWidth: const FlexColumnWidth(3.0),
-                    children: <TableRow>[
-                      TableRow(
-                          decoration: BoxDecoration(
-                            color: Colors.cyanAccent,
-                            borderRadius: BorderRadius.circular(16.0),
-                            shape: BoxShape.rectangle,
-                          ),
-                          children: [
-                            Container(
-                              height: 32,
-                              color: Colors.transparent,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
-                              child: Text(
-                                '${_.userModel.value.matriculation}',
-                                style: textStyleName,
-                              ),
-                            ),
-                            TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
-                              child: Container(
-                                  height: 32,
-                                  width: 32,
-                                  alignment: Alignment.center,
-                                  child: Text('${_.userModel.value.companyName}', style: textStyleName,)
-                              ),
-                            ),
-                          ]
-                      ),
-                      TableRow(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(16.0),
-                            shape: BoxShape.rectangle,
-                          ),
-                          children: [
-                            Container(
-                              height: 32,
-                              color: Colors.transparent,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
-                              child: Text(
-                                'Activité(s) :',
-                                style: textStyleCell,
-                              ),
-                            ),
-                            TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
-                              child: Container(
-                                height: 32,
-                                width: 32,
-                                alignment: Alignment.center,
-                                child: Text('${_.userModel.value.activity}', style: textStyleName),
-                              ),
-                            ),
-                          ]),
-                      TableRow(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(16.0),
-                            shape: BoxShape.rectangle,
-                          ),
-                          children: [
-                            Container(
-                              height: 32,
-                              color: Colors.transparent,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
-                              child: Text(
-                                'Specialisation(s) :',
-                                style: textStyleCell,
-                              ),
-                            ),
-                            TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
-                              child: Container(
-                                height: 32,
-                                width: 32,
-                                alignment: Alignment.center,
-                                child: Text('${_.userModel.value.specialisation}', style: textStyleName),
-                              ),
-                            ),
-                          ]),
-                      TableRow(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(16.0),
-                            shape: BoxShape.rectangle,
-                          ),
-                          children: [
-                            Container(
-                              height: 32,
-                              color: Colors.transparent,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
-                              child: Text(
-                                'Status :',
-                                style: textStyleCell,
-                              ),
-                            ),
-                            TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
-                              child: Container(
-                                height: 32,
-                                width: 32,
-                                alignment: Alignment.center,
-                                child: Text('${_.userModel.value.status}', style: textStyleName),
-                              ),
-                            ),
-                          ]),
-                      TableRow(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(16.0),
-                            shape: BoxShape.rectangle,
-                          ),
-                          children: [
-                            Container(
-                              height: 32,
-                              color: Colors.transparent,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
-                              child: Text(
-                                'location :',
-                                style: textStyleCell,
-                              ),
-                            ),
-                            TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
-                              child: Container(
-                                height: 32,
-                                width: 32,
-                                alignment: Alignment.center,
-                                child: Text('${_.userModel.value.location}', style: textStyleName),
-                              ),
-                            ),
-                          ]),
-                      TableRow(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(16.0),
-                            shape: BoxShape.rectangle,
-                          ),
-                          children: [
-                            Container(
-                              height: 32,
-                              color: Colors.transparent,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
-                              child: Text(
-                                'Assurance :',
-                                style: textStyleCell,
-                              ),
-                            ),
-                            TableCell(
-                              verticalAlignment: TableCellVerticalAlignment.middle,
-                              child: Container(
-                                height: 32,
-                                width: 32,
-                                alignment: Alignment.center,
-                                child: Text('${_.userModel.value.assurance}', style: textStyleName),
-                              ),
-                            ),
-                          ]),
-                    ],
-                  )
-              ));
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Container(
+                        height: 32,
+                        width: 32,
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${_.userModel.value.companyName}',
+                          style: textStyleName,
+                        )),
+                  ),
+                ]),
+            TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(16.0),
+                  shape: BoxShape.rectangle,
+                ),
+                children: [
+                  Container(
+                    height: 32,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 0.5, horizontal: 0.5),
+                    child: Text(
+                      'Activité(s) :',
+                      style: textStyleCell,
+                    ),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Container(
+                      height: 32,
+                      width: 32,
+                      alignment: Alignment.center,
+                      child: Text('${_.userModel.value.activity}',
+                          style: textStyleName),
+                    ),
+                  ),
+                ]),
+            TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(16.0),
+                  shape: BoxShape.rectangle,
+                ),
+                children: [
+                  Container(
+                    height: 32,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 0.5, horizontal: 0.5),
+                    child: Container(
+                        height: 32,
+                        alignment: Alignment.center,
+                        child:Text(
+                      'Specialisation(s) :',
+                      style: textStyleCell,
+                            maxLines: 1
+                    )),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Container(
+                      height: 32,
+                      width: 32,
+                      alignment: Alignment.center,
+                      child: Text('${_.userModel.value.specialisation}',
+                          style: textStyleName),
+                    ),
+                  ),
+                ]),
+            TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(16.0),
+                  shape: BoxShape.rectangle,
+                ),
+                children: [
+                  Container(
+                    height: 32,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 0.5, horizontal: 0.5),
+                    child: Text(
+                      'Status :',
+                      style: textStyleCell,
+                    ),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Container(
+                      height: 32,
+                      width: 32,
+                      alignment: Alignment.center,
+                      child: Text('${_.userModel.value.status}',
+                          style: textStyleName),
+                    ),
+                  ),
+                ]),
+            TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(16.0),
+                  shape: BoxShape.rectangle,
+                ),
+                children: [
+                  Container(
+                    height: 32,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 0.5, horizontal: 0.5),
+                    child: Text(
+                      'location :',
+                      style: textStyleCell,
+                    ),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Container(
+                      height: 32,
+                      width: 32,
+                      alignment: Alignment.center,
+                      child: Text('${_.userModel.value.location}',
+                          style: textStyleName),
+                    ),
+                  ),
+                ]),
+            TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(16.0),
+                  shape: BoxShape.rectangle,
+                ),
+                children: [
+                  Container(
+                    height: 32,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 0.5, horizontal: 0.5),
+                    child: Text(
+                      'Assurance :',
+                      style: textStyleCell,
+                    ),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Container(
+                      height: 32,
+                      width: 32,
+                      alignment: Alignment.center,
+                      child: Text('${_.userModel.value.assurance}',
+                          style: textStyleName),
+                    ),
+                  ),
+                ]),
+            TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(16.0),
+                  shape: BoxShape.rectangle,
+                ),
+                children: [
+                  Container(
+                    height: 32,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 0.5, horizontal: 0.5),
+                    child: Text(
+                      'Length :',
+                      style: textStyleCell,
+                    ),
+                  ),
+                  TableCell(
+                    verticalAlignment: TableCellVerticalAlignment.middle,
+                    child: Container(
+                      height: 32,
+                      width: 32,
+                      alignment: Alignment.center,
+                      child: Text('${_.userModel.value.length}',
+                          style: textStyleName),
+                    ),
+                  ),
+                ]),
+          ],
+        ));
   }
 }

@@ -87,4 +87,6 @@ class UserModel {
     'companyName' : companyName,
     'id':id,
   };
+
+  static List<UserModel> listFromJson(list) => List<UserModel>.from(list.map((x) => UserModel.fromJson(x)));
 }

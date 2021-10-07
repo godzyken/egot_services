@@ -1,4 +1,5 @@
 import 'package:egot_services/app/models/use_x_models.dart';
+import 'package:egot_services/app/modules/AddCompany/controllers/assurance_controller.dart';
 import 'package:egot_services/app/modules/Register/controllers/register_controller.dart';
 import 'package:egot_services/app/modules/Register/controllers/user_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
@@ -7,26 +8,36 @@ import 'package:get/get.dart';
 
 class AddCompanyController extends GetxController {
   static AddCompanyController? get to => Get.find();
-  var formKey = GlobalKey<FormState>();
-  final pageController = PageController(
-    initialPage: 1, viewportFraction: 1.0, keepPage: true
-  );
+  AssuranceController? assuranceC;
+  RegisterController? fbConnect;
+  ModalRoute? mountRoute;
+  List<GlobalKey<FormState>?> formKeys = [];
+  final pageController =
+      PageController(initialPage: 1, viewportFraction: 1.0, keepPage: true);
 
-  var statusController = TextEditingController();
-  var assuranceController = TextEditingController();
-  var specialisationController = TextEditingController();
-  var companyNameController = TextEditingController();
-  var activityController = TextEditingController();
-  var matriculationController = TextEditingController();
-  var lengthController = TextEditingController();
-  var locationController = TextEditingController();
+  final statusController = TextEditingController().obs;
+  final assuranceController = TextEditingController().obs;
+  final specialisationController = TextEditingController().obs;
+  final companyNameController = TextEditingController().obs;
+  final activityController = TextEditingController().obs;
+  final matriculationController = TextEditingController().obs;
+  final lengthController = TextEditingController().obs;
+  final locationController = TextEditingController().obs;
+  final userModel = UserModel().obs;
 
   bool success = false;
-  final userModel = UserModel().obs;
+
+  var cards = <Card>[];
+  var h = Get.mediaQuery.size.height;
+  var w = Get.mediaQuery.size.width;
 
   @override
   void onInit() {
+    assuranceC = AssuranceController();
+    fbConnect = RegisterController();
+    formKeys = [GlobalKey<FormState>()];
 
+    update();
     super.onInit();
   }
 
@@ -38,41 +49,97 @@ class AddCompanyController extends GetxController {
   @override
   void onClose() {}
 
-  void createNewUser(context) async {
-
+  void createNewUser() async {
     try {
-      final fbConnect = Get.find<RegisterController>();
-
-      var _authResult = fbConnect.firebaseAuthController.firebaseAuth.currentUser;
+      var _authResult =
+          fbConnect!.firebaseAuthController.firebaseAuth.currentUser;
 
       var _user = UserModel(
         id: _authResult!.uid,
         email: _authResult.email,
-        companyName: _authResult.displayName,
-        activity: activityController,
-        matriculation: matriculationController,
-        length: lengthController,
-        location: locationController,
-        status: statusController,
-        assurance: assuranceController,
-        specialisation: specialisationController,
+        companyName: companyNameController.value,
+        activity: activityController.value,
+        matriculation: matriculationController.value,
+        length: lengthController.value,
+        location: locationController.value,
+        status: statusController.value,
+        assurance: assuranceController.value,
+        specialisation: specialisationController.value,
       );
-      update();
+
+      _user = await updateUserCompanyName(_authResult.displayName, _user.companyName);
       if (await RegisterServices().createNewUser(_user)) {
         Get.find<UserController>().user = _user;
+        success = true;
         update();
-        Get.back();
       }
     } catch (e) {
       Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
   }
 
-  updateUserModel(String? newValue1, String? newValue2) {
+  updateUserCompanyName(String? newValue1, String? newValue2) {
     userModel.update((userModel) {
-      userModel!.id = newValue1!;
-      userModel.email = newValue2!;
+      userModel!.companyName = newValue1;
+      userModel.companyName = newValue2;
     });
   }
 
+  updateUserCompanyActivity(String? newValue1, String? newValue2) {
+    userModel.update((userModel) {
+      userModel!.activity = newValue1;
+      userModel.activity = newValue2;
+    });
+  }
+
+  updateUserCompanySpeciality(String? newValue1, String? newValue2) {
+    userModel.update((userModel) {
+      userModel!.specialisation = newValue1;
+      userModel.specialisation = newValue2;
+    });
+  }
+
+  updateUserCompanyIdentity(String? newValue1, String? newValue2) {
+    userModel.update((userModel) {
+      userModel!.matriculation = newValue1;
+      userModel.matriculation = newValue2;
+    });
+  }
+
+  updateUserCompanyLocation(String? newValue1, String? newValue2) {
+    userModel.update((userModel) {
+      userModel!.location = newValue1;
+      userModel.location = newValue2;
+    });
+  }
+
+  updateUserCompanyStatus(String? newValue1, String? newValue2) {
+    userModel.update((userModel) {
+      userModel!.status = newValue1;
+      userModel.status = newValue2;
+    });
+  }
+
+  updateUserCompanyLength(String? newValue1, String? newValue2) {
+    userModel.update((userModel) {
+      userModel!.length = newValue1;
+      userModel.length = newValue2;
+    });
+  }
+  updateUserCompanyAssurance(String? newValue1, String? newValue2) {
+    userModel.update((userModel) {
+      userModel!.assurance = newValue1;
+      userModel.assurance = newValue2;
+    });
+  }
+
+  validateInputs() {
+    print('button');
+    for (int i = 0; i < formKeys.length; i++) {
+      if (formKeys[i]!.currentState!.validate()) {
+        formKeys[i]!.currentState!.save();
+        update();
+      }
+    }
+  }
 }

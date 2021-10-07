@@ -83,7 +83,7 @@ class PresentationView extends GetView<PresentationController> {
                                         color: Colors.redAccent,
                                         width: 1.0,
                                         style: BorderStyle.solid)),
-                                child: _avatarBody(context),
+                                // child: _avatarBody(context),
                               ),
                             ),
                           )
@@ -123,9 +123,10 @@ class PresentationView extends GetView<PresentationController> {
   Widget _avatarBody(BuildContext context) {
     return GetBuilder<PresentationController>(
       assignId: true,
-      builder: (_) => _.user!.uid == null
+      init: PresentationController(repository: controller.repository),
+      builder: (_) => _.user! == null
           ? const Center(
-              child: CircularProgressIndicator.adaptive(),
+              child: CircularProgressIndicator(),
             )
           : CircleAvatar(
               radius: 70,

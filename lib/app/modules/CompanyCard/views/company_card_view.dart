@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:getxfire/getxfire.dart';
 
 import '../controllers/company_card_controller.dart';
 
 class CompanyCardView extends GetView<CompanyCardController> {
-  const CompanyCardView({Key? key, uid, required UserModel? company}) : super(key: key);
+  const CompanyCardView({Key? key, uid, UserModel? company}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,7 @@ class CompanyCardView extends GetView<CompanyCardController> {
                             height: 32,
                             color: Colors.transparent,
                             alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
+                            padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
                             child: Text(
                               '${_.userModel.value.matriculation}',
                               style: textStyleName,
@@ -104,7 +105,7 @@ class CompanyCardView extends GetView<CompanyCardController> {
                             height: 32,
                             color: Colors.transparent,
                             alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
+                            padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
                             child: Text(
                               'Activité(s) :',
                               style: textStyleCell,
@@ -135,7 +136,7 @@ class CompanyCardView extends GetView<CompanyCardController> {
                             height: 32,
                             color: Colors.transparent,
                             alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
+                            padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
                             child: Text(
                               'Spécialisation(s) :',
                               style: textStyleCell,
@@ -166,7 +167,7 @@ class CompanyCardView extends GetView<CompanyCardController> {
                             height: 32,
                             color: Colors.transparent,
                             alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
+                            padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
                             child: Text(
                               'Status :',
                               style: textStyleCell,
@@ -197,7 +198,7 @@ class CompanyCardView extends GetView<CompanyCardController> {
                             height: 32,
                             color: Colors.transparent,
                             alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
+                            padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
                             child: Text(
                               'location :',
                               style: textStyleCell,
@@ -228,7 +229,7 @@ class CompanyCardView extends GetView<CompanyCardController> {
                             height: 32,
                             color: Colors.transparent,
                             alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
+                            padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
                             child: Text(
                               'Assurance :',
                               style: textStyleCell,
@@ -241,6 +242,37 @@ class CompanyCardView extends GetView<CompanyCardController> {
                               width: 32,
                               alignment: Alignment.center,
                               child: Text('${_.userModel.value.assurance}', style: textStyleName),
+                            ),
+                          ),
+                          Container(
+                            height: 64,
+                            color: Colors.red,
+                          ),
+                        ]),
+                    TableRow(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(16.0),
+                          shape: BoxShape.rectangle,
+                        ),
+                        children: [
+                          Container(
+                            height: 32,
+                            color: Colors.transparent,
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(vertical: 0.5, horizontal: 0.5),
+                            child: Text(
+                              'Size :',
+                              style: textStyleCell,
+                            ),
+                          ),
+                          TableCell(
+                            verticalAlignment: TableCellVerticalAlignment.middle,
+                            child: Container(
+                              height: 32,
+                              width: 32,
+                              alignment: Alignment.center,
+                              child: Text('${_.userModel.value.length}', style: textStyleName),
                             ),
                           ),
                           Container(

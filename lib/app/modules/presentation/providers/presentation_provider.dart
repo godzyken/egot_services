@@ -13,14 +13,14 @@ class PresentationProvider extends BaseServiceProvider implements IPresentationP
   void onInit() {
     super.onInit();
 
-    getNews();
-    getPersonData();
+    // getNews();
+    // getPersonData();
   }
 
   /// for get requests.
   FutureOr<Store> getPersonData() async {
     var res = await get("/person_url");
-    debugPrint(res.body!);
+    debugPrint(res.body);
     return res.body!;
   }
   /// for post requests.

@@ -1,0 +1,30 @@
+{
+  "id": 33176898,
+  "avatar_url": "https://avatars.githubusercontent.com/u/33176898?v=4",
+  "gravatar_id": "",
+  "organizations_url": "https://api.github.com/users/godzyken/orgs",
+  "type": {
+    "commercial_property": "commercials properties",
+    "vehicles_commercial": "vehicles commercials",
+    "responsibility_civil": {
+      "responsibility_civil" : true,
+      "exploitation": "exploitation",
+      "delivery": "delivery",
+      "specific": "specific"
+    },
+    "other_protection,": {
+      "lost_exploitation": "lost exploitation",
+      "contre_crime": "contre le crime"
+    },
+    "extra_protection": {
+      "cyber_risks": "cyber risks",
+      "seepage_and_water_damage" : {
+        "flooding": "flooding",
+        "sewer_backup_and_overflow": true
+      }
+    }
+  },
+  "name": "Dore Emryck",
+  "created_at": "2017-10-28T11:33:02Z",
+  "updated_at": "2021-08-11T15:42:13Z"
+}

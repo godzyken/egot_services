@@ -1,6 +1,6 @@
-import 'package:egot_services/app/middleswares/auth_middleware.dart';
 import 'package:get/get.dart';
 
+import 'package:egot_services/app/middleswares/auth_middleware.dart';
 import 'package:egot_services/app/modules/AddCompany/bindings/add_company_binding.dart';
 import 'package:egot_services/app/modules/AddCompany/views/add_company_view.dart';
 import 'package:egot_services/app/modules/Atelier/bindings/atelier_binding.dart';
@@ -33,6 +33,8 @@ import 'package:egot_services/app/modules/archives/bindings/archives_binding.dar
 import 'package:egot_services/app/modules/archives/views/archives_view.dart';
 import 'package:egot_services/app/modules/presentation/bindings/presentation_binding.dart';
 import 'package:egot_services/app/modules/presentation/views/presentation_view.dart';
+import 'package:egot_services/app/modules/user/bindings/user_binding.dart';
+import 'package:egot_services/app/modules/user/views/user_view.dart';
 
 part 'app_routes.dart';
 
@@ -60,7 +62,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DEVIS,
-      page: () => DevisView(),
+      page: () => const DevisView(),
       binding: DevisBinding(),
     ),
     GetPage(
@@ -125,8 +127,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.COMPANY_CARD,
-      page: () => CompanyCardView(company: Get.arguments,),
+      page: () => const CompanyCardView(),
       binding: CompanyCardBinding(),
+    ),
+    GetPage(
+      name: _Paths.USER,
+      page: () => UserView(),
+      binding: UserBinding(),
     ),
   ];
 }

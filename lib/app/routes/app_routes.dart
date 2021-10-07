@@ -23,6 +23,7 @@ abstract class Routes {
   static const ADD_COMPANY = _Paths.ADD_COMPANY;
   static const LIST_COMPANY = _Paths.LIST_COMPANY;
   static const COMPANY_CARD = _Paths.COMPANY_CARD;
+  static const USER = _Paths.USER;
 }
 
 abstract class _Paths {
@@ -42,4 +43,5 @@ abstract class _Paths {
   static const ADD_COMPANY = '/add-company';
   static const LIST_COMPANY = '/list-company';
   static const COMPANY_CARD = '/company-card';
+  static const USER = '/user';
 }
