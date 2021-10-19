@@ -78,7 +78,7 @@ class RegisterView extends GetView<RegisterController> {
                           backgroundColor: Colors.blueGrey,
                           text: 'Register',
                           onPressed: () async {
-                            if (_.emailController.value.text != '') {
+                            if (_.userModel!.companyName != '') {
 
                               return await _.register();
                             } else {
