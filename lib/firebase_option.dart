@@ -6,7 +6,9 @@ FirebaseOptions get firebaseOptions {
     appId: '1:55611526582:android:d50936ec4e0738a5080517',
     messagingSenderId: '55611526582',
     projectId: 'egoteback',
-    authDomain: 'com.godzy.egot_services',
-    storageBucket: 'egoteback.appspot.com'
+    authDomain: 'https://storage.googleapis.com',
+    storageBucket: 'egoteback.appspot.com',
+    databaseURL: 'https://console.cloud.google.com/storage/browser/egoteback.appspot.com',
+
   );
 }

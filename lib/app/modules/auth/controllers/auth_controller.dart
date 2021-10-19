@@ -6,9 +6,7 @@ import 'package:getxfire/getxfire.dart';
 
 class AuthController extends GetxController {
   final auth = GetxFire.auth;
-
-
-  final Rxn<User?> _user = Rxn<User?>();
+  final _user = Rxn<User?>();
   RegisterServices? _registerServices;
 
   User? get currentUser => auth.currentUser;
@@ -21,7 +19,6 @@ class AuthController extends GetxController {
   onInit() {
     _user.bindStream(auth.authStateChanges());
 
-
     auth.authStateChanges().listen(
       (event) {
         isSignIn.value = event != null;
@@ -30,9 +27,9 @@ class AuthController extends GetxController {
       cancelOnError: true,
       onDone: () => print('ke passa passa '),
     );
+
+    super.onInit();
   }
-
-
 
   void dialogError(String? msg) {
     Get.defaultDialog(
@@ -44,16 +41,16 @@ class AuthController extends GetxController {
   Future<bool?> connectToFirebase() async {
     try {
       var authInfo = await auth.app.options;
-      if(authInfo != null) {
+      if (authInfo != null) {
         print('auth Info : ${authInfo.storageBucket}');
         return true;
-
       } else {
         print(' auth info is null: ${authInfo.databaseURL}');
         return false;
       }
     } on FirebaseAuthException catch (code, e) {
-      Get.snackbar('Erreur Auth connection : $code', 'Erreur message2: $e', snackPosition: SnackPosition.TOP, duration: Duration(seconds: 20));
+      Get.snackbar('Erreur Auth connection : $code', 'Erreur message2: $e',
+          snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 20));
     }
   }
 
@@ -79,13 +76,13 @@ class AuthController extends GetxController {
             collection: 'users',
             data: user.toJson(),
             id: user.id,
-            onError: (err) => GetxFire.openDialog.messageError('Maa ké passa : $err!'),
+            onError: (err) =>
+                GetxFire.openDialog.messageError('Maa ké passa : ${err.toString()}', title: 'Erreur Create User: $err', duration: const Duration(seconds: 12)),
             isErrorDialog: true,
           );
 
           update();
-        }
-        else {
+        } else {
           var user = Get.find<UserController>().user;
 
           user = UserModel(
@@ -94,19 +91,22 @@ class AuthController extends GetxController {
             companyName: currentUser!.displayName ?? name,
           );
 
-          await GetxFire.firestore.updateData(
-            collection: 'users',
-            data: UserModel().toJson(),
-            id: user.id,
-            onError: (err) => GetxFire.openDialog.messageError('Maa ké passi : $err!'),
-            isErrorDialog: true,
-          ).then((value) => login(email, password));
+          await GetxFire.firestore
+              .updateData(
+                collection: 'users',
+                data: user.toJson(),
+                id: user.id,
+                onError: (err) =>
+                    GetxFire.openDialog.messageError('Maa ké passi : ${err.toString()}', title: 'Erreur Create User: $err', duration: const Duration(seconds: 12)),
+                isErrorDialog: true,
+              )
+              .then((value) => login(email, password));
 
           update();
         }
       });
-    } catch (e) {
-      GetxFire.openDialog.messageError('Maa ké passo : ${e.toString()}!');
+    } on FirebaseAuthException catch (code, e) {
+      GetxFire.openDialog.messageError('Maa ké passo : $code', title: 'Erreur Create User: $e', duration: const Duration(seconds: 12));
     }
   }
 
@@ -115,10 +115,19 @@ class AuthController extends GetxController {
       var _authResult = await auth.signInWithEmailAndPassword(
           email: email.trim(), password: password);
       Get.find<UserController>().user =
-          await _registerServices!.getUser(_authResult.user!.uid);
+          await _registerServices!.getUser(_authResult.user!.uid).then((value) {
+        var currentUser = UserModel(
+            email: value.email,
+            id: value.id,
+            companyName: value.companyName,
+            status: value.status);
+
+        user!.updateDisplayName(currentUser.companyName);
+        user!.updateEmail(currentUser.email);
+        user!.getIdToken(currentUser.id);
+      });
 
       update();
-
     } catch (e) {
       Get.snackbar(
         "Error signing in",

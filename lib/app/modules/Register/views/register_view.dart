@@ -130,9 +130,9 @@ class RegisterView extends GetView<RegisterController> {
           return Obx(() {
             return Container(
               color: Colors.transparent,
-                child: _.userModel.value.id != null
+                child: _.userModel!.id != null
                     ? modelCard(_)
-                    : CompanyCardView(company: _.userModel.value.companyName));
+                    : CompanyCardView(company: _.userModel!.companyName));
           });
         });
   }
@@ -174,7 +174,7 @@ class RegisterView extends GetView<RegisterController> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 0.5, horizontal: 0.5),
                     child: Text(
-                      '${_.userModel.value.matriculation}',
+                      '${_.userModel!.matriculation}',
                       style: textStyleName,
                     ),
                   ),
@@ -185,7 +185,7 @@ class RegisterView extends GetView<RegisterController> {
                         width: 32,
                         alignment: Alignment.center,
                         child: Text(
-                          '${_.userModel.value.companyName}',
+                          '${_.userModel!.companyName}',
                           style: textStyleName,
                         )),
                   ),
@@ -214,7 +214,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel.value.activity}',
+                      child: Text('${_.userModel!.activity}',
                           style: textStyleName),
                     ),
                   ),
@@ -247,7 +247,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel.value.specialisation}',
+                      child: Text('${_.userModel!.specialisation}',
                           style: textStyleName),
                     ),
                   ),
@@ -276,7 +276,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel.value.status}',
+                      child: Text('${_.userModel!.status}',
                           style: textStyleName),
                     ),
                   ),
@@ -305,7 +305,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel.value.location}',
+                      child: Text('${_.userModel!.location}',
                           style: textStyleName),
                     ),
                   ),
@@ -334,7 +334,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel.value.assurance}',
+                      child: Text('${_.userModel!.assurance}',
                           style: textStyleName),
                     ),
                   ),
@@ -363,7 +363,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel.value.length}',
+                      child: Text('${_.userModel!.length}',
                           style: textStyleName),
                     ),
                   ),

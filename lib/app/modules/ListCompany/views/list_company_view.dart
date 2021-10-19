@@ -25,7 +25,7 @@ class ListCompanyView extends GetView<ListCompanyController> {
                       child: ListView.builder(
                       itemCount: _.userList!.value.length,
                       itemBuilder: (_, index) => CompanyCardView(
-                          uid: controller.listController.userModel.value.id,
+                          uid: controller.listController.userModel!.id,
                           company: controller.userList!.value[index]),
                     )),
             ),

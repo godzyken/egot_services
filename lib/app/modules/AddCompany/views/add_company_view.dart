@@ -72,7 +72,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
           // onPressed: () => Get.to(const RegisterView())),
           onPressed: () {
             print('thheeee brrrooout1');
-            _.registerServices.updateUser(_.user);
+            _.registerServices.updateUser(_.userModel);
             // _.createNewUser();
           }),
     );
@@ -106,7 +106,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                     children: [
                       Obx(() {
                         return Text(
-                            "Your company assurance is : ${_.userModel.value.assurance}");
+                            "Your company assurance is : ${_.userModel!.assurance}");
                       }),
                       const SizedBox(),
                       TextFormField(
@@ -120,13 +120,11 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           return null;
                         },
                         onSaved: (value) {
-                          _.userModel.value.assurance = value;
+                          _.userModel!.assurance = value;
                         },
                         onEditingComplete: () => TextInputAction.next,
                         onChanged: (value) =>
-                            _.userModel.update((val) {
-                              val!.assurance = value;
-                            }),
+                            _.userModel!.assurance = value,
                       ),
                       const SizedBox(),
                       // Container(
@@ -195,7 +193,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                     children: [
                       Obx(() {
                         return Text(
-                            "Your company length : ${_.userModel.value.length}");
+                            "Your company length : ${_.userModel!.length}");
                       }),
                       const SizedBox(),
                       TextFormField(
@@ -208,11 +206,10 @@ class AddCompanyView extends GetView<AddCompanyController> {
                             labelText: 'Company length', filled: true),
                         validator: (value) => _.validateNum(value!),
                         onSaved: (value) {
-                          _.userModel.value.length = int.parse(value!);
+                          _.userModel!.length = int.parse(value!);
                         },
                         onEditingComplete: () => TextInputAction.next,
-                        onChanged: (value) => _.updateUserCompanyLength(
-                            int.parse(value), int.parse(value)),
+                        onChanged: (value) => _.userModel!.length = int.parse(value),
                       ),
                     ],
                   ))
@@ -249,7 +246,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                     children: [
                       Obx(() {
                         return Text(
-                            "Your company status is : ${_.userModel.value.status}");
+                            "Your company status is : ${_.userModel!.status}");
                       }),
                       const SizedBox(),
                       TextFormField(
@@ -264,11 +261,10 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           return null;
                         },
                         onSaved: (value) {
-                          _.userModel.value.status = value;
+                          _.userModel!.status = value;
                         },
                         onEditingComplete: () => TextInputAction.next,
-                        onChanged: (value) =>
-                            _.updateUserCompanyStatus(value, value),
+                        onChanged: (value) => _.userModel!.status = value,
                       )
                     ],
                   ))
@@ -305,7 +301,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                     children: [
                       Obx(() {
                         return Text(
-                            "Your company location : ${_.userModel.value.location}");
+                            "Your company location : ${_.userModel!.location}");
                       }),
                       const SizedBox(),
                       TextFormField(
@@ -320,11 +316,10 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           return null;
                         },
                         onSaved: (value) {
-                          _.userModel.value.location = value;
+                          _.userModel!.location = value;
                         },
                         onEditingComplete: () => TextInputAction.next,
-                        onChanged: (value) =>
-                            _.updateUserCompanyLocation(value, value),
+                        onChanged: (value) => _.userModel!.location = value,
                       )
                     ],
                   ))
@@ -361,7 +356,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                       children: [
                         Obx(() {
                           return Text(
-                              "Your company matriculate : ${_.userModel.value.matriculation}");
+                              "Your company matriculate : ${_.userModel!.matriculation}");
                         }),
                         const SizedBox(),
                         TextFormField(
@@ -376,11 +371,10 @@ class AddCompanyView extends GetView<AddCompanyController> {
                             return null;
                           },
                           onSaved: (value) {
-                            _.userModel.value.matriculation = value;
+                            _.userModel!.matriculation = value;
                           },
                           onEditingComplete: () => TextInputAction.next,
-                          onChanged: (value) =>
-                              _.updateUserCompanyIdentity(value, value),
+                          onChanged: (value) => _.userModel!.matriculation = value,
                         ),
                       ],
                     ))
@@ -416,7 +410,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                     children: [
                       Obx(() {
                         return Text(
-                            "Your company specialisation is : ${_.userModel.value.specialisation}");
+                            "Your company specialisation is : ${_.userModel!.specialisation}");
                       }),
                       const SizedBox(),
                       TextFormField(
@@ -431,11 +425,10 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           return null;
                         },
                         onSaved: (value) {
-                          _.userModel.value.specialisation = value;
+                          _.userModel!.specialisation = value;
                         },
                         onEditingComplete: () => TextInputAction.next,
-                        onChanged: (value) =>
-                            _.updateUserCompanySpeciality(value, value),
+                        onChanged: (value) => _.userModel!.specialisation = value,
                       ),
                     ],
                   ))
@@ -473,7 +466,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                   children: [
                     Obx(() {
                       return Text(
-                          "Your company activity is : ${_.userModel.value.activity}");
+                          "Your company activity is : ${_.userModel!.activity}");
                     }),
                     const SizedBox(),
                     TextFormField(
@@ -488,11 +481,10 @@ class AddCompanyView extends GetView<AddCompanyController> {
                         return null;
                       },
                       onSaved: (value) {
-                        _.userModel.value.activity = value;
+                        _.userModel!.activity = value;
                       },
                       onEditingComplete: () => TextInputAction.next,
-                      onChanged: (value) =>
-                          _.updateUserCompanyActivity(value, value),
+                      onChanged: (value) => _.userModel!.activity = value,
                     )
                   ],
                 ))
@@ -532,7 +524,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                       children: [
                         Obx(() {
                           return Text(
-                              "Your company name's : ${_.userModel.value.companyName}");
+                              "Your company name's : ${_.userModel!.companyName}");
                         }),
                         const SizedBox(),
                         TextFormField(
@@ -541,12 +533,9 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           decoration: const InputDecoration(
                               labelText: 'Company Name', filled: true),
                           validator: (value) => _.validateName(value!),
-                          onSaved: (value) => _.userModel.update(
-                            (user) => user?.companyName = value,
-                          ),
+                          onSaved: (value) => _.userModel!.companyName = value,
                           onEditingComplete: () => TextInputAction.next,
-                          onChanged: (value) =>
-                              _.updateUserCompanyName(value, value),
+                          onChanged: (value) => _.userModel!.companyName = value,
                         ),
                         const SizedBox(),
                       ],
