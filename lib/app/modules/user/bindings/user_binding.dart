@@ -7,7 +7,7 @@ class UserBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<UserController>(
-      () => UserController(userProvider: Get.find()),
+      () => UserController(),
     );
     Get.lazyPut<UserProvider>(
       () => UserProvider(),

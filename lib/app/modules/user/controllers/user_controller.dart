@@ -3,8 +3,12 @@ import 'package:egot_services/app/modules/user/providers/user_provider.dart';
 import 'package:get/get.dart';
 
 class UserController extends SuperController<List<UserModel>> {
-  final UserProvider? userProvider;
-  UserController({required this.userProvider});
+  final userProvider = UserProvider();
+  final _userModel = UserModel().obs;
+
+  UserModel? get user => _userModel.value;
+
+  set user(UserModel? value) => _userModel.value = value!;
 
   @override
   void onInit() {
@@ -40,8 +44,12 @@ class UserController extends SuperController<List<UserModel>> {
     // TODO: implement onResumed
   }
 
+  void clear() {
+    _userModel.value = UserModel();
+  }
+
   void findAllUsers() {
-    userProvider!.getAllUsers().then((result) {
+    userProvider.getAllUsers().then((result) {
       List<UserModel>? data = result.body;
 
       change(data, status: RxStatus.success());

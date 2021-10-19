@@ -1,4 +1,7 @@
 import 'package:egot_services/app/models/user_model.dart';
+import 'package:egot_services/app/modules/AddCompany/controllers/add_company_controller.dart';
+import 'package:egot_services/app/modules/AddCompany/views/add_company_view.dart';
+import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +15,10 @@ class CompanyCardView extends GetView<CompanyCardController> {
 
   @override
   Widget build(BuildContext context) {
-    return buildNewCompanyCard();
+    return InkWell(
+      onTap: () => Get.to(() => const AddCompanyView()),
+        child: buildNewCompanyCard()
+    );
   }
 
   TextStyle get textStyleName {

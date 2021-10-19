@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
 
 class RxUserModel {
-  final id = 0.obs;
+  final id = '0'.obs;
   final companyName = 'companyName'.obs;
   final status = 'status'.obs;
   final activity = 'activity'.obs;

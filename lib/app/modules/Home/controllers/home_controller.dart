@@ -1,6 +1,6 @@
 import 'package:egot_services/app/models/menus_model.dart';
 import 'package:egot_services/app/models/use_x_models.dart';
-import 'package:egot_services/app/modules/Register/controllers/register_controller.dart';
+import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,7 +25,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     print('>>> HomeController init');
-    userModel = RegisterController().userModel.value;
+    userModel = UserController().user;
 
     super.onInit();
   }

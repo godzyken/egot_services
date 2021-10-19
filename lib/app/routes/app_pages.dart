@@ -31,6 +31,8 @@ import 'package:egot_services/app/modules/SketchMyWishes/bindings/sketch_my_wish
 import 'package:egot_services/app/modules/SketchMyWishes/views/sketch_my_wishes_view.dart';
 import 'package:egot_services/app/modules/archives/bindings/archives_binding.dart';
 import 'package:egot_services/app/modules/archives/views/archives_view.dart';
+import 'package:egot_services/app/modules/auth/bindings/auth_binding.dart';
+import 'package:egot_services/app/modules/auth/views/auth_view.dart';
 import 'package:egot_services/app/modules/presentation/bindings/presentation_binding.dart';
 import 'package:egot_services/app/modules/presentation/views/presentation_view.dart';
 import 'package:egot_services/app/modules/user/bindings/user_binding.dart';
@@ -134,6 +136,11 @@ class AppPages {
       name: _Paths.USER,
       page: () => UserView(),
       binding: UserBinding(),
+    ),
+    GetPage(
+      name: _Paths.AUTH,
+      page: () => AuthView(),
+      binding: AuthBinding(),
     ),
   ];
 }

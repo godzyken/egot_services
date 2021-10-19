@@ -1,17 +1,54 @@
 import 'package:egot_services/app/models/use_x_models.dart';
+import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:getxfire/getxfire.dart';
 
-class RegisterServices {
+class RegisterServices extends GetConnect {
+  static RegisterServices get to => Get.find();
   final _firestore = GetxFire.firestore;
+
+  var user = Get.find<AuthController>().user;
 
   // Section ['Users']
   Future<bool> createNewUser(UserModel? userModel) async {
     try {
-      await _firestore.createData(
-          collection: "users", data: UserModel().toJson(), id: userModel!.id);
-      return true;
+      return await _firestore.createData(
+          collection: "users",
+          data: UserModel().toJson(),
+          id: userModel!.id,
+          isErrorDialog: true,
+          onError: (code) {
+            GetxFire.openDialog.messageError('Erreur message1: ${code}',
+                title: 'Erreur connection database',
+                duration: const Duration(seconds: 10));
+          });
     } catch (e) {
-      print(e);
+      print('Create user failed $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateUser(UserModel? userModel) async {
+    print('thheeee brrrooout2');
+
+    try {
+      print('thheeee brrrooout3');
+      if (user!.uid.isCurrency){
+        print('thheeee brrrooout5');
+
+        var newUser = user?.updateDisplayName(userModel!.companyName);
+        print('User: $newUser');
+        user?.updateEmail(userModel!.email);
+
+        user?.getIdToken();
+
+        return true;
+      }
+      return false;
+    } on FirebaseAuthException catch (code, e) {
+      print('Create user failed ${code.message}');
+      GetxFire.openDialog.messageError('Erreur message: ${code.code}',
+          title: 'Erreur connection database $e}',
+          duration: const Duration(seconds: 10));
       return false;
     }
   }
@@ -83,10 +120,7 @@ class RegisterServices {
   Future<void> updateAgent(bool newAgent, String? uid, String? agentId) async {
     try {
       await _firestore.updateData(
-          collection: "users/agents",
-          id: uid,
-          data: UserModel().toJson()
-      );
+          collection: "users/agents", id: uid, data: UserModel().toJson());
     } catch (e) {
       print(e);
       rethrow;
@@ -97,7 +131,9 @@ class RegisterServices {
   Future<bool> createContact(ContactModel? contactModel) async {
     try {
       await _firestore.createData(
-          collection: "contacts", data: ContactModel().toJson(), id: contactModel!.id);
+          collection: "contacts",
+          data: ContactModel().toJson(),
+          id: contactModel!.id);
       return true;
     } catch (e) {
       print(e);

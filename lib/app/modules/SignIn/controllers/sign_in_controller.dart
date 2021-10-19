@@ -1,6 +1,7 @@
 import 'package:egot_services/app/helpers/show_loading.dart';
-import 'package:egot_services/app/modules/Register/controllers/user_controller.dart';
+import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
+import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,8 @@ import 'package:getxfire/getxfire.dart';
 
 class SignInController extends GetxController {
   static SignInController? get to => Get.find();
+
+  final firebaseAuth = AuthController().auth;
 
   bool success = false;
   bool showAuthSecretTextField = false;
@@ -20,7 +23,6 @@ class SignInController extends GetxController {
 
   User? user;
 
-  FirebaseAuth firebaseAuth = GetxFire.auth;
 
   final nameController = TextEditingController();
   final urlController = TextEditingController();
@@ -121,6 +123,50 @@ class SignInController extends GetxController {
     }
   }
 
+  signInWithEmailAndPassword() async {
+    return await GetxFire.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+        isSuccessDialog: true,
+        isErrorDialog: true,
+        onSuccess: onSuccess,
+        onError: onErrorCatch);
+  }
+
+  onErrorCatch(code, message) {
+    if (code == 'email-already-in-use') {
+      GetxFire.openDialog.messageError(message!);
+      Get.toNamed('/sign-in');
+    } else {
+      GetxFire.openDialog.messageError(code);
+    }
+    if (code == 'invalid-email') {
+      GetxFire.openDialog.messageError('Elooot: $message');
+      GetxFire.currentUser?.delete();
+    } else {
+      GetxFire.openDialog.messageError(code);
+    }
+  }
+
+  onSuccess(userCredential) async {
+    if (userCredential!.user != null) {
+      isRegister.value = true;
+      GetxFire.openDialog.messageSuccess('on success login: $userCredential', title: 'userCredential', duration: const Duration(seconds: 12));
+
+      /*  await GetxFire.firestore.createData(
+        collection: 'users',
+        id: AddCompanyController().userModel.value.id,
+        data: UserModel().toJson(),
+        onError: (message) => dialogError(message),
+        isErrorDialog: true,
+      );*/
+
+      update();
+    } else {
+      isRegister.value = false;
+    }
+  }
+
   Future<void> signInAnonymously() async {
     await GetxFire.signInAnonymously(onSuccess: (userCredential) {
       print('Signed in Anonymously as user ${userCredential!.user!.uid}');
@@ -158,18 +204,6 @@ class SignInController extends GetxController {
     }
   }
 
-  signInWithEmailAndPassword() async {
-    return await GetxFire.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-        onSuccess: (userCredential) {
-          return '${userCredential!.user!.email} signed in';
-        },
-        onError: (code, message) {
-          return 'Failed to sign in with Email & Password\n$message';
-        });
-  }
-
   Future<void> _signInWithGoogle(context) async {
     await GetxFire.signInWithGoogle(onSuccess: (userCredential) {
       final user = userCredential!.user;
@@ -191,7 +225,7 @@ class SignInController extends GetxController {
       final AuthCredential credential = FacebookAuthProvider.credential(
         tokenController.text,
       );
-      final  user = (await firebaseAuth.signInWithCredential(credential)).user;
+      final user = (await firebaseAuth.signInWithCredential(credential)).user;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -239,7 +273,6 @@ class SignInController extends GetxController {
   }
 
   handleRadioButtonSelected(int? value) {
-
     selection = value!;
 
     switch (selection) {
@@ -278,5 +311,5 @@ class SignInController extends GetxController {
           update();
         }
     }
-}
+  }
 }

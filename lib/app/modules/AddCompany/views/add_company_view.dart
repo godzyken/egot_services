@@ -1,7 +1,7 @@
 import 'package:egot_services/app/modules/AddCompany/controllers/assurance_controller.dart';
-import 'package:egot_services/app/modules/Register/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 
 import 'package:get/get.dart';
@@ -23,6 +23,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
       ),
       body: GetBuilder<AddCompanyController>(
           init: AddCompanyController(),
+          initState: (state) => controller.registerServices,
           builder: (_) {
             return Form(
               // key: _.formKeys[_.formKeys.length - 1].currentState!.widget.key,
@@ -34,7 +35,10 @@ class AddCompanyView extends GetView<AddCompanyController> {
                     controller: _.pageController,
                     scrollDirection: Axis.horizontal,
                     pageSnapping: true,
-                    onPageChanged: (value) => _.companyNameController.value,
+                    onPageChanged: (value) {
+                      _.pageChanged.value = value;
+                      print('Page numero: ${_.pageChanged.value}');
+                    },
                     children: [
                       buildCompanyName(_),
                       buildActivity(_),
@@ -64,8 +68,13 @@ class AddCompanyView extends GetView<AddCompanyController> {
           icon: Icons.add_business,
           iconColor: Colors.tealAccent,
           backgroundColor: Colors.lightBlue,
-          text: 'Register',
-          onPressed: () => Get.to(const RegisterView())),
+          text: 'save',
+          // onPressed: () => Get.to(const RegisterView())),
+          onPressed: () {
+            print('thheeee brrrooout1');
+            _.registerServices.updateUser(_.user);
+            // _.createNewUser();
+          }),
     );
   }
 
@@ -115,39 +124,42 @@ class AddCompanyView extends GetView<AddCompanyController> {
                         },
                         onEditingComplete: () => TextInputAction.next,
                         onChanged: (value) =>
-                            _.updateUserCompanyAssurance(value, value),
+                            _.userModel.update((val) {
+                              val!.assurance = value;
+                            }),
                       ),
                       const SizedBox(),
-                      Container(
-                          child: _.assuranceC!.provider.allowAutoSignedCert
-                              ? Center(
-                                  child: _.assuranceC!.obx((state) =>
-                                      ListView.separated(
-                                          itemBuilder: (context, index) {
-                                            final Assurance assurance =
-                                                state![index];
-                                            return ListTile(
-                                              onTap: () => Get.toNamed(
-                                                  '/add-company',
-                                                  arguments: assurance),
-                                              title:
-                                                  Text("\$${assurance.name}"),
-                                              trailing: Text(
-                                                  "\$${assurance.organizationsUrl}"),
-                                              leading: AssuranceImage(
-                                                  assurance: assurance),
-                                            );
-                                          },
-                                          separatorBuilder: (context, index) =>
-                                              Divider(
-                                                color:
-                                                    context.theme.disabledColor,
-                                              ),
-                                          itemCount: state!.length)),
-                                )
-                              : const Center(
-                                  child: CircularProgressIndicator(),
-                                ))
+                      // Container(
+                      //     child: _.assuranceC!.provider.allowAutoSignedCert
+                      //     ? const Center(
+                      //             child: CircularProgressIndicator(),
+                      //           )
+                      //         : Center(
+                      //       child: _.assuranceC!.obx((state) =>
+                      //           ListView.separated(
+                      //               itemBuilder: (context, index) {
+                      //                 final Assurance assurance =
+                      //                 state![index];
+                      //                 return ListTile(
+                      //                   onTap: () => Get.toNamed(
+                      //                       '/add-company',
+                      //                       arguments: assurance),
+                      //                   title:
+                      //                   Text("\$${assurance.name}"),
+                      //                   trailing: Text(
+                      //                       "\$${assurance.organizationsUrl}"),
+                      //                   leading: AssuranceImage(
+                      //                       assurance: assurance),
+                      //                 );
+                      //               },
+                      //               separatorBuilder: (context, index) =>
+                      //                   Divider(
+                      //                     color:
+                      //                     context.theme.disabledColor,
+                      //                   ),
+                      //               itemCount: state!.length)),
+                      //     )
+                      // )
                     ],
                   ))
             ]),
@@ -188,20 +200,19 @@ class AddCompanyView extends GetView<AddCompanyController> {
                       const SizedBox(),
                       TextFormField(
                         controller: _.lengthController.value,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         decoration: const InputDecoration(
                             labelText: 'Company length', filled: true),
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your company size';
-                          }
-                          return null;
-                        },
+                        validator: (value) => _.validateNum(value!),
                         onSaved: (value) {
-                          _.userModel.value.length = value;
+                          _.userModel.value.length = int.parse(value!);
                         },
                         onEditingComplete: () => TextInputAction.next,
-                        onChanged: (value) =>
-                            _.updateUserCompanyLength(value, value),
+                        onChanged: (value) => _.updateUserCompanyLength(
+                            int.parse(value), int.parse(value)),
                       ),
                     ],
                   ))
@@ -521,7 +532,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                       children: [
                         Obx(() {
                           return Text(
-                              "Your company name's is : ${_.userModel.value.companyName}");
+                              "Your company name's : ${_.userModel.value.companyName}");
                         }),
                         const SizedBox(),
                         TextFormField(
@@ -529,15 +540,10 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           textAlign: TextAlign.center,
                           decoration: const InputDecoration(
                               labelText: 'Company Name', filled: true),
-                          validator: (String? value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your company name';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _.userModel.value.companyName = value;
-                          },
+                          validator: (value) => _.validateName(value!),
+                          onSaved: (value) => _.userModel.update(
+                            (user) => user?.companyName = value,
+                          ),
                           onEditingComplete: () => TextInputAction.next,
                           onChanged: (value) =>
                               _.updateUserCompanyName(value, value),

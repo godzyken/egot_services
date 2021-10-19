@@ -20,62 +20,60 @@ class ArchivesView extends GetView<ArchivesController> {
             title: const Text('Archives View'),
             centerTitle: true,
           ),
-          body: Container(
-            child: Stack(
-              children: [
-                ARView(
-                  showPlatformType: _.modelChoiceActive,
-                  onARViewCreated: _.onARViewCreated,
-                  permissionPromptDescription: "Camera permission must be given to the app for AR functions to work",
-                  permissionPromptParentalRestriction: "Camera permission is restriced by the OS, please check parental control settings",
-                  planeDetectionConfig:
-                      PlaneDetectionConfig.horizontalAndVertical,
+          body: Stack(
+            children: [
+              ARView(
+                showPlatformType: _.modelChoiceActive,
+                onARViewCreated: _.onARViewCreated,
+                permissionPromptDescription: "Camera permission must be given to the app for AR functions to work",
+                permissionPromptParentalRestriction: "Camera permission is restriced by the OS, please check parental control settings",
+                planeDetectionConfig:
+                    PlaneDetectionConfig.horizontalAndVertical,
+              ),
+              Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                        onPressed: _.onRemoveEverythinh,
+                        child: const Text("Remove Everything")),
+                  ],
                 ),
-                Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                          onPressed: _.onRemoveEverythinh,
-                          child: const Text("Remove Everything")),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: FractionalOffset.topCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Visibility(
-                        child: ElevatedButton(
-                          onPressed: _.onUploadButtonPressed,
-                          child: const Text("Upload"),
-                        ),
-                        visible: _.readyToUpload,
+              ),
+              Align(
+                alignment: FractionalOffset.topCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Visibility(
+                      child: ElevatedButton(
+                        onPressed: _.onUploadButtonPressed,
+                        child: const Text("Upload"),
                       ),
-                      Visibility(
-                        child: ElevatedButton(
-                          onPressed: _.onDownloadButtonPressed,
-                          child: const Text("Download"),
-                        ),
-                        visible: _.readyToDownload,
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: FractionalOffset.centerLeft,
-                  child: Visibility(
-                    visible: _.modelChoiceActive,
-                    child: ModelSelectionWidget(
-                      onTap: _.onModelSelected,
-                      firebaseManager: _.firebaseManager
+                      visible: _.readyToUpload,
                     ),
+                    Visibility(
+                      child: ElevatedButton(
+                        onPressed: _.onDownloadButtonPressed,
+                        child: const Text("Download"),
+                      ),
+                      visible: _.readyToDownload,
+                    ),
+                  ],
+                ),
+              ),
+              Align(
+                alignment: FractionalOffset.centerLeft,
+                child: Visibility(
+                  visible: _.modelChoiceActive,
+                  child: ModelSelectionWidget(
+                    onTap: _.onModelSelected,
+                    firebaseManager: _.firebaseManager
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },

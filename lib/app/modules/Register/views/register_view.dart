@@ -1,5 +1,6 @@
 import 'package:egot_services/app/modules/AddCompany/controllers/add_company_controller.dart';
 import 'package:egot_services/app/modules/CompanyCard/views/company_card_view.dart';
+import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_signin_button/button_builder.dart';
@@ -20,6 +21,7 @@ class RegisterView extends GetView<RegisterController> {
       ),
       body: GetBuilder<RegisterController>(
           init: RegisterController(),
+          initState: (state) => RegisterServices(),
           autoRemove: true,
           builder: (_) {
             return Form(
@@ -44,30 +46,20 @@ class RegisterView extends GetView<RegisterController> {
                       TextFormField(
                         controller: _.emailController.value,
                         decoration: const InputDecoration(labelText: 'Email'),
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          return null;
-                        },
+                        validator: (value) => _.validateEmail(value!),
                         onEditingComplete: () =>
                             GetUtils.isEmail(_.emailController.value.text)
                                 ? "Email OK!"
                                 : "this isn't a valid email",
                         onSaved: (value) {
-                          _.userModel.value.email = value;
+                          _.userModel!.email = value;
                         },
                       ),
                       TextFormField(
                         controller: _.passwordController.value,
-                        decoration:
-                            const InputDecoration(labelText: 'Password'),
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
+                        decoration: const InputDecoration(labelText: 'Password'),
+                        onSaved: (value) => _.passwordController.value.text = value!,
+                        validator: (value) => _.validatePassword(value!),
                         obscureText: true,
                       ),
                       Obx(() {
@@ -81,7 +73,7 @@ class RegisterView extends GetView<RegisterController> {
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         alignment: Alignment.center,
-                        child: _.auth.currentUser != null ? Text('${_.auth.currentUser!.displayName}') : SignInButtonBuilder(
+                        child: SignInButtonBuilder(
                           icon: Icons.add_business,
                           backgroundColor: Colors.blueGrey,
                           text: 'Register',
@@ -97,10 +89,10 @@ class RegisterView extends GetView<RegisterController> {
                       ),
                       Container(
                         alignment: Alignment.center,
-                        child: Text(_.success == null
+                        child: Text(_.isSignIn == null
                             ? ''
-                            : (_.success.isTrue
-                                ? 'Successfully registered ${_.userModel.value.email}'
+                            : (_.isSignIn.isTrue
+                                ? 'Successfully registered ${_.userModel!.email}'
                                 : 'Registration failed')),
                       )
                     ],

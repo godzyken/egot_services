@@ -1,4 +1,4 @@
-import 'package:egot_services/app/modules/Register/controllers/user_controller.dart';
+import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:get/get.dart';
 
 import '../controllers/sign_in_controller.dart';

@@ -1,7 +1,9 @@
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/AddCompany/controllers/add_company_controller.dart';
+import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
-import 'package:egot_services/app/routes/app_pages.dart';
+import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
+import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,20 +14,14 @@ class RegisterController extends GetxController {
   static RegisterController? get to => Get.find();
 
   AddCompanyController? addCompanyC;
+  final _registerServices = RegisterServices();
 
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
+  final firebaseAuthController = SignInController().obs;
 
-  final firebaseAuthController = SignInController();
-
-  final success = false.obs;
-
-  final userModel = UserModel().obs;
-
-  // final firebaseUser = Rxn<User>();
-  // final fireStoreUser = Rxn<UserModel>();
-  // final connect = GetxFire.firestore;
-  final auth = GetxFire.auth;
+  final authC = AuthController();
+  UserModel? get userModel => Get.find<UserController>().user;
 
   final Map<String, String> _dataUserCompany = {
     'email': 'isgodzy@gmail.com',
@@ -44,7 +40,6 @@ class RegisterController extends GetxController {
   var isSignIn = false.obs;
   var rememberme = false.obs;
 
-  Stream<User?> get user => GetxFire.userChanges();
 
   bool shouldPop = true;
 
@@ -56,16 +51,13 @@ class RegisterController extends GetxController {
   void onInit() {
     addCompanyC = AddCompanyController();
 
+
     super.onInit();
   }
 
   @override
   void onReady() async {
     ever(isSignIn, handleAuthChanged);
-    isSignIn.value = auth.currentUser != null;
-    auth.authStateChanges().listen((event) {
-      isSignIn.value = event != null;
-    });
 
     update();
 
@@ -82,24 +74,85 @@ class RegisterController extends GetxController {
     );
   }
 
+  /*void checkLogin() {
+    final isValid = loginFormKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    loginFormKey.currentState!.save();
+  }*/
+
+  String? validateEmail(String value) {
+    if (!GetUtils.isEmail(value)) {
+      return "Provide valid Email";
+    }
+    return null;
+  }
+
+  String? validatePassword(String value) {
+    if (value.length < 8) {
+      return "Password is too short";
+    }
+    return null;
+  }
+
   Future<void> register() async {
-    await GetxFire.createUserWithEmailAndPassword(
-        email: emailController.value.text,
-        password: passwordController.value.text,
-        isSuccessDialog: true,
-        onSuccess: (userCredential) {
-          if (userCredential!.user != null) {
 
-            isSignIn.value = true;
+    try {
+      if (await authC.connectToFirebase().then((value) => isSignIn.value = value!)) {
 
-            update();
-          } else {
-            success.value = false;
-          }
-        },
-        onError: (code, message) {
-          GetxFire.openDialog.messageError(message!);
-        });
+
+        await authC.createUser(userModel!.companyName,
+            emailController.value.text, passwordController.value.text);
+        print('create User With Email And Password! ${authC.auth}');
+      } else {
+        print('error de connection!');
+        return;
+      }
+    } on FirebaseAuthException catch (code, e) {
+
+      print('code: ${code.toString()}');
+      Get.snackbar(
+        "Error creating Account : ${code.code}",
+        'Erreur code 1: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 30),
+      );
+    }
+  }
+
+  onErrorCatch(code, message) {
+    if (code == 'email-already-in-use') {
+      GetxFire.openDialog.messageError(message!);
+      Get.toNamed('/sign-in');
+    } else {
+      GetxFire.openDialog.messageError(code);
+    }
+    if (code == 'invalid-email') {
+      GetxFire.openDialog.messageError('Elooot: $message');
+      GetxFire.currentUser?.delete();
+    } else {
+      GetxFire.openDialog.messageError(code);
+    }
+  }
+
+  onSuccess(userCredential) async {
+    if (userCredential!.user != null) {
+      isSignIn.value = true;
+      GetxFire.openDialog.messageSuccess(userCredential);
+
+      /*  await GetxFire.firestore.createData(
+        collection: 'users',
+        id: AddCompanyController().userModel.value.id,
+        data: UserModel().toJson(),
+        onError: (message) => dialogError(message),
+        isErrorDialog: true,
+      );*/
+
+      update();
+    } else {
+      isSignIn.value = false;
+    }
   }
 
   autoLogin() {
@@ -158,13 +211,11 @@ class RegisterController extends GetxController {
 
   handleAuthChanged(isLoggedIn) {
     if (isLoggedIn) {
-      Get.offAndToNamed(Routes.HOME);
+      Get.toNamed('/home');
 
-      isSignIn.value = true;
       update();
     } else {
       Get.until((route) => Get.currentRoute == '/register');
     }
   }
-
 }

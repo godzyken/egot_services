@@ -49,6 +49,7 @@ class ArchivesController extends GetxController {
 
   @override
   void onReady() {
+    onARViewCreated(arSessionManager, arObjectManager, arAnchorManager, arLocationManager);
     super.onReady();
 
   }
@@ -68,22 +69,21 @@ class ArchivesController extends GetxController {
     return _platformVersion = platformVersion;
   }
 
-
   onARViewCreated(
-      ARSessionManager arSessionManager,
-      ARObjectManager arObjectManager,
-      ARAnchorManager arAnchorManager,
-      ARLocationManager arLocationManager,
+      ARSessionManager? arSessionManager,
+      ARObjectManager? arObjectManager,
+      ARAnchorManager? arAnchorManager,
+      ARLocationManager? arLocationManager,
       ) {
     arSessionManager = arSessionManager;
     arObjectManager = arObjectManager;
     arAnchorManager = arAnchorManager;
     arLocationManager = arLocationManager;
 
-    arSessionManager.onInitialize();
+    arSessionManager!.onInitialize();
 
-    arObjectManager.onInitialize();
-    arAnchorManager.initGoogleCloudAnchorMode();
+    arObjectManager!.onInitialize();
+    arAnchorManager!.initGoogleCloudAnchorMode();
 
     arSessionManager.onPlaneOrPointTap = onPlaneOrPointTapped;
     arObjectManager.onNodeTap = onNodeTapped;
@@ -130,7 +130,7 @@ class ArchivesController extends GetxController {
             break;
           }
       }
-      arSessionManager.onError(error.toString());
+      arSessionManager!.onError(error.toString());
     });
   }
 
@@ -197,8 +197,10 @@ class ArchivesController extends GetxController {
     firebaseManager.uploadAnchor(anchor,
         currentLocation: arLocationManager!.currentLocation);
     if (anchor is ARPlaneAnchor) {
-      anchor.childNodes.forEach((nodeName) => firebaseManager.uploadObject(
-          nodes.firstWhere((element) => element.name == nodeName)));
+      for (var nodeName in anchor.childNodes) {
+        firebaseManager.uploadObject(
+          nodes.firstWhere((element) => element.name == nodeName));
+      }
     }
     readyToDownload = true;
     readyToUpload = false;

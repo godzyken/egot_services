@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
 
+import 'firebase_option.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetxFire.init();
+  await GetxFire.init(
+    name: 'egot_services',
+    options: firebaseOptions,
+  );
 
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,

@@ -1,5 +1,6 @@
 import 'package:egot_services/app/modules/Register/bindings/register_binding.dart';
 import 'package:egot_services/app/modules/Register/controllers/register_controller.dart';
+import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:egot_services/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,14 +13,16 @@ class EnsureAuthMiddleware extends GetMiddleware {
     GetMiddleware(priority: 4),
     GetMiddleware(priority: -8),
   ];
-  final authServices = RegisterController();
+  final authServices = AuthController();
 
   int? get priority => 2;
 
 
+  var isSignIn = false.obs;
   @override
   RouteSettings? redirect(String? route) {
-    return authServices.isSignIn.value == false || route == Routes.REGISTER
+    print('route: $route');
+    return isSignIn.value == authServices.isSignIn.isFalse || route == Routes.REGISTER
         ? null
         : RouteSettings(name: Routes.REGISTER, arguments: authServices.isSignIn.value);
   }
@@ -94,8 +97,9 @@ class EnsureProfileMiddleware extends GetMiddleware {
 
   @override
   RouteSettings? redirect(String? route) {
-    final authServices = RegisterController();
+    final authServices = AuthController();
     if (isProfileSet.value == authServices.isSignIn.isFalse) {
+      print('redirecte to: ${authServices.isSignIn.value}');
       return const RouteSettings(name: Routes.HOME);
     }
   }

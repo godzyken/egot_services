@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 
 class AssuranceController extends GetxController
     with StateMixin<List<Assurance>> {
+
   static AssuranceController? get to => Get.find();
   final provider = AssuranceProvider();
 
   final assurance = Assurance().obs;
-
 
   @override
   void onInit() {
