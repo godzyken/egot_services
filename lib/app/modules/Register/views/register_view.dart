@@ -89,7 +89,7 @@ class RegisterView extends GetView<RegisterController> {
                       ),
                       Container(
                         alignment: Alignment.center,
-                        child: Text(_.isSignIn == null
+                        child: Text(_.isSignIn.isFalse
                             ? ''
                             : (_.isSignIn.isTrue
                                 ? 'Successfully registered ${_.userModel!.email}'
@@ -204,7 +204,7 @@ class RegisterView extends GetView<RegisterController> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 0.5, horizontal: 0.5),
                     child: Text(
-                      'Activité(s) :',
+                      'Activity :',
                       style: textStyleCell,
                     ),
                   ),

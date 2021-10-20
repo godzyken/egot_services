@@ -23,7 +23,6 @@ class SignInController extends GetxController {
 
   User? user;
 
-
   final nameController = TextEditingController();
   final urlController = TextEditingController();
   final emailController = TextEditingController();
@@ -61,21 +60,54 @@ class SignInController extends GetxController {
     print('$uid has successfully signed out.');
   }
 
+  onErrorCatch(code, message) {
+    if (code == 'email-already-in-use') {
+      GetxFire.openDialog.messageError('Maa ké passa : $message',
+          title: 'Error Create User: ${code.code}',
+          duration: const Duration(seconds: 12));
+      Get.toNamed('/sign-in');
+    } else {
+      GetxFire.openDialog.messageError('Maa ké passu : $message',
+          title: 'Error Create User: ${code.code}',
+          duration: const Duration(seconds: 12));
+    }
+    if (code == 'invalid-email') {
+      GetxFire.openDialog.messageError('Maa ké passi : $message',
+          title: 'Error Create User: ${code.code}',
+          duration: const Duration(seconds: 12));
+      GetxFire.currentUser?.delete();
+    } else {
+      GetxFire.openDialog.messageError('Maa ké passo : $message',
+          title: 'Error Create User: ${code.code}',
+          duration: const Duration(seconds: 12));
+    }
+  }
+
+  onSuccess(userCredential) async {
+    if (userCredential!.user != null) {
+      isRegister.value = true;
+      GetxFire.openDialog.messageSuccess('on success login: $userCredential',
+          title: 'userCredential', duration: const Duration(seconds: 12));
+
+      update();
+    } else {
+      isRegister.value = false;
+    }
+  }
+
+
   login(context) async {
     try {
       showLoading();
-      await GetxFire.signInWithGoogle(onSuccess: (userCredential) {
-        final user = userCredential!.user;
-
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Sign In ${user!.uid} with Google')));
-      }, onError: (code, message) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to sign in with Google: $message'),
-        ));
-      });
-    } catch (e) {
-      debugPrint(e.toString());
+      await GetxFire.signInWithGoogle(
+          onSuccess: onSuccess, onError: onErrorCatch);
+    } on FirebaseAuthException catch (code, e) {
+      print('Error login code: $e');
+      GetxFire.openDialog.messageError(
+        "Error Login to your Account : ${code.message}",
+        title: 'Error login 1: ${code.code}',
+        duration: const Duration(seconds: 30),
+      );
     }
   }
 
@@ -86,9 +118,13 @@ class SignInController extends GetxController {
           password: passwordController.text);
       Get.find<UserController>().user =
           await RegisterServices().getUser(_authResult.user!.uid);
-    } catch (e) {
-      Get.snackbar("Error signing in", e.toString(),
-          snackPosition: SnackPosition.BOTTOM);
+
+    } on FirebaseAuthException catch (code, e) {
+      print('wattttata: $e');
+      GetxFire.openDialog.messageError(
+          'Wats wrong? : ${code.message}',
+          title: 'Error during login Wep: ${code.code}',
+          duration: const Duration(seconds: 12));
     }
   }
 
@@ -97,12 +133,22 @@ class SignInController extends GetxController {
       await firebaseAuth.signOut();
       Get.find<UserController>().clear();
       GetxFire.signOut();
-    } catch (e) {
-      Get.snackbar("Error signing out", e.toString(),
-          snackPosition: SnackPosition.BOTTOM);
+
+      GetxFire.openDialog.messageSuccess(
+          'Ciao banbino',
+          title: 'logout success',
+          duration: const Duration(seconds: 12));
+
+    } on FirebaseAuthException catch (code, e) {
+      print('Error logout: $e');
+      GetxFire.openDialog.messageError(
+          'Maa ké zako : $e',
+          title: 'Error during logout: ${code.code}',
+          duration: const Duration(seconds: 12));
     }
   }
 
+  // TODO: sign in provider.
   signInWithOtherProvider() {
     switch (selection) {
       case 0:
@@ -123,6 +169,7 @@ class SignInController extends GetxController {
     }
   }
 
+  // TODO: sign in with Email & Password.
   signInWithEmailAndPassword() async {
     return await GetxFire.signInWithEmailAndPassword(
         email: emailController.text,
@@ -133,49 +180,13 @@ class SignInController extends GetxController {
         onError: onErrorCatch);
   }
 
-  onErrorCatch(code, message) {
-    if (code == 'email-already-in-use') {
-      GetxFire.openDialog.messageError(message!);
-      Get.toNamed('/sign-in');
-    } else {
-      GetxFire.openDialog.messageError(code);
-    }
-    if (code == 'invalid-email') {
-      GetxFire.openDialog.messageError('Elooot: $message');
-      GetxFire.currentUser?.delete();
-    } else {
-      GetxFire.openDialog.messageError(code);
-    }
-  }
-
-  onSuccess(userCredential) async {
-    if (userCredential!.user != null) {
-      isRegister.value = true;
-      GetxFire.openDialog.messageSuccess('on success login: $userCredential', title: 'userCredential', duration: const Duration(seconds: 12));
-
-      /*  await GetxFire.firestore.createData(
-        collection: 'users',
-        id: AddCompanyController().userModel.value.id,
-        data: UserModel().toJson(),
-        onError: (message) => dialogError(message),
-        isErrorDialog: true,
-      );*/
-
-      update();
-    } else {
-      isRegister.value = false;
-    }
-  }
-
+  // TODO: sign in with Github.
   Future<void> signInAnonymously() async {
-    await GetxFire.signInAnonymously(onSuccess: (userCredential) {
-      print('Signed in Anonymously as user ${userCredential!.user!.uid}');
-    }, onError: (code, message) {
-      print('Failed to sign in Anonymously\n$message');
-    });
+    await GetxFire.signInAnonymously(
+        onSuccess: onSuccess, onError: onErrorCatch);
   }
 
-  // Example code of how to sign in with Github.
+  // TODO: sign in with Github.
   Future<void> _signInWithGithub(context) async {
     try {
       UserCredential userCredential;
@@ -191,35 +202,30 @@ class SignInController extends GetxController {
 
       final user = userCredential.user;
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Sign In ${user!.uid} with GitHub'),
-      ));
-    } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to sign in with GitHub: $e'),
-        ),
-      );
+      GetxFire.openDialog.messageSuccess(
+          'your User account on : ${user!.displayName}',
+          title: 'Create github User successfully: ${user.email}',
+          duration: const Duration(seconds: 12));
+    } on FirebaseAuthException catch (code, e) {
+      print('Failed to github log error: $e');
+
+      GetxFire.openDialog.messageError(
+          'Failed to sign in, Error: ${code.message}',
+          title: 'GitHub login error: ${code.code}',
+          duration: const Duration(seconds: 12));
     }
   }
 
+  // TODO: sign in with Google.
   Future<void> _signInWithGoogle(context) async {
-    await GetxFire.signInWithGoogle(onSuccess: (userCredential) {
-      final user = userCredential!.user;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Sign In ${user!.uid} with Google'),
-      ));
-    }, onError: (code, message) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to sign in with Google: $message'),
-        ),
-      );
-    });
+    await GetxFire.signInWithGoogle(
+        isSuccessDialog: true,
+        isErrorDialog: true,
+        onSuccess: onSuccess,
+        onError: onErrorCatch);
   }
 
-  // Example code of how to sign in with Facebook.
+  // TODO: sign in with Facebook.
   Future<void> _signInWithFacebook(context) async {
     try {
       final AuthCredential credential = FacebookAuthProvider.credential(
@@ -227,22 +233,21 @@ class SignInController extends GetxController {
       );
       final user = (await firebaseAuth.signInWithCredential(credential)).user;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Sign In ${user!.uid} with Facebook'),
-        ),
+      GetxFire.openDialog.messageSuccess(
+        "Sin in with Account facebook:",
+        title: 'Your user id : ${user!.uid}',
+        duration: const Duration(seconds: 30),
       );
-    } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to sign in with Facebook: $e'),
-        ),
-      );
+    } on FirebaseAuthException catch (code, e) {
+      print('Ké pasapasa: $e');
+      GetxFire.openDialog.messageError(
+          'Failed to sign in with Facebook: ${code.code}',
+          title: 'Error Create User: ${code.message}',
+          duration: const Duration(seconds: 12));
     }
   }
 
-  // Example code of how to sign in with Twitter.
+  // TODO: sign in with Twitter.
   Future<void> _signInWithTwitter(context) async {
     try {
       UserCredential? userCredential;
@@ -259,15 +264,17 @@ class SignInController extends GetxController {
 
       final user = userCredential!.user;
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Sign In ${user!.uid} with Twitter'),
-      ));
-    } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to sign in with Twitter: $e'),
-        ),
+      GetxFire.openDialog.messageSuccess(
+        "'Sign In ${user!.uid} with Twitter'",
+        title: 'Twitter login success',
+        duration: const Duration(seconds: 30),
+      );
+    } on FirebaseAuthException catch (code, e) {
+      print('Error during login: $e');
+      GetxFire.openDialog.messageSuccess(
+        "'Sign Error:  ${code.message}'",
+        title: 'Twitter login failed: ${code.code}',
+        duration: const Duration(seconds: 30),
       );
     }
   }

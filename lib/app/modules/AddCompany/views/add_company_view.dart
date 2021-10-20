@@ -70,9 +70,14 @@ class AddCompanyView extends GetView<AddCompanyController> {
           backgroundColor: Colors.lightBlue,
           text: 'save',
           // onPressed: () => Get.to(const RegisterView())),
-          onPressed: () {
+          onPressed: () async {
             print('thheeee brrrooout1');
-            _.registerServices.updateUser(_.userModel);
+            if (await _.registerServices.updateUser(_.userModel) != false) {
+              return Get.toNamed('/user',
+                  id: _.userModel!.id,
+                  arguments: Get.arguments,
+                  preventDuplicates: true);
+            }
             // _.createNewUser();
           }),
     );
@@ -123,8 +128,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           _.userModel!.assurance = value;
                         },
                         onEditingComplete: () => TextInputAction.next,
-                        onChanged: (value) =>
-                            _.userModel!.assurance = value,
+                        onChanged: (value) => _.userModel!.assurance = value,
                       ),
                       const SizedBox(),
                       // Container(
@@ -209,7 +213,8 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           _.userModel!.length = int.parse(value!);
                         },
                         onEditingComplete: () => TextInputAction.next,
-                        onChanged: (value) => _.userModel!.length = int.parse(value),
+                        onChanged: (value) =>
+                            _.userModel!.length = int.parse(value),
                       ),
                     ],
                   ))
@@ -374,7 +379,8 @@ class AddCompanyView extends GetView<AddCompanyController> {
                             _.userModel!.matriculation = value;
                           },
                           onEditingComplete: () => TextInputAction.next,
-                          onChanged: (value) => _.userModel!.matriculation = value,
+                          onChanged: (value) =>
+                              _.userModel!.matriculation = value,
                         ),
                       ],
                     ))
@@ -428,7 +434,8 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           _.userModel!.specialisation = value;
                         },
                         onEditingComplete: () => TextInputAction.next,
-                        onChanged: (value) => _.userModel!.specialisation = value,
+                        onChanged: (value) =>
+                            _.userModel!.specialisation = value,
                       ),
                     ],
                   ))
@@ -535,7 +542,8 @@ class AddCompanyView extends GetView<AddCompanyController> {
                           validator: (value) => _.validateName(value!),
                           onSaved: (value) => _.userModel!.companyName = value,
                           onEditingComplete: () => TextInputAction.next,
-                          onChanged: (value) => _.userModel!.companyName = value,
+                          onChanged: (value) =>
+                              _.userModel!.companyName = value,
                         ),
                         const SizedBox(),
                       ],

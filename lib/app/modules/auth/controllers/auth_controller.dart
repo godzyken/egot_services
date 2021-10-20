@@ -20,7 +20,7 @@ class AuthController extends GetxController {
     _user.bindStream(auth.authStateChanges());
 
     auth.authStateChanges().listen(
-      (event) {
+          (event) {
         isSignIn.value = event != null;
       },
       onError: (err) => dialogError(err),
@@ -50,63 +50,60 @@ class AuthController extends GetxController {
       }
     } on FirebaseAuthException catch (code, e) {
       Get.snackbar('Erreur Auth connection : $code', 'Erreur message2: $e',
-          snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 20));
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(seconds: 20));
     }
   }
 
   createUser(String? name, String? email, String? password) async {
     try {
       await GetxFire.createUserWithEmailAndPassword(
-              email: email!.trim(),
-              password: password!,
-              isSuccessDialog: true,
-              onSuccess: onSuccess,
-              onError: onErrorCatch)
-          .then((userCred) async {
+          email: email!.trim(),
+          password: password!,
+          isSuccessDialog: true,
+          onSuccess: onSuccess,
+          onError: onErrorCatch)
+          .then((userCred) {
         if (userCred!.additionalUserInfo!.isNewUser) {
-          var user = Get.find<UserController>().user;
+         Get.find<UserController>().user?.id = userCred.user!.uid;
+         Get.find<UserController>().user?.email = userCred.user!.email;
 
-          user = UserModel(
-            id: userCred.user!.uid,
-            email: userCred.user!.email,
-            companyName: name,
-          );
-
-          await GetxFire.firestore.createData(
+          GetxFire.firestore.createData(
             collection: 'users',
-            data: user.toJson(),
-            id: user.id,
+            data: Get.find<UserController>().user!.toJson(),
+            id: userCred.user!.uid,
             onError: (err) =>
-                GetxFire.openDialog.messageError('Maa ké passa : ${err.toString()}', title: 'Erreur Create User: $err', duration: const Duration(seconds: 12)),
+                GetxFire.openDialog.messageError(
+                    'Maa ké passa : $err',
+                    title: 'Erreur Create User',
+                    duration: const Duration(seconds: 12)),
             isErrorDialog: true,
           );
 
           update();
         } else {
-          var user = Get.find<UserController>().user;
 
-          user = UserModel(
-            id: currentUser!.uid,
-            email: currentUser!.email,
-            companyName: currentUser!.displayName ?? name,
-          );
-
-          await GetxFire.firestore
+          GetxFire.firestore
               .updateData(
-                collection: 'users',
-                data: user.toJson(),
-                id: user.id,
-                onError: (err) =>
-                    GetxFire.openDialog.messageError('Maa ké passi : ${err.toString()}', title: 'Erreur Create User: $err', duration: const Duration(seconds: 12)),
-                isErrorDialog: true,
-              )
+            collection: 'users',
+            data: Get.find<UserController>().user!.toJson(),
+            id: Get.find<UserController>().user!.id,
+            onError: (err) =>
+                GetxFire.openDialog.messageError(
+                    'Maa ké passi : ${err.toString()}',
+                    title: 'Erreur Create User: $err',
+                    duration: const Duration(seconds: 12)),
+            isErrorDialog: true,
+          )
               .then((value) => login(email, password));
 
           update();
         }
       });
     } on FirebaseAuthException catch (code, e) {
-      GetxFire.openDialog.messageError('Maa ké passo : $code', title: 'Erreur Create User: $e', duration: const Duration(seconds: 12));
+      GetxFire.openDialog.messageError('Maa ké passo : $code',
+          title: 'Erreur Create User: $e',
+          duration: const Duration(seconds: 12));
     }
   }
 
@@ -114,17 +111,26 @@ class AuthController extends GetxController {
     try {
       var _authResult = await auth.signInWithEmailAndPassword(
           email: email.trim(), password: password);
-      Get.find<UserController>().user =
-          await _registerServices!.getUser(_authResult.user!.uid).then((value) {
-        var currentUser = UserModel(
+
+      await _registerServices!.getUser(_authResult.user!.uid).then((value) {
+        var user = Get
+            .find<UserController>()
+            .user;
+
+        user = UserModel(
             email: value.email,
             id: value.id,
             companyName: value.companyName,
-            status: value.status);
+            matriculation: value.matriculation,
+            activity: value.activity,
+            specialisation: value.specialisation,
+            status: value.status,
+            location: value.location,
+            assurance: value.assurance,
+            length: value.length
+        );
 
-        user!.updateDisplayName(currentUser.companyName);
-        user!.updateEmail(currentUser.email);
-        user!.getIdToken(currentUser.id);
+        print('Get user : $user');
       });
 
       update();

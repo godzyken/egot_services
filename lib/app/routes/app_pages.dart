@@ -134,7 +134,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.USER,
-      page: () => UserView(),
+      page: () => const UserView(),
       binding: UserBinding(),
     ),
     GetPage(

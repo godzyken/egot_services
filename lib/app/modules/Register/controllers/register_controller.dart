@@ -40,7 +40,6 @@ class RegisterController extends GetxController {
   var isSignIn = false.obs;
   var rememberme = false.obs;
 
-
   bool shouldPop = true;
 
   Future<bool> onWillPop() async {
@@ -104,19 +103,21 @@ class RegisterController extends GetxController {
 
         await authC.createUser(userModel!.companyName,
             emailController.value.text, passwordController.value.text);
-        print('create User With Email And Password! ${authC.auth}');
+
+        print('create User With Email And Password! '
+            '${authC.auth.currentUser!.uid}, '
+            ' ${authC.user?.uid}');
       } else {
         print('error de connection!');
         return;
       }
     } on FirebaseAuthException catch (code, e) {
 
-      print('code: ${code.toString()}');
-      Get.snackbar(
+      print('Register error code: $e');
+      GetxFire.openDialog.messageError(
         "Error creating Account : ${code.code}",
-        'Erreur code 1: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 30),
+        title: 'Register Error : ${code.code}',
+        duration: const Duration(seconds: 30),
       );
     }
   }
