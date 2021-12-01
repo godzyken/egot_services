@@ -235,11 +235,8 @@ class RegisterView extends GetView<RegisterController> {
                     child: Container(
                         height: 32,
                         alignment: Alignment.center,
-                        child:Text(
-                      'Specialisation(s) :',
-                      style: textStyleCell,
-                            maxLines: 1
-                    )),
+                        child: Text('Specialisation(s) :',
+                            style: textStyleCell, maxLines: 1)),
                   ),
                   TableCell(
                     verticalAlignment: TableCellVerticalAlignment.middle,
@@ -276,8 +273,8 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel!.status}',
-                          style: textStyleName),
+                      child:
+                          Text('${_.userModel!.status}', style: textStyleName),
                     ),
                   ),
                 ]),
@@ -363,8 +360,8 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel!.length}',
-                          style: textStyleName),
+                      child:
+                          Text('${_.userModel!.length}', style: textStyleName),
                     ),
                   ),
                 ]),

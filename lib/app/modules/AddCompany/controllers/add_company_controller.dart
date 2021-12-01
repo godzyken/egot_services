@@ -11,7 +11,7 @@ class AddCompanyController extends GetxController {
 
   final registerServices = RegisterServices();
   final formKeys = <GlobalKey<FormState>>[].obs;
-  final userModel = Get.find<UserController>().user;
+  final userModel = UserController().user;
 
   final pageController =
       PageController(initialPage: 0, viewportFraction: 1.0, keepPage: true);

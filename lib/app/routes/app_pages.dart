@@ -114,7 +114,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.REGISTER,
-      page: () => const RegisterView(),
+      page: () => RegisterView(),
       binding: RegisterBinding(),
     ),
     GetPage(
@@ -134,7 +134,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.USER,
-      page: () => const UserView(),
+      page: () => UserView(),
       binding: UserBinding(),
     ),
     GetPage(

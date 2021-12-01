@@ -16,8 +16,8 @@ class UserProvider extends GetConnect {
     httpClient.baseUrl = 'YOUR-API-URL';
   }
 
-  Future<UserModel> getUser(int id) async {
-    final response = await get('user/$id');
+  Future<UserModel> getUser(int? id) async {
+    final response = await get('users/$id');
     return response.body;
   }
 
@@ -26,6 +26,6 @@ class UserProvider extends GetConnect {
     'https://', decoder: UserModel.listFromJson
   );
 
-  Future<Response<UserModel>> postUser(UserModel user) async => await post('user', user);
-  Future<Response> deleteUser(int id) async => await delete('user/$id');
+  Future<Response<UserModel>> postUser(UserModel user) async => await post('users', user);
+  Future<Response> deleteUser(int id) async => await delete('users/$id');
 }

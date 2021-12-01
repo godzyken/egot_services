@@ -9,28 +9,32 @@ class UserView extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Users'),
-        centerTitle: true,
-      ),
-      body: Container(
-        child: controller.obx(
-            (state) => ListView.builder(
-                  itemCount: state?.length,
-                  itemBuilder: (context, index) {
-                    return Text(state?[index].companyName ?? '');
-                  },
-                ),
-            onLoading: const Center(child: CircularProgressIndicator()),
-            onError: (error) => Center(
-                  child: Text(
-                    'Error: $error',
-                    style: const TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                )),
-      ),
-    );
+    return GetBuilder<UserController>(builder: (_) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(_.user!.companyName),
+          centerTitle: true,
+        ),
+        body: Container(
+          child: controller.obx(
+                  (state) =>
+                  StreamBuilder(
+                      builder: (BuildContext context, AsyncSnapshot<
+                          dynamic> snapshot) {
+                        _.user = snapshot.data;
+                        return Text("Stream : ${_.user!.companyName}");
+                      }),
+              onLoading: const Center(child: CircularProgressIndicator()),
+              onError: (error) =>
+                  Center(
+                    child: Text(
+                      'Error: $error',
+                      style: const TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+        ),
+      );
+    });
   }
 }

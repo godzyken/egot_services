@@ -1,6 +1,7 @@
 import 'package:egot_services/app/models/use_x_models.dart';
-import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
+import 'package:egot_services/app/modules/Register/views/register_view.dart';
+import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
 
@@ -8,8 +9,6 @@ class AuthController extends GetxController {
   final auth = GetxFire.auth;
   final _user = Rxn<User?>();
   RegisterServices? _registerServices;
-
-  User? get currentUser => auth.currentUser;
 
   User? get user => _user.value;
 
@@ -20,7 +19,7 @@ class AuthController extends GetxController {
     _user.bindStream(auth.authStateChanges());
 
     auth.authStateChanges().listen(
-          (event) {
+      (event) {
         isSignIn.value = event != null;
       },
       onError: (err) => dialogError(err),
@@ -31,7 +30,7 @@ class AuthController extends GetxController {
     super.onInit();
   }
 
-  void dialogError(String? msg) {
+  dialogError(String? msg) {
     Get.defaultDialog(
       title: 'Hi mé ké passo!',
       middleText: msg!,
@@ -42,80 +41,82 @@ class AuthController extends GetxController {
     try {
       var authInfo = await auth.app.options;
       if (authInfo != null) {
-        print('auth Info : ${authInfo.storageBucket}');
         return true;
       } else {
-        print(' auth info is null: ${authInfo.databaseURL}');
         return false;
       }
     } on FirebaseAuthException catch (code, e) {
-      Get.snackbar('Erreur Auth connection : $code', 'Erreur message2: $e',
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 20));
+      GetxFire.openDialog.messageError('Error Auth connection : $code',
+          title: 'Error message2: $e', duration: const Duration(seconds: 20));
     }
   }
 
   createUser(String? name, String? email, String? password) async {
-    try {
-      await GetxFire.createUserWithEmailAndPassword(
-          email: email!.trim(),
-          password: password!,
-          isSuccessDialog: true,
-          onSuccess: onSuccess,
-          onError: onErrorCatch)
-          .then((userCred) {
-        if (userCred!.additionalUserInfo!.isNewUser) {
-         Get.find<UserController>().user?.id = userCred.user!.uid;
-         Get.find<UserController>().user?.email = userCred.user!.email;
+    await GetxFire.createUserWithEmailAndPassword(
+            email: email!.trim(),
+            password: password!,
+            isSuccessDialog: true,
+            onSuccess: onSuccess,
+            onError: onErrorCatch)
+        .then((userCred) async {
+      var user = Get.find<UserController>().user;
+      //
+      // user!.id = userCred?.user!.uid;
+      // user.email = userCred?.user!.email;
+      // user.companyName = userCred?.user!.displayName ?? name;
+      // user.avatarUrl = userCred?.user?.photoURL;
+      // user.tenantId = userCred?.user?.tenantId ?? 'tenantId empty';
+      // user.emailVerified = userCred?.user?.emailVerified ?? false;
+      // user.providerData =
+      //     userCred?.user?.providerData ?? 'expect provider data';
+      // user.phoneNumber =
+      //     userCred?.user?.phoneNumber ?? 'enter a valid phone number';
+      // user.refreshToken =
+      //     userCred?.user?.refreshToken ?? 'No refresh token';
 
-          GetxFire.firestore.createData(
-            collection: 'users',
-            data: Get.find<UserController>().user!.toJson(),
-            id: userCred.user!.uid,
-            onError: (err) =>
-                GetxFire.openDialog.messageError(
-                    'Maa ké passa : $err',
-                    title: 'Erreur Create User',
-                    duration: const Duration(seconds: 12)),
-            isErrorDialog: true,
-          );
+      if (userCred != null && userCred.additionalUserInfo!.isNewUser) {
+        await GetxFire.firestore.createData(
+          collection: 'users',
+          data: user!.toJson(),
+          id: user.id,
+          onError: (err) => GetxFire.openDialog.messageError(
+              'Maa ké passa : $err',
+              title: 'Erreur Create User',
+              duration: const Duration(seconds: 12)),
+          isErrorDialog: true,
+        );
 
-          update();
-        } else {
+        update();
+      } else {
+        await GetxFire.firestore
+            .updateData(
+              collection: 'users',
+              data: user!.toJson(),
+              id: user.id,
+              onError: (err) => GetxFire.openDialog.messageError(
+                  'Maa ké passi : ${err.toString()}',
+                  title: 'Error Create User: $err',
+                  duration: const Duration(seconds: 12)),
+              isErrorDialog: true,
+            )
+            .then((value) => login(email, password));
 
-          GetxFire.firestore
-              .updateData(
-            collection: 'users',
-            data: Get.find<UserController>().user!.toJson(),
-            id: Get.find<UserController>().user!.id,
-            onError: (err) =>
-                GetxFire.openDialog.messageError(
-                    'Maa ké passi : ${err.toString()}',
-                    title: 'Erreur Create User: $err',
-                    duration: const Duration(seconds: 12)),
-            isErrorDialog: true,
-          )
-              .then((value) => login(email, password));
-
-          update();
-        }
-      });
-    } on FirebaseAuthException catch (code, e) {
-      GetxFire.openDialog.messageError('Maa ké passo : $code',
-          title: 'Erreur Create User: $e',
-          duration: const Duration(seconds: 12));
-    }
+        update();
+      }
+    },
+            onError: (err) => GetxFire.openDialog.messageError(
+                'Error Credential null: $err ',
+                title: 'Error connection',
+                duration: const Duration(seconds: 12)));
   }
 
-  void login(String email, String password) async {
+  login(String email, String password) async {
     try {
       var _authResult = await auth.signInWithEmailAndPassword(
           email: email.trim(), password: password);
 
       await _registerServices!.getUser(_authResult.user!.uid).then((value) {
-        var user = Get
-            .find<UserController>()
-            .user;
+        var user = Get.find<UserController>().user;
 
         user = UserModel(
             email: value.email,
@@ -127,8 +128,7 @@ class AuthController extends GetxController {
             status: value.status,
             location: value.location,
             assurance: value.assurance,
-            length: value.length
-        );
+            length: value.length);
 
         print('Get user : $user');
       });
@@ -143,9 +143,9 @@ class AuthController extends GetxController {
     }
   }
 
-  void signOut() async {
+  signOut() async {
     try {
-      await auth.signOut();
+      await auth.signOut().then((value) => Get.offAll(const RegisterView()));
       Get.find<UserController>().clear();
     } catch (e) {
       Get.snackbar(
@@ -158,31 +158,52 @@ class AuthController extends GetxController {
 
   onErrorCatch(code, message) {
     if (code == 'email-already-in-use') {
-      GetxFire.openDialog.messageError(message!);
+      GetxFire.openDialog.messageError(
+        "Error creating Account 1: $code}",
+        title: 'Register Error 1: $message',
+        duration: const Duration(seconds: 30),
+      );
       Get.toNamed('/sign-in');
     } else {
-      GetxFire.openDialog.messageError(code);
+      GetxFire.openDialog.messageError(
+        "Error creating Account 2: $code}",
+        title: 'Register Error 2: $message',
+        duration: const Duration(seconds: 30),
+      );
     }
     if (code == 'invalid-email') {
-      GetxFire.openDialog.messageError('Elooot: $message');
+      GetxFire.openDialog.messageError(
+        "Error creating Account 3: $code}",
+        title: 'Register Error 3',
+        duration: const Duration(seconds: 30),
+      );
       GetxFire.currentUser?.delete();
     } else {
-      GetxFire.openDialog.messageError(code);
+      GetxFire.openDialog.messageError(
+        "Error creating Account 4: $message}",
+        title: 'Register Error 4: $code',
+        duration: const Duration(seconds: 30),
+      );
     }
   }
 
   onSuccess(userCredential) async {
     if (userCredential!.user != null) {
       isSignIn.value = true;
-      GetxFire.openDialog.messageSuccess(userCredential);
+      GetxFire.openDialog.messageSuccess(
+        "creating Account Successfully: $userCredential}",
+        title: 'Register ok :',
+        duration: const Duration(seconds: 30),
+      );
+      ;
 
-      /*  await GetxFire.firestore.createData(
+      await GetxFire.firestore.updateData(
         collection: 'users',
-        id: AddCompanyController().userModel.value.id,
-        data: UserModel().toJson(),
+        id: user!.uid,
+        data: Get.find<UserController>().user!.toJson(),
         onError: (message) => dialogError(message),
         isErrorDialog: true,
-      );*/
+      );
 
       update();
     } else {

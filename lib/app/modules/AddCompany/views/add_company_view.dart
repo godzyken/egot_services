@@ -72,9 +72,8 @@ class AddCompanyView extends GetView<AddCompanyController> {
           // onPressed: () => Get.to(const RegisterView())),
           onPressed: () async {
             print('thheeee brrrooout1');
-            if (await _.registerServices.updateUser(_.userModel) != false) {
+            if (await _.registerServices.updateUser(_.userModel)) {
               return Get.toNamed('/user',
-                  id: _.userModel!.id,
                   arguments: Get.arguments,
                   preventDuplicates: true);
             }

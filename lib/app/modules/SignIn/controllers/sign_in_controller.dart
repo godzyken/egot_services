@@ -62,23 +62,33 @@ class SignInController extends GetxController {
 
   onErrorCatch(code, message) {
     if (code == 'email-already-in-use') {
-      GetxFire.openDialog.messageError('Maa ké passa : $message',
-          title: 'Error Create User: ${code.code}',
+      GetxFire.openDialog.messageError('Email is wrong : $message',
+          title: 'Create User: $code',
           duration: const Duration(seconds: 12));
       Get.toNamed('/sign-in');
     } else {
       GetxFire.openDialog.messageError('Maa ké passu : $message',
-          title: 'Error Create User: ${code.code}',
+          title: 'Error Create User: $code',
+          duration: const Duration(seconds: 12));
+    }
+    if (code == 'wrong-password') {
+      GetxFire.openDialog.messageError('Error Password : $message',
+          title: 'Enter Password: ${code}',
+          duration: const Duration(seconds: 12));
+      GetxFire.currentUser?.delete();
+    } else {
+      GetxFire.openDialog.messageError('Error password : $message',
+          title: 'Enter Password: ${code}',
           duration: const Duration(seconds: 12));
     }
     if (code == 'invalid-email') {
       GetxFire.openDialog.messageError('Maa ké passi : $message',
-          title: 'Error Create User: ${code.code}',
+          title: 'Error Create User: ${code}',
           duration: const Duration(seconds: 12));
       GetxFire.currentUser?.delete();
     } else {
       GetxFire.openDialog.messageError('Maa ké passo : $message',
-          title: 'Error Create User: ${code.code}',
+          title: 'Error Create User: ${code}',
           duration: const Duration(seconds: 12));
     }
   }
@@ -88,6 +98,8 @@ class SignInController extends GetxController {
       isRegister.value = true;
       GetxFire.openDialog.messageSuccess('on success login: $userCredential',
           title: 'userCredential', duration: const Duration(seconds: 12));
+
+      Get.toNamed('/user');
 
       update();
     } else {

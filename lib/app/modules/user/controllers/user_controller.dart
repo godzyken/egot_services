@@ -12,12 +12,11 @@ class UserController extends SuperController<List<UserModel>> {
 
   @override
   void onInit() {
-
     super.onInit();
   }
 
   @override
-  void onReady() {
+  void onReady() async {
     // findAllUsers();
     super.onReady();
   }

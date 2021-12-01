@@ -13,42 +13,45 @@ class SignInView extends GetView<SignInController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign In'),
-        centerTitle: true,
-        actions: <Widget>[
-          Builder(builder: (BuildContext context) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: TextButton(
-                onPressed: () async {
-                  await controller.logout();
-                },
-                child: Text(
-                  'Sign out',
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Colors.red[400],
+    return GetBuilder<SignInController>(
+      assignId: true,
+      builder: (_) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Sign In'),
+            centerTitle: true,
+            actions: <Widget>[
+              Builder(builder: (BuildContext context) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: TextButton(
+                    onPressed: () async {
+                      await _.logout();
+                    },
+                    child: Text(
+                      'Sign out',
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.red[400],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            );
-          })
-        ],
-      ),
-      body: GetBuilder<SignInController>(
-        init: SignInController(),
-        builder: (_) => ListView(
-          padding: const EdgeInsets.all(8),
-          children: <Widget>[
-            const UserInfoCardView(),
-            const EmailPasswordFormView(),
-            AnonymouslySignInSectionView(),
-            const OtherProvidersSignInSectionView(),
-          ],
-        ),
-      ),
+                );
+              })
+            ],
+          ),
+          body: ListView(
+            padding: const EdgeInsets.all(8),
+            children: <Widget>[
+              const UserInfoCardView(),
+              const EmailPasswordFormView(),
+              AnonymouslySignInSectionView(),
+              const OtherProvidersSignInSectionView(),
+            ],
+          ),
+
+        );
+      },
     );
   }
 }

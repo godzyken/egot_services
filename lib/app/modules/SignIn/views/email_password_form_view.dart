@@ -5,7 +5,7 @@ import 'package:flutter_signin_button/button_view.dart';
 
 import 'package:get/get.dart';
 
-class EmailPasswordFormView extends GetView {
+class EmailPasswordFormView extends GetView<SignInController> {
   const EmailPasswordFormView({Key? key}) : super(key: key);
 
   @override

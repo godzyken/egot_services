@@ -1,5 +1,4 @@
 import 'package:egot_services/app/models/menus_model.dart';
-import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/routes/app_pages.dart';
@@ -20,12 +19,10 @@ class HomeController extends GetxController {
 
   var firebaseAuthController = SignInController();
 
-  UserModel? userModel;
+  var userModel = UserController().user;
 
   @override
   void onInit() {
-    print('>>> HomeController init');
-    userModel = UserController().user;
 
     super.onInit();
   }

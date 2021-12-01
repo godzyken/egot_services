@@ -13,23 +13,22 @@ class EnsureAuthMiddleware extends GetMiddleware {
     GetMiddleware(priority: 4),
     GetMiddleware(priority: -8),
   ];
-  final authServices = AuthController();
+  AuthController? authServices;
 
   int? get priority => 2;
-
 
   var isSignIn = false.obs;
   @override
   RouteSettings? redirect(String? route) {
     print('route: $route');
-    return isSignIn.value == authServices.isSignIn.isFalse || route == Routes.REGISTER
+    return isSignIn.value == authServices?.isSignIn.isFalse || route == Routes.REGISTER
         ? null
-        : RouteSettings(name: Routes.REGISTER, arguments: authServices.isSignIn.value);
+        : RouteSettings(name: Routes.REGISTER, arguments: authServices?.isSignIn.value);
   }
 
   @override
   Future<GetNavConfig?> redirectDelegate(GetNavConfig route) async {
-    final authServices = RegisterController();
+    final authServices = AuthController();
     if (!authServices.isSignIn.value) {
       final newRoute = Routes.LOGIN_THEN(route.location!);
       return GetNavConfig.fromRoute(newRoute);
@@ -53,7 +52,7 @@ class EnsureAuthMiddleware extends GetMiddleware {
 
   @override
   List<Bindings>? onBindingsStart(List<Bindings>? bindings) {
-    final authService = Get.find<RegisterController>();
+    final authService = AuthController();
     if (authService.isSignIn.value) {
       bindings!.add(RegisterBinding());
     }
@@ -67,7 +66,7 @@ class EnsureAuthMiddleware extends GetMiddleware {
       settings: redirect('/register'),
       middlewares: middlewares,
       binding: RegisterBinding(),
-      arguments: authServices.user,
+      arguments: authServices?.user,
       popGesture: true,
     );
   }
@@ -76,7 +75,7 @@ class EnsureAuthMiddleware extends GetMiddleware {
 class EnsureNotAuthedMiddleware extends GetMiddleware {
   @override
   Future<GetNavConfig?> redirectDelegate(GetNavConfig route) async {
-    final authServices = Get.put(RegisterController());
+    final authServices = Get.put(AuthController());
 
     if (authServices.isSignIn.value) {
       //NEVER navigate to auth screen, when user is already authed

@@ -6,78 +6,62 @@ class RegisterServices extends GetConnect {
   static RegisterServices get to => Get.find();
   final _firestore = GetxFire.firestore;
 
-  var user = Get.find<AuthController>().user;
-
   // Section ['Users']
   Future<bool> createNewUser(UserModel? userModel) async {
-    userModel = UserModel(
-      id: user!.uid,
-      email: user!.email,
-      companyName: user!.displayName ?? userModel!.companyName,
-      status: userModel!.status,
-      specialisation: userModel.specialisation,
-      activity: userModel.activity,
-      matriculation: userModel.matriculation,
-      assurance: userModel.assurance,
-      location: userModel.location,
-      length: userModel.length,
-    );
-
     try {
-      return await _firestore.createData(
-          collection: "users",
-          data: userModel.toJson(),
-          id: user!.uid,
-          isErrorDialog: true,
-          onError: (code) {
-            GetxFire.openDialog.messageError('Erreur message1: ${code}',
-                title: 'Erreur connection database',
-                duration: const Duration(seconds: 10));
-          });
-    } catch (e) {
-      print('Create user failed $e');
+      return await _firestore
+          .createData(
+              collection: "users",
+              data: userModel!.toJson(),
+              id: userModel.id,
+              isErrorDialog: true,
+              onError: (code) {
+                GetxFire.openDialog.messageError('Error message1: ${code}',
+                    title: 'Error connection database 1',
+                    duration: const Duration(seconds: 10));
+              })
+          .then((value) {
+        if (value != false) {
+          print('create data user successfully');
+          GetxFire.openDialog.messageSuccess('data users is create:',
+              title: 'create data user successfully',
+              duration: const Duration(seconds: 10));
+          return true;
+        } else {
+          print('create data user failed');
+          GetxFire.openDialog.messageError('Error message2}',
+              title: 'Error connection database 2',
+              duration: const Duration(seconds: 10));
+          return false;
+        }
+      });
+    } on FirebaseAuthException catch (code, e) {
+      print('Create user failed $e}');
+      GetxFire.openDialog.messageError('Error message: ${code.message}',
+          title: 'Error created data users ${code.code}}',
+          duration: const Duration(seconds: 10));
       return false;
     }
   }
 
   Future<bool> updateUser(UserModel? userModel) async {
-    userModel = UserModel(
-      id: user!.uid,
-      email: user!.email,
-      companyName: user!.displayName ?? userModel!.companyName,
-      status: userModel!.status,
-      specialisation: userModel.specialisation,
-      activity: userModel.activity,
-      matriculation: userModel.matriculation,
-      assurance: userModel.assurance,
-      location: userModel.location,
-      length: userModel.length,
-    );
-
     try {
-      return await _firestore
-          .updateData(
-              collection: "users",
-              data: userModel.toJson(),
-              id: user!.uid,
-              isErrorDialog: true,
-              onError: (code) {
-                GetxFire.openDialog.messageError('Erreur Update: $code',
-                    title: 'Erreur connection database',
-                    duration: const Duration(seconds: 10));
-              })
-          .then((value) {
-        if (value == false) {
-          print('That false Value: $value');
-          return false;
-        }
-        print('OKKKKKKKKK!!! $value');
-        return true;
-      });
+      userModel?.id = AuthController().user?.uid;
+
+      return await _firestore.updateData(
+          collection: "users",
+          data: userModel!.toJson(),
+          id: userModel.id,
+          isErrorDialog: true,
+          onError: (code) {
+            GetxFire.openDialog.messageError('Error Update: $code',
+                title: 'Update user failed',
+                duration: const Duration(seconds: 10));
+          });
     } on FirebaseAuthException catch (code, e) {
-      print('Create user failed ${code.message}');
-      GetxFire.openDialog.messageError('Erreur message: ${code.code}',
-          title: 'Erreur connection database $e}',
+      print('Update user failed $e}');
+      GetxFire.openDialog.messageError('Error update 2: ${code.message}',
+          title: 'Error to update data users ${code.code}}',
           duration: const Duration(seconds: 10));
       return false;
     }
