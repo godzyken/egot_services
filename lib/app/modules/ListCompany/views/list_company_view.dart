@@ -12,10 +12,6 @@ class ListCompanyView extends GetView<ListCompanyController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('ListCompanyView'),
-          centerTitle: true,
-        ),
         body: Column(
           children: [
             GetX<ListCompanyController>(

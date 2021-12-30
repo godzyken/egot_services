@@ -12,10 +12,6 @@ class PresentationView extends GetView<PresentationController> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: key,
-      appBar: AppBar(
-        title: const Text('Presentation Entreprise'),
-        centerTitle: true,
-      ),
       body: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
         child: LayoutBuilder(

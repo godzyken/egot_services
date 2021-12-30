@@ -44,7 +44,7 @@ class CompanyCardView extends GetView<CompanyCardController> {
           return Obx(() {
             return Card(
                 color: Colors.white38,
-                shadowColor: Colors.yellow,
+                shadowColor: Colors.transparent,
                 margin:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                 clipBehavior: Clip.antiAlias,

@@ -1,9 +1,9 @@
 
+import 'package:egot_services/app/modules/snap_scroll/views/snap_scroll_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import 'package:egot_services/app/modules/CompanyCard/views/company_card_view.dart';
 import 'package:egot_services/app/modules/GodzyLogo/views/godzy_logo_view.dart';
 import 'package:egot_services/app/themes/app_theme_data.dart';
 
@@ -15,6 +15,10 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return GetRouterOutlet.builder(
+      routerDelegate: GetDelegate(
+        backButtonPopMode: PopMode.History,
+        preventDuplicateHandlingMode: PreventDuplicateHandlingMode.ReorderRoutes,
+      ),
       builder: (context, delegate, currentRoute) => Scaffold(
         body: GetBuilder<HomeController>(
             init: HomeController(),
@@ -31,17 +35,14 @@ class HomeView extends GetView<HomeController> {
                     clipBehavior: Clip.hardEdge,
                     fit: StackFit.loose,
                     children: <Widget>[
-                      CompanyCardView(
-                        uid: _.userModel!.id.toString(),
-                        company: _.userModel,
-                      ),
+                      SnapScrollView(),
                       const DraggableListMenu()
                     ],
                   ));
             }),
         backgroundColor: Colors.transparent,
         floatingActionButton: FloatingActionButton(
-          onPressed: () => delegate.toNamed('/godzy-logo'),
+          onPressed: () => Get.rootDelegate.toNamed('/godzy-logo'),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
             clipBehavior: Clip.hardEdge,

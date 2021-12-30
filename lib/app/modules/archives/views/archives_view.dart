@@ -16,10 +16,6 @@ class ArchivesView extends GetView<ArchivesController> {
       assignId: true,
       builder: (_) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Archives View'),
-            centerTitle: true,
-          ),
           body: Stack(
             children: [
               ARView(

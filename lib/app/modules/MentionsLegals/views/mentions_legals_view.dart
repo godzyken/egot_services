@@ -8,10 +8,6 @@ class MentionsLegalsView extends GetView<MentionsLegalsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('MentionsLegalsView'),
-        centerTitle: true,
-      ),
       body: Center(
         child: Text(
           'MentionsLegalsView is working',

@@ -8,10 +8,6 @@ class EgotServicesView extends GetView<EgotServicesController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('EgotServicesView'),
-        centerTitle: true,
-      ),
       body: Center(
         child: Text(
           'EgotServicesView is working',

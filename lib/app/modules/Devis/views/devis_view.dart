@@ -18,10 +18,6 @@ class DevisView extends GetView<DevisController> {
               colors: [Colors.tealAccent, Colors.orangeAccent]),
         ),
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Devis'),
-            centerTitle: true,
-          ),
           body: GetBuilder<DevisController>(
             assignId: true,
             builder: (_) {

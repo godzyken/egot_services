@@ -5,7 +5,6 @@ import 'package:getxfire/getxfire.dart';
 
 import 'package:egot_services/app/models/menus_model.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
-import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:egot_services/app/routes/app_pages.dart';
 
 class HomeController extends GetxController {
@@ -16,12 +15,11 @@ class HomeController extends GetxController {
   var scrollController = ScrollController();
   var h = Get.mediaQuery.size.height;
   var w = Get.mediaQuery.size.width;
-
   var isSignIn = false.obs;
 
   var firebaseAuthController = SignInController();
 
-  var userModel = UserController(Get.parameters['userId']).user;
+
 
   @override
   void onInit() {

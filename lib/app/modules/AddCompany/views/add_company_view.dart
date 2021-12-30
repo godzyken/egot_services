@@ -18,10 +18,6 @@ class AddCompanyView extends GetView<AddCompanyController> {
     return Scaffold(
       key: key,
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: const Text('Add your Company'),
-        centerTitle: true,
-      ),
       body: GetBuilder<AddCompanyController>(
           init: AddCompanyController(),
           initState: (state) => controller.registerServices,

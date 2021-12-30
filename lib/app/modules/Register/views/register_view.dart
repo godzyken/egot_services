@@ -16,10 +16,6 @@ class RegisterView extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-        centerTitle: true,
-      ),
       body: GetBuilder<RegisterController>(
           init: RegisterController(),
           initState: (state) => RegisterServices(),

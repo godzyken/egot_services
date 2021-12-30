@@ -16,10 +16,6 @@ class UserView extends GetView<UserController> {
         init: UserController(Get.arguments['userId']),
         builder: (_) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(_.user!.companyName),
-              centerTitle: true,
-            ),
             body: Container(
               child: controller.obx(
                   (state) => StreamBuilder<UserModel?>(

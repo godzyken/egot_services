@@ -8,10 +8,6 @@ class AtelierView extends GetView<AtelierController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('AtelierView'),
-        centerTitle: true,
-      ),
       body: Center(
         child: Text(
           'AtelierView is working',

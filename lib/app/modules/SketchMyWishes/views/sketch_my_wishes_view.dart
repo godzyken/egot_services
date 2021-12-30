@@ -8,10 +8,6 @@ class SketchMyWishesView extends GetView<SketchMyWishesController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('SketchMyWishesView'),
-        centerTitle: true,
-      ),
       body: Center(
         child: Text(
           'SketchMyWishesView is working',

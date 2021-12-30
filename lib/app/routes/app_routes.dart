@@ -26,6 +26,7 @@ abstract class Routes {
   static const AUTH = _Paths.AUTH;
 
   static String USER(String? userId) => '$AUTH/$userId';
+  static const SNAP_SCROLL = _Paths.SNAP_SCROLL;
 }
 
 abstract class _Paths {
@@ -47,4 +48,5 @@ abstract class _Paths {
   static const COMPANY_CARD = '/company-card';
   static const USER = '/:user';
   static const AUTH = '/auth';
+  static const SNAP_SCROLL = '/snap-scroll';
 }
