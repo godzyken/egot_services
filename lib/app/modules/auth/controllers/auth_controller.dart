@@ -1,9 +1,10 @@
+import 'package:get/get.dart';
+import 'package:getxfire/getxfire.dart';
+
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:egot_services/app/modules/Register/views/register_view.dart';
 import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
-import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
 
 class AuthController extends GetxController {
   final auth = GetxFire.auth;
@@ -75,7 +76,7 @@ class AuthController extends GetxController {
       //     userCred?.user?.refreshToken ?? 'No refresh token';
 
       if (userCred != null && userCred.additionalUserInfo!.isNewUser) {
-        await GetxFire.firestore.createData(
+        await _registerServices?.firestore.createData(
           collection: 'users',
           data: user!.toJson(),
           id: user.id,
@@ -88,7 +89,7 @@ class AuthController extends GetxController {
 
         update();
       } else {
-        await GetxFire.firestore
+        await _registerServices?.firestore
             .updateData(
               collection: 'users',
               data: user!.toJson(),
@@ -163,7 +164,7 @@ class AuthController extends GetxController {
         title: 'Register Error 1: $message',
         duration: const Duration(seconds: 30),
       );
-      Get.toNamed('/sign-in');
+      Get.rootDelegate.toNamed('/sign-in');
     } else {
       GetxFire.openDialog.messageError(
         "Error creating Account 2: $code}",
@@ -197,7 +198,7 @@ class AuthController extends GetxController {
       );
       ;
 
-      await GetxFire.firestore.updateData(
+      await _registerServices?.firestore.updateData(
         collection: 'users',
         id: user!.uid,
         data: Get.find<UserController>().user!.toJson(),

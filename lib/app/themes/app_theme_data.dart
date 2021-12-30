@@ -57,14 +57,14 @@ class AppThemes {
   static const Color _darkBackgroundColor = ebonyClay;
   static const Color _darkBackgroundAppBarColor = _darkPrimaryColor;
   static const Color _darkBackgroundSecondaryColor =
-  Color.fromRGBO(0, 0, 0, .6);
+      Color.fromRGBO(0, 0, 0, .6);
   static const Color _darkBackgroundAlertColor = blackPearl;
   static const Color _darkBackgroundActionTextColor = white;
 
   static const Color _darkBackgroundErrorColor =
-  Color.fromRGBO(255, 97, 136, 1);
+      Color.fromRGBO(255, 97, 136, 1);
   static const Color _darkBackgroundSuccessColor =
-  Color.fromRGBO(186, 215, 97, 1);
+      Color.fromRGBO(186, 215, 97, 1);
 
   //Text Colors
   static const Color _darkTextColor = Colors.white;
@@ -117,7 +117,8 @@ class AppThemes {
     iconTheme: const IconThemeData(
       color: _lightIconColor,
     ),
-    popupMenuTheme: const PopupMenuThemeData(color: _lightBackgroundAppBarColor),
+    popupMenuTheme:
+        const PopupMenuThemeData(color: _lightBackgroundAppBarColor),
     textTheme: _lightTextTheme,
     buttonTheme: ButtonThemeData(
         shape: RoundedRectangleBorder(
@@ -184,7 +185,6 @@ class AppThemes {
     brightness: Brightness.dark,
     //primarySwatch: _darkPrimaryColor, //cant be Color on MaterialColor so it can compute different shades.
     accentColor: _darkPrimaryColor, //prefix icon color form input on focus
-
 
     fontFamily: font1,
     scaffoldBackgroundColor: _darkBackgroundColor,

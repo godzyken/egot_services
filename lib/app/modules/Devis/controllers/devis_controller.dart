@@ -1,5 +1,6 @@
-import 'package:egot_services/app/models/devis_model.dart';
 import 'package:get/get.dart';
+
+import 'package:egot_services/app/models/devis_model.dart';
 
 class DevisController extends GetxController {
   RxString? username = 'username'.obs;
@@ -10,7 +11,6 @@ class DevisController extends GetxController {
   final RxInt? id = 0.obs;
   var isMaison = false.obs;
   var isAppartement = false.obs;
-
 
   @override
   void onInit() {

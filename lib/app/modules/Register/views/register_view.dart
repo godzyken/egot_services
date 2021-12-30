@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+
+import 'package:flutter_signin_button/button_builder.dart';
+import 'package:get/get.dart';
+
 import 'package:egot_services/app/modules/AddCompany/controllers/add_company_controller.dart';
 import 'package:egot_services/app/modules/CompanyCard/views/company_card_view.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter_signin_button/button_builder.dart';
-
-import 'package:get/get.dart';
 
 import '../controllers/register_controller.dart';
 
@@ -39,8 +40,8 @@ class RegisterView extends GetView<RegisterController> {
                     crossAxisAlignment: WrapCrossAlignment.start,
                     children: <Widget>[
                       InkWell(
-                        onTap: () => Get.toNamed('/add-company',
-                            arguments: Get.arguments, preventDuplicates: true),
+                        onTap: () => Get.rootDelegate.toNamed('/add-company',
+                            arguments: Get.arguments['userId']),
                         child: buildNewCompanyCard(),
                       ),
                       TextFormField(
@@ -57,8 +58,10 @@ class RegisterView extends GetView<RegisterController> {
                       ),
                       TextFormField(
                         controller: _.passwordController.value,
-                        decoration: const InputDecoration(labelText: 'Password'),
-                        onSaved: (value) => _.passwordController.value.text = value!,
+                        decoration:
+                            const InputDecoration(labelText: 'Password'),
+                        onSaved: (value) =>
+                            _.passwordController.value.text = value!,
                         validator: (value) => _.validatePassword(value!),
                         obscureText: true,
                       ),
@@ -79,10 +82,9 @@ class RegisterView extends GetView<RegisterController> {
                           text: 'Register',
                           onPressed: () async {
                             if (_.userModel!.companyName != '') {
-
                               return await _.register();
                             } else {
-                              return Get.toNamed('/add-company');
+                              return Get.rootDelegate.toNamed('/add-company');
                             }
                           },
                         ),
@@ -129,8 +131,8 @@ class RegisterView extends GetView<RegisterController> {
         builder: (_) {
           return Obx(() {
             return Container(
-              color: Colors.transparent,
-                child: _.userModel!.id != null
+                color: Colors.transparent,
+                child: _.userModel!.id.toString() != null
                     ? modelCard(_)
                     : CompanyCardView(company: _.userModel!.companyName));
           });

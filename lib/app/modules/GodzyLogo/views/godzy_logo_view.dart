@@ -12,9 +12,9 @@ class GodzyLogoView extends GetView<GodzyLogoController> {
         child: Container(
           decoration: const BoxDecoration(
               image: DecorationImage(
-                image: ExactAssetImage("assets/lottie/image/godzy_logo.png"),
-                fit: BoxFit.fill,
-              )),
+            image: ExactAssetImage("assets/lottie/image/godzy_logo.png"),
+            fit: BoxFit.fill,
+          )),
         ),
       ),
     );

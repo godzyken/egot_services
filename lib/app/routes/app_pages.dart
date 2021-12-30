@@ -35,6 +35,8 @@ import 'package:egot_services/app/modules/auth/bindings/auth_binding.dart';
 import 'package:egot_services/app/modules/auth/views/auth_view.dart';
 import 'package:egot_services/app/modules/presentation/bindings/presentation_binding.dart';
 import 'package:egot_services/app/modules/presentation/views/presentation_view.dart';
+import 'package:egot_services/app/modules/root/bindings/root_binding.dart';
+import 'package:egot_services/app/modules/root/views/root_view.dart';
 import 'package:egot_services/app/modules/user/bindings/user_binding.dart';
 import 'package:egot_services/app/modules/user/views/user_view.dart';
 
@@ -47,100 +49,116 @@ class AppPages {
 
   static final routes = [
     GetPage(
-      name: _Paths.HOME,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
-      participatesInRootNavigator: true,
-      // preventDuplicates: true,
-      // opaque: true,
-      // maintainState: true,
-      middlewares: [EnsureAuthMiddleware(), EnsureProfileMiddleware()],
-      popGesture: true,
-    ),
-    GetPage(
-      name: _Paths.EGOT_SERVICES,
-      page: () => EgotServicesView(),
-      binding: EgotServicesBinding(),
-    ),
-    GetPage(
-      name: _Paths.DEVIS,
-      page: () => const DevisView(),
-      binding: DevisBinding(),
-    ),
-    GetPage(
-      name: _Paths.SKETCH_MY_WISHES,
-      page: () => SketchMyWishesView(),
-      binding: SketchMyWishesBinding(),
-    ),
-    GetPage(
-      name: _Paths.ATELIER,
-      page: () => AtelierView(),
-      binding: AtelierBinding(),
-    ),
-    GetPage(
-      name: _Paths.OUVRAGE,
-      page: () => OuvrageView(),
-      binding: OuvrageBinding(),
-    ),
-    GetPage(
-      name: _Paths.MENTIONS_LEGALS,
-      page: () => MentionsLegalsView(),
-      binding: MentionsLegalsBinding(),
-    ),
-    GetPage(
-      name: _Paths.EGOT_INFOS,
-      page: () => EgotInfosView(),
-      binding: EgotInfosBinding(),
-    ),
-    GetPage(
-      name: _Paths.GODZY_LOGO,
-      page: () => GodzyLogoView(),
-      binding: GodzyLogoBinding(),
-    ),
-    GetPage(
-      name: _Paths.PRESENTATION,
-      page: () => const PresentationView(),
-      binding: PresentationBinding(),
-    ),
-    GetPage(
-      name: _Paths.ARCHIVES,
-      page: () => const ArchivesView(),
-      binding: ArchivesBinding(),
-    ),
-    GetPage(
-      name: _Paths.SIGN_IN,
-      page: () => const SignInView(),
-      binding: SignInBinding(),
-    ),
-    GetPage(
-      name: _Paths.REGISTER,
-      page: () => RegisterView(),
-      binding: RegisterBinding(),
-    ),
-    GetPage(
-      name: _Paths.ADD_COMPANY,
-      page: () => const AddCompanyView(),
-      binding: AddCompanyBinding(),
-    ),
-    GetPage(
-      name: _Paths.LIST_COMPANY,
-      page: () => const ListCompanyView(),
-      binding: ListCompanyBinding(),
-    ),
-    GetPage(
-      name: _Paths.COMPANY_CARD,
-      page: () => const CompanyCardView(),
-      binding: CompanyCardBinding(),
-    ),
-    GetPage(
-      name: _Paths.USER,
-      page: () => UserView(),
-      binding: UserBinding(),
-    ),
-    GetPage(
-      name: _Paths.AUTH,
-      page: () => AuthView(),
-      binding: AuthBinding(),
-    ),
+        name: '/',
+        page: () => RootView(),
+        binding: RootBinding(),
+        participatesInRootNavigator: true,
+        preventDuplicates: true,
+        children: [
+          GetPage(
+            name: _Paths.HOME,
+            page: () => const HomeView(),
+            binding: HomeBinding(),
+            participatesInRootNavigator: true,
+            // preventDuplicates: true,
+            // opaque: true,
+            // maintainState: true,
+            middlewares: [EnsureAuthMiddleware(), EnsureProfileMiddleware()],
+            children: [
+              GetPage(
+                  name: _Paths.EGOT_SERVICES,
+                  page: () => EgotServicesView(),
+                  binding: EgotServicesBinding(),
+                  children: [
+                    GetPage(
+                      name: _Paths.DEVIS,
+                      page: () => const DevisView(),
+                      binding: DevisBinding(),
+                    ),
+                  ]),
+              GetPage(
+                  name: _Paths.ATELIER,
+                  page: () => AtelierView(),
+                  binding: AtelierBinding(),
+                  children: [
+                    GetPage(
+                      name: _Paths.SKETCH_MY_WISHES,
+                      page: () => SketchMyWishesView(),
+                      binding: SketchMyWishesBinding(),
+                    ),
+                  ]),
+              GetPage(
+                  name: _Paths.PRESENTATION,
+                  page: () => const PresentationView(),
+                  binding: PresentationBinding(),
+                  children: [
+                    GetPage(
+                      name: _Paths.MENTIONS_LEGALS,
+                      page: () => MentionsLegalsView(),
+                      binding: MentionsLegalsBinding(),
+                    ),
+                    GetPage(
+                        name: _Paths.EGOT_INFOS,
+                        page: () => EgotInfosView(),
+                        binding: EgotInfosBinding(),
+                        children: [
+                          GetPage(
+                            name: _Paths.ARCHIVES,
+                            page: () => const ArchivesView(),
+                            binding: ArchivesBinding(),
+                          ),
+                          GetPage(
+                            name: _Paths.OUVRAGE,
+                            page: () => OuvrageView(),
+                            binding: OuvrageBinding(),
+                          ),
+                        ]),
+                  ]),
+              GetPage(
+                name: _Paths.GODZY_LOGO,
+                page: () => GodzyLogoView(),
+                binding: GodzyLogoBinding(),
+              ),
+              GetPage(
+                  name: _Paths.COMPANY_CARD,
+                  page: () => const CompanyCardView(),
+                  binding: CompanyCardBinding(),
+                  children: [
+                    GetPage(
+                      name: _Paths.ADD_COMPANY,
+                      page: () => const AddCompanyView(),
+                      binding: AddCompanyBinding(),
+                    ),
+                    GetPage(
+                      name: _Paths.LIST_COMPANY,
+                      page: () => const ListCompanyView(),
+                      binding: ListCompanyBinding(),
+                    ),
+                  ]),
+            ],
+            popGesture: true,
+          ),
+          GetPage(
+              name: _Paths.AUTH,
+              page: () => AuthView(),
+              binding: AuthBinding(),
+              children: [
+                GetPage(
+                  name: _Paths.USER,
+                  page: () => UserView(),
+                  binding: UserBinding(),
+                ),
+                GetPage(
+                  name: _Paths.SIGN_IN,
+                  page: () => const SignInView(),
+                  binding: SignInBinding(),
+                ),
+                GetPage(
+                  name: _Paths.REGISTER,
+                  page: () => RegisterView(),
+                  binding: RegisterBinding(),
+                ),
+              ]),
+        ]),
   ];
 }

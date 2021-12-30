@@ -1,7 +1,9 @@
-import 'package:egot_services/app/modules/presentation/controllers/presentation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:getxfire/getxfire.dart';
+
+import 'package:egot_services/app/modules/presentation/controllers/presentation_controller.dart';
 
 class PresentationView extends GetView<PresentationController> {
   const PresentationView({Key? key}) : super(key: key);
@@ -116,7 +118,7 @@ class PresentationView extends GetView<PresentationController> {
       ),
       backgroundColor: Colors.greenAccent,
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => Get.toNamed('/home'), label: const Text('Get Home')),
+          onPressed: () => Get.rootDelegate.toNamed('/home'), label: const Text('Get Home')),
     );
   }
 

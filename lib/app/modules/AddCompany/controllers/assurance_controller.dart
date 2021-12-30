@@ -1,10 +1,10 @@
+import 'package:get/get.dart';
+
 import 'package:egot_services/app/models/assurance_model.dart';
 import 'package:egot_services/app/modules/AddCompany/providers/assurance_provider.dart';
-import 'package:get/get.dart';
 
 class AssuranceController extends GetxController
     with StateMixin<List<Assurance>> {
-
   static AssuranceController? get to => Get.find();
   final provider = AssuranceProvider();
 

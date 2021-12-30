@@ -1,10 +1,12 @@
-import 'package:egot_services/app/models/menus_model.dart';
-import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
-import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
-import 'package:egot_services/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
+
 import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
+
+import 'package:egot_services/app/models/menus_model.dart';
+import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
+import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
+import 'package:egot_services/app/routes/app_pages.dart';
 
 class HomeController extends GetxController {
   var isLoading = true.obs;
@@ -19,11 +21,10 @@ class HomeController extends GetxController {
 
   var firebaseAuthController = SignInController();
 
-  var userModel = UserController().user;
+  var userModel = UserController(Get.parameters['userId']).user;
 
   @override
   void onInit() {
-
     super.onInit();
   }
 
@@ -46,10 +47,10 @@ class HomeController extends GetxController {
 
   void handleAuthStateChanged(isSignIn) {
     if (isSignIn) {
-      Get.offAllNamed(Routes.HOME, arguments: firebaseAuthController.firebaseAuth.currentUser);
+      Get.rootDelegate.toNamed(Routes.HOME,
+          arguments: firebaseAuthController.firebaseAuth.currentUser);
     } else {
-      Get.offAllNamed(Routes.REGISTER);
+      Get.rootDelegate.toNamed(Routes.REGISTER);
     }
   }
-
 }

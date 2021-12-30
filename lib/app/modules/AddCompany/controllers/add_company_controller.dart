@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+import 'package:getxfire/getxfire.dart';
+
 import 'package:egot_services/app/modules/AddCompany/controllers/assurance_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
 
 class AddCompanyController extends GetxController {
   static AddCompanyController? get to => Get.find();
@@ -11,7 +13,7 @@ class AddCompanyController extends GetxController {
 
   final registerServices = RegisterServices();
   final formKeys = <GlobalKey<FormState>>[].obs;
-  final userModel = UserController().user;
+  final userModel = UserController(Get.arguments['userId']).user;
 
   final pageController =
       PageController(initialPage: 0, viewportFraction: 1.0, keepPage: true);

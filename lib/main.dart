@@ -1,4 +1,4 @@
-import 'package:egot_services/app/modules/Home/views/home_view.dart';
+import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:egot_services/app/routes/app_pages.dart';
 import 'package:egot_services/app/themes/app_theme_data.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +14,12 @@ Future<void> main() async {
     options: firebaseOptions,
   );
 
-  runApp(GetMaterialApp(
+  runApp(GetMaterialApp.router(
     debugShowCheckedModeBanner: false,
+    title: "Egote Service App",
+    initialBinding: BindingsBuilder(() => Get.put(AuthController())),
     getPages: AppPages.routes,
-    initialRoute: AppPages.INITIAL,
-    home: const HomeView(),
+    routingCallback: (value) => Get.toNamed('/', id: Get.arguments['id']),
     opaqueRoute: Get.isOpaqueRouteDefault,
     popGesture: Get.isPopGestureEnable,
     transitionDuration: Get.defaultDialogTransitionDuration,

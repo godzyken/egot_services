@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+
 import 'package:egot_services/app/helpers/firebase_manager.dart';
 import 'package:egot_services/app/models/available_model.dart';
 import 'package:egot_services/app/modules/archives/controllers/archives_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ModelSelectionWidget extends GetWidget<ArchivesController> {
   final Function onTap;

@@ -1,10 +1,11 @@
-import 'package:egot_services/app/modules/Register/bindings/register_binding.dart';
-import 'package:egot_services/app/modules/Register/controllers/register_controller.dart';
-import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
-import 'package:egot_services/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
+
+import 'package:egot_services/app/modules/Register/bindings/register_binding.dart';
+import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
+import 'package:egot_services/app/routes/app_pages.dart';
 
 class EnsureAuthMiddleware extends GetMiddleware {
   static final middlewares = [
@@ -21,9 +22,11 @@ class EnsureAuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     print('route: $route');
-    return isSignIn.value == authServices?.isSignIn.isFalse || route == Routes.REGISTER
+    return isSignIn.value == authServices?.isSignIn.isFalse ||
+            route == Routes.REGISTER
         ? null
-        : RouteSettings(name: Routes.REGISTER, arguments: authServices?.isSignIn.value);
+        : RouteSettings(
+            name: Routes.REGISTER, arguments: authServices?.isSignIn.value);
   }
 
   @override
@@ -75,7 +78,7 @@ class EnsureAuthMiddleware extends GetMiddleware {
 class EnsureNotAuthedMiddleware extends GetMiddleware {
   @override
   Future<GetNavConfig?> redirectDelegate(GetNavConfig route) async {
-    final authServices = Get.put(AuthController());
+    final authServices = Get.find<AuthController>();
 
     if (authServices.isSignIn.value) {
       //NEVER navigate to auth screen, when user is already authed
@@ -99,9 +102,9 @@ class EnsureProfileMiddleware extends GetMiddleware {
     final authServices = AuthController();
     if (isProfileSet.value == authServices.isSignIn.isFalse) {
       print('redirecte to: ${authServices.isSignIn.value}');
+      return const RouteSettings(name: Routes.AUTH);
+    } else {
       return const RouteSettings(name: Routes.HOME);
     }
   }
-
-
 }

@@ -1,19 +1,20 @@
+import 'package:getxfire/getxfire.dart';
+
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
-import 'package:getxfire/getxfire.dart';
 
 class RegisterServices extends GetConnect {
   static RegisterServices get to => Get.find();
-  final _firestore = GetxFire.firestore;
+  final firestore = GetxFire.firestore;
 
   // Section ['Users']
   Future<bool> createNewUser(UserModel? userModel) async {
     try {
-      return await _firestore
+      return await firestore
           .createData(
               collection: "users",
               data: userModel!.toJson(),
-              id: userModel.id,
+              id: userModel.id.toString(),
               isErrorDialog: true,
               onError: (code) {
                 GetxFire.openDialog.messageError('Error message1: ${code}',
@@ -26,6 +27,8 @@ class RegisterServices extends GetConnect {
           GetxFire.openDialog.messageSuccess('data users is create:',
               title: 'create data user successfully',
               duration: const Duration(seconds: 10));
+          AuthController().isSignIn.value = true;
+          Get.rootDelegate.toNamed('/home');
           return true;
         } else {
           print('create data user failed');
@@ -48,7 +51,7 @@ class RegisterServices extends GetConnect {
     try {
       userModel?.id = AuthController().user?.uid;
 
-      return await _firestore.updateData(
+      return await firestore.updateData(
           collection: "users",
           data: userModel!.toJson(),
           id: userModel.id,
@@ -69,7 +72,7 @@ class RegisterServices extends GetConnect {
 
   Future<UserModel> getUserDetail(String? uid) async {
     try {
-      var _doc = await _firestore.getDetail(collection: "users", id: uid!);
+      var _doc = await firestore.getDetail(collection: "users", id: uid!);
 
       return UserModel.fromDocumentSnapshot(_doc);
     } catch (e) {
@@ -91,7 +94,7 @@ class RegisterServices extends GetConnect {
   }
 
   Stream<QuerySnapshot<Object?>> streamGetUsers(String? uid) {
-    return _firestore.streamData(
+    return firestore.streamData(
       collection: "users",
       collectionChild: "agents",
       idChild: uid!,
@@ -133,7 +136,7 @@ class RegisterServices extends GetConnect {
 
   Future<void> updateAgent(bool newAgent, String? uid, String? agentId) async {
     try {
-      await _firestore.updateData(
+      await firestore.updateData(
           collection: "users/agents", id: uid, data: UserModel().toJson());
     } catch (e) {
       print(e);
@@ -144,7 +147,7 @@ class RegisterServices extends GetConnect {
   // Section ['Contacts']
   Future<bool> createContact(ContactModel? contactModel) async {
     try {
-      await _firestore.createData(
+      await firestore.createData(
           collection: "contacts",
           data: ContactModel().toJson(),
           id: contactModel!.id);
@@ -173,7 +176,7 @@ class RegisterServices extends GetConnect {
   }
 
   Stream<QuerySnapshot<Object?>> streamContact(String? uid) {
-    return _firestore.streamData(
+    return firestore.streamData(
         collection: "users", collectionChild: "contacts", idChild: uid);
   }
 

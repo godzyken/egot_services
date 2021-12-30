@@ -1,11 +1,13 @@
-import 'package:egot_services/app/helpers/show_loading.dart';
-import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
-import 'package:egot_services/app/modules/Register/services/register_services.dart';
-import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
+
+import 'package:egot_services/app/helpers/show_loading.dart';
+import 'package:egot_services/app/modules/Register/services/register_services.dart';
+import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
+import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 
 class SignInController extends GetxController {
   static SignInController? get to => Get.find();
@@ -63,9 +65,8 @@ class SignInController extends GetxController {
   onErrorCatch(code, message) {
     if (code == 'email-already-in-use') {
       GetxFire.openDialog.messageError('Email is wrong : $message',
-          title: 'Create User: $code',
-          duration: const Duration(seconds: 12));
-      Get.toNamed('/sign-in');
+          title: 'Create User: $code', duration: const Duration(seconds: 12));
+      Get.rootDelegate.toNamed('/sign-in');
     } else {
       GetxFire.openDialog.messageError('Maa ké passu : $message',
           title: 'Error Create User: $code',
@@ -99,14 +100,15 @@ class SignInController extends GetxController {
       GetxFire.openDialog.messageSuccess('on success login: $userCredential',
           title: 'userCredential', duration: const Duration(seconds: 12));
 
-      Get.toNamed('/user');
+      Get.rootDelegate.toNamed('/home');
+
+      AuthController().isSignIn.value = true;
 
       update();
     } else {
       isRegister.value = false;
     }
   }
-
 
   login(context) async {
     try {
@@ -130,11 +132,9 @@ class SignInController extends GetxController {
           password: passwordController.text);
       Get.find<UserController>().user =
           await RegisterServices().getUser(_authResult.user!.uid);
-
     } on FirebaseAuthException catch (code, e) {
       print('wattttata: $e');
-      GetxFire.openDialog.messageError(
-          'Wats wrong? : ${code.message}',
+      GetxFire.openDialog.messageError('Wats wrong? : ${code.message}',
           title: 'Error during login Wep: ${code.code}',
           duration: const Duration(seconds: 12));
     }
@@ -143,18 +143,14 @@ class SignInController extends GetxController {
   logout() async {
     try {
       await firebaseAuth.signOut();
-      Get.find<UserController>().clear();
+      //Get.find<UserController>().clear();
       GetxFire.signOut();
 
-      GetxFire.openDialog.messageSuccess(
-          'Ciao banbino',
-          title: 'logout success',
-          duration: const Duration(seconds: 12));
-
+      GetxFire.openDialog.messageSuccess('Ciao banbino',
+          title: 'logout success', duration: const Duration(seconds: 12));
     } on FirebaseAuthException catch (code, e) {
       print('Error logout: $e');
-      GetxFire.openDialog.messageError(
-          'Maa ké zako : $e',
+      GetxFire.openDialog.messageError('Maa ké zako : $e',
           title: 'Error during logout: ${code.code}',
           duration: const Duration(seconds: 12));
     }

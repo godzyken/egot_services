@@ -1,7 +1,7 @@
-import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
-import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
 import 'package:flutter/material.dart';
 
+import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
+import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
 import 'package:get/get.dart';
 
 import '../controllers/archives_controller.dart';
@@ -25,8 +25,10 @@ class ArchivesView extends GetView<ArchivesController> {
               ARView(
                 showPlatformType: _.modelChoiceActive,
                 onARViewCreated: _.onARViewCreated,
-                permissionPromptDescription: "Camera permission must be given to the app for AR functions to work",
-                permissionPromptParentalRestriction: "Camera permission is restriced by the OS, please check parental control settings",
+                permissionPromptDescription:
+                    "Camera permission must be given to the app for AR functions to work",
+                permissionPromptParentalRestriction:
+                    "Camera permission is restriced by the OS, please check parental control settings",
                 planeDetectionConfig:
                     PlaneDetectionConfig.horizontalAndVertical,
               ),
@@ -68,9 +70,8 @@ class ArchivesView extends GetView<ArchivesController> {
                 child: Visibility(
                   visible: _.modelChoiceActive,
                   child: ModelSelectionWidget(
-                    onTap: _.onModelSelected,
-                    firebaseManager: _.firebaseManager
-                  ),
+                      onTap: _.onModelSelected,
+                      firebaseManager: _.firebaseManager),
                 ),
               ),
             ],

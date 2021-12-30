@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
@@ -9,13 +11,12 @@ import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
 import 'package:ar_flutter_plugin/models/ar_anchor.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
-import 'package:egot_services/app/helpers/firebase_manager.dart';
-import 'package:egot_services/app/models/available_model.dart';
-import 'package:vector_math/vector_math_64.dart' as VectorMath;
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
+import 'package:vector_math/vector_math_64.dart' as VectorMath;
+
+import 'package:egot_services/app/helpers/firebase_manager.dart';
+import 'package:egot_services/app/models/available_model.dart';
 
 class ArchivesController extends GetxController {
   Map<String, Map> anchorsInDownloadProgress = <String, Map>{};
@@ -49,9 +50,9 @@ class ArchivesController extends GetxController {
 
   @override
   void onReady() {
-    onARViewCreated(arSessionManager, arObjectManager, arAnchorManager, arLocationManager);
+    onARViewCreated(
+        arSessionManager, arObjectManager, arAnchorManager, arLocationManager);
     super.onReady();
-
   }
 
   @override
@@ -70,11 +71,11 @@ class ArchivesController extends GetxController {
   }
 
   onARViewCreated(
-      ARSessionManager? arSessionManager,
-      ARObjectManager? arObjectManager,
-      ARAnchorManager? arAnchorManager,
-      ARLocationManager? arLocationManager,
-      ) {
+    ARSessionManager? arSessionManager,
+    ARObjectManager? arObjectManager,
+    ARAnchorManager? arAnchorManager,
+    ARLocationManager? arLocationManager,
+  ) {
     arSessionManager = arSessionManager;
     arObjectManager = arObjectManager;
     arAnchorManager = arAnchorManager;
@@ -199,7 +200,7 @@ class ArchivesController extends GetxController {
     if (anchor is ARPlaneAnchor) {
       for (var nodeName in anchor.childNodes) {
         firebaseManager.uploadObject(
-          nodes.firstWhere((element) => element.name == nodeName));
+            nodes.firstWhere((element) => element.name == nodeName));
       }
     }
     readyToDownload = true;
@@ -209,12 +210,11 @@ class ArchivesController extends GetxController {
   }
 
   ARAnchor onAnchorDownloaded(Map<String, dynamic> serializedAnchor) {
-    final anchor = ARPlaneAnchor.fromJson(
-        anchorsInDownloadProgress);
+    final anchor = ARPlaneAnchor.fromJson(anchorsInDownloadProgress);
     anchorsInDownloadProgress.remove(anchor.cloudanchorid);
     anchors.add(anchor);
 
- /*   firebaseManager.getObjectsFromAnchor(anchor, (snapshot) {
+    /*   firebaseManager.getObjectsFromAnchor(anchor, (snapshot) {
       for (var objectDoc in snapshot.docs) {
         var object = ARNode.fromMap(objectDoc.data());
         arObjectManager!.addNode(object, planeAnchor: anchor);
@@ -239,21 +239,24 @@ class ArchivesController extends GetxController {
     }
   }
 
-
-  void showAlertDialog(String title, String content,
-      String buttonText, Function buttonFunction, String cancelButtonText) {
+  void showAlertDialog(String title, String content, String buttonText,
+      Function buttonFunction, String cancelButtonText) {
     // set up the buttons
     Widget cancelButton = ElevatedButton(
       child: Text(cancelButtonText),
       onPressed: () {
-        GetNavigator(pages: [],).onPopPage;
+        GetNavigator(
+          pages: [],
+        ).onPopPage;
       },
     );
     Widget actionButton = ElevatedButton(
       child: Text(buttonText),
       onPressed: () {
         buttonFunction();
-        GetNavigator(pages: const [],).onPopPage;
+        GetNavigator(
+          pages: const [],
+        ).onPopPage;
       },
     );
 
@@ -275,7 +278,4 @@ class ArchivesController extends GetxController {
       },
     );
   }
-
-
-
 }

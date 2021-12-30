@@ -1,14 +1,26 @@
-import 'package:egot_services/app/models/use_x_models.dart';
-import 'package:egot_services/app/modules/user/providers/user_provider.dart';
 import 'package:get/get.dart';
 
+import 'package:egot_services/app/models/use_x_models.dart';
+import 'package:egot_services/app/modules/user/providers/user_provider.dart';
+
 class UserController extends SuperController<List<UserModel>> {
+  UserController(this.userId);
+
   final userProvider = UserProvider();
   final _userModel = UserModel().obs;
+  String? userId;
+
+  var running = false.obs;
 
   UserModel? get user => _userModel.value;
 
   set user(UserModel? value) => _userModel.value = value!;
+
+  Stream<UserModel?> userStream() async* {
+    while (running.value) {
+      await findAllUsers();
+    }
+  }
 
   @override
   void onInit() {
@@ -48,15 +60,17 @@ class UserController extends SuperController<List<UserModel>> {
     _userModel.value = UserModel();
   }
 
-  void findAllUsers() {
+  findAllUsers() async {
     userProvider.getAllUsers().then((result) {
       List<UserModel>? data = result.body;
 
       change(data, status: RxStatus.success());
+
+      return data!.toList();
     }, onError: (err) {
       change(null, status: RxStatus.error(err.toString()));
-    }
-    );
+      return err;
+    });
   }
 
   updateUserCompanyEmail(String? newValue) {
@@ -99,7 +113,6 @@ class UserController extends SuperController<List<UserModel>> {
     update();
 
     print('New company spéciality: ${_userModel.value.specialisation}');
-
   }
 
   updateUserCompanyIdentity(String? newValue) {

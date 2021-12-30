@@ -61,7 +61,8 @@ class SelectedAppartement extends StatelessWidget {
                   controlAffinity: ListTileControlAffinity.leading,
                   value: _.isAppartement.value,
                   title: const Text('Appartement'),
-                  onChanged: (value) => _.isAppartement.value = !_.isAppartement.value,
+                  onChanged: (value) =>
+                      _.isAppartement.value = !_.isAppartement.value,
                   contentPadding: const EdgeInsets.all(18.0),
                   activeColor: Colors.green,
                   checkColor: Colors.black87,

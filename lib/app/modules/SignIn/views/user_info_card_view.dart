@@ -1,8 +1,9 @@
-import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
-import 'package:egot_services/app/modules/SignIn/views/update_user_dialog_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+
+import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
+import 'package:egot_services/app/modules/SignIn/views/update_user_dialog_view.dart';
 
 class UserInfoCardView extends GetView {
   const UserInfoCardView({Key? key}) : super(key: key);

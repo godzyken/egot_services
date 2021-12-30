@@ -1,14 +1,16 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:getxfire/getxfire.dart';
+
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/AddCompany/controllers/add_company_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:getxfire/getxfire.dart';
 
 class RegisterController extends GetxController {
   static RegisterController? get to => Get.find();
@@ -49,7 +51,6 @@ class RegisterController extends GetxController {
   @override
   void onInit() {
     addCompanyC = AddCompanyController();
-
 
     super.onInit();
   }
@@ -96,23 +97,17 @@ class RegisterController extends GetxController {
   }
 
   Future<void> register() async {
-
     try {
-      if (await authC.connectToFirebase().then((value) => isSignIn.value = value!)) {
-
-
+      if (await authC
+          .connectToFirebase()
+          .then((value) => isSignIn.value = value!)) {
         await authC.createUser(userModel!.companyName,
             emailController.value.text, passwordController.value.text);
-
-        print('create User With Email And Password! '
-            '${authC.auth.currentUser!.uid}, '
-            ' ${authC.user?.uid}');
       } else {
         print('error de connection!');
         return;
       }
     } on FirebaseAuthException catch (code, e) {
-
       print('Register error code: $e');
       GetxFire.openDialog.messageError(
         "Error creating Account : ${code.code}",
@@ -125,7 +120,7 @@ class RegisterController extends GetxController {
   onErrorCatch(code, message) {
     if (code == 'email-already-in-use') {
       GetxFire.openDialog.messageError(message!);
-      Get.toNamed('/sign-in');
+      Get.rootDelegate.toNamed('/sign-in');
     } else {
       GetxFire.openDialog.messageError(code);
     }
@@ -212,7 +207,7 @@ class RegisterController extends GetxController {
 
   handleAuthChanged(isLoggedIn) {
     if (isLoggedIn) {
-      Get.toNamed('/home');
+      Get.rootDelegate.toNamed('/home');
 
       update();
     } else {

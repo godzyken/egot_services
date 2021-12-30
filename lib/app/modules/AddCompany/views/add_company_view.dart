@@ -1,10 +1,11 @@
-import 'package:egot_services/app/modules/AddCompany/controllers/assurance_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_signin_button/button_builder.dart';
 
+import 'package:flutter_signin_button/button_builder.dart';
 import 'package:get/get.dart';
+
+import 'package:egot_services/app/modules/AddCompany/controllers/assurance_controller.dart';
 
 import '../../../models/assurance_model.dart';
 import '../controllers/add_company_controller.dart';
@@ -73,9 +74,8 @@ class AddCompanyView extends GetView<AddCompanyController> {
           onPressed: () async {
             print('thheeee brrrooout1');
             if (await _.registerServices.updateUser(_.userModel)) {
-              return Get.toNamed('/user',
-                  arguments: Get.arguments,
-                  preventDuplicates: true);
+              return Get.rootDelegate.toNamed('/user',
+                  arguments: Get.arguments['userId']);
             }
             // _.createNewUser();
           }),
@@ -142,7 +142,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                       //                 final Assurance assurance =
                       //                 state![index];
                       //                 return ListTile(
-                      //                   onTap: () => Get.toNamed(
+                      //                   onTap: () => Get.rootDelegate.toNamed(
                       //                       '/add-company',
                       //                       arguments: assurance),
                       //                   title:

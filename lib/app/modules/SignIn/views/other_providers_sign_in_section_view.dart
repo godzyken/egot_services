@@ -1,10 +1,11 @@
-import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-
 import 'package:get/get.dart';
+
+import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 
 class OtherProvidersSignInSectionView extends GetView {
   const OtherProvidersSignInSectionView({Key? key}) : super(key: key);
@@ -39,7 +40,7 @@ class OtherProvidersSignInSectionView extends GetView {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                       /*     ListTile(
+                            /*     ListTile(
                               title: const Text('GitHub'),
                               leading: Radio<int>(
                                 value: 0,

@@ -7,24 +7,25 @@ abstract class Routes {
   static String LOGIN_THEN(String afterSuccessfulLogin) =>
       '$SIGN_IN?then=${Uri.encodeQueryComponent(afterSuccessfulLogin)}';
 
-  static const EGOT_SERVICES = _Paths.EGOT_SERVICES;
+  static const EGOT_SERVICES = _Paths.HOME + _Paths.EGOT_SERVICES;
   static const DEVIS = _Paths.DEVIS;
   static const HOME = _Paths.HOME;
   static const SKETCH_MY_WISHES = _Paths.SKETCH_MY_WISHES;
-  static const ATELIER = _Paths.ATELIER;
+  static const ATELIER = _Paths.HOME + _Paths.ATELIER;
   static const OUVRAGE = _Paths.OUVRAGE;
   static const MENTIONS_LEGALS = _Paths.MENTIONS_LEGALS;
   static const EGOT_INFOS = _Paths.EGOT_INFOS;
   static const GODZY_LOGO = _Paths.GODZY_LOGO;
-  static const PRESENTATION = _Paths.PRESENTATION;
+  static const PRESENTATION = _Paths.HOME + _Paths.PRESENTATION;
   static const ARCHIVES = _Paths.ARCHIVES;
   static const SIGN_IN = _Paths.SIGN_IN;
   static const REGISTER = _Paths.REGISTER;
   static const ADD_COMPANY = _Paths.ADD_COMPANY;
   static const LIST_COMPANY = _Paths.LIST_COMPANY;
-  static const COMPANY_CARD = _Paths.COMPANY_CARD;
-  static const USER = _Paths.USER;
+  static const COMPANY_CARD = _Paths.HOME + _Paths.COMPANY_CARD;
   static const AUTH = _Paths.AUTH;
+
+  static String USER(String? userId) => '$AUTH/$userId';
 }
 
 abstract class _Paths {
@@ -44,6 +45,6 @@ abstract class _Paths {
   static const ADD_COMPANY = '/add-company';
   static const LIST_COMPANY = '/list-company';
   static const COMPANY_CARD = '/company-card';
-  static const USER = '/user';
+  static const USER = '/:user';
   static const AUTH = '/auth';
 }

@@ -1,7 +1,8 @@
-import 'package:egot_services/app/modules/CompanyCard/views/company_card_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+
+import 'package:egot_services/app/modules/CompanyCard/views/company_card_view.dart';
 
 import '../controllers/list_company_controller.dart';
 

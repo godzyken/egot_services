@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 class GodzyLogoController extends GetxController {
   //TODO: Implement GodzyLogoController
 
-
   final count = 0.obs;
   @override
   void onInit() {

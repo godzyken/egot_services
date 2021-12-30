@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
 
 class RxUserModel {
-  final id = '0'.obs;
+  final id = 0.obs;
   final tenantId = '0'.obs;
   final refreshToken = '0'.obs;
   final companyName = 'Godzyken'.obs;
@@ -26,7 +26,9 @@ class RxUserModel {
   final following = 0.obs;
   final createdAt = 'createAt'.obs;
   final updatedAt = 'updateAt'.obs;
-  final avatarUrl = 'https://cdn.pixabay.com/photo/2021/09/25/19/06/witch-6655604_1280.png'.obs;
+  final avatarUrl =
+      'https://cdn.pixabay.com/photo/2021/09/25/19/06/witch-6655604_1280.png'
+          .obs;
   final gravatarId = 'gravatarId'.obs;
   final url = 'url'.obs;
   final htmlUrl = 'htmlUrl'.obs;

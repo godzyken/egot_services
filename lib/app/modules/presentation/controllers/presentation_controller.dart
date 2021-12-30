@@ -1,13 +1,14 @@
 import 'dart:async';
+import 'dart:convert' show json;
+
+import 'package:get/get.dart';
+import 'package:getxfire/getxfire.dart';
 
 import 'package:egot_services/app/models/store_model.dart';
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/Home/controllers/home_controller.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/modules/presentation/repository/repository.dart';
-import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
-import 'dart:convert' show json;
 
 class PresentationController extends SuperController<Store> {
   HomeController homeController = Get.find<HomeController>();
@@ -21,7 +22,7 @@ class PresentationController extends SuperController<Store> {
       .snapshots();
 
   var count = 0.obs;
-  
+
   final IStoreRepository repository;
 
   User? user;
@@ -53,10 +54,11 @@ class PresentationController extends SuperController<Store> {
   ///function Ok with cloud field have to create
   void addContact() {
     Map<String, int> contact = {
-      "count":(count+1).toInt(),
+      "count": (count + 1).toInt(),
     };
-    
-    DocumentReference documentReference = FirebaseFirestore.instance.collection('presentation').doc("contact");
+
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection('presentation').doc("contact");
 
     documentReference.update(contact);
   }

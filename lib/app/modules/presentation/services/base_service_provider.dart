@@ -1,10 +1,10 @@
-import 'package:egot_services/app/models/store_model.dart';
 import 'package:get/get.dart';
+
+import 'package:egot_services/app/models/store_model.dart';
 
 class BaseServiceProvider extends GetConnect {
   @override
   void onInit() {
-
     httpClient.defaultDecoder = (data) => Store.fromJson(data);
     httpClient.baseUrl = 'http://192.168.1.12:3000';
     httpClient.defaultContentType = "application/json";
