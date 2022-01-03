@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
-import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
 import 'package:get/get.dart';
 
 import '../controllers/archives_controller.dart';
-import 'model_selection_widget.dart';
 
 class ArchivesView extends GetView<ArchivesController> {
   const ArchivesView({Key? key}) : super(key: key);
@@ -13,13 +10,14 @@ class ArchivesView extends GetView<ArchivesController> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ArchivesController>(
-      assignId: true,
+      init: ArchivesController(),
       builder: (_) {
         return Scaffold(
           body: Stack(
+            fit: StackFit.expand,
             children: [
-              ARView(
-                showPlatformType: _.modelChoiceActive,
+         /*     ARView(
+                showPlatformType: _.modelChoiceActive.value,
                 onARViewCreated: _.onARViewCreated,
                 permissionPromptDescription:
                     "Camera permission must be given to the app for AR functions to work",
@@ -49,14 +47,14 @@ class ArchivesView extends GetView<ArchivesController> {
                         onPressed: _.onUploadButtonPressed,
                         child: const Text("Upload"),
                       ),
-                      visible: _.readyToUpload,
+                      visible: _.readyToUpload.value,
                     ),
                     Visibility(
                       child: ElevatedButton(
                         onPressed: _.onDownloadButtonPressed,
                         child: const Text("Download"),
                       ),
-                      visible: _.readyToDownload,
+                      visible: _.readyToDownload.value,
                     ),
                   ],
                 ),
@@ -64,12 +62,24 @@ class ArchivesView extends GetView<ArchivesController> {
               Align(
                 alignment: FractionalOffset.centerLeft,
                 child: Visibility(
-                  visible: _.modelChoiceActive,
+                  visible: _.modelChoiceActive.value,
                   child: ModelSelectionWidget(
                       onTap: _.onModelSelected,
                       firebaseManager: _.firebaseManager),
                 ),
-              ),
+              ),*/
+              _.anchorWasFound.value
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Point the camera at the pointer',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5!
+                            .copyWith(color: Colors.white),
+                      ),
+                    )
             ],
           ),
         );

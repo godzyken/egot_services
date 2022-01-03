@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -13,24 +15,28 @@ import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
-import 'package:vector_math/vector_math_64.dart' as VectorMath;
+import 'package:vector_math/vector_math_64.dart' as vectorMath;
 
 import 'package:egot_services/app/helpers/firebase_manager.dart';
 import 'package:egot_services/app/models/available_model.dart';
 
 class ArchivesController extends GetxController {
   Map<String, Map> anchorsInDownloadProgress = <String, Map>{};
-  var error = false;
-  var readyToUpload = false;
-  var readyToDownload = false;
-  var modelChoiceActive = false;
+  var error = false.obs;
+  var readyToUpload = false.obs;
+  var readyToDownload = false.obs;
+  var modelChoiceActive = false.obs;
+  var anchorWasFound = false.obs;
   var firebaseManager = FirebaseManager();
   var _platformVersion;
+  var urlSketch ='https://app.sketchup.com/app';
 
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
   ARAnchorManager? arAnchorManager;
   ARLocationManager? arLocationManager;
+
+  Timer? timer;
 
   var nodes = <ARNode>[];
   var anchors = <ARAnchor>[];
@@ -44,14 +50,15 @@ class ArchivesController extends GetxController {
     super.onInit();
     initPlatformState();
     firebaseManager.initializeFlutterFire().then((value) {
-      error = !value;
+      error.value = !value;
     });
   }
 
   @override
   void onReady() {
-    onARViewCreated(
-        arSessionManager, arObjectManager, arAnchorManager, arLocationManager);
+    /*onARViewCreated(
+        arSessionManager, arObjectManager, arAnchorManager, arLocationManager);*/
+
     super.onReady();
   }
 
@@ -70,6 +77,7 @@ class ArchivesController extends GetxController {
     return _platformVersion = platformVersion;
   }
 
+
   onARViewCreated(
     ARSessionManager? arSessionManager,
     ARObjectManager? arObjectManager,
@@ -82,7 +90,6 @@ class ArchivesController extends GetxController {
     arLocationManager = arLocationManager;
 
     arSessionManager!.onInitialize();
-
     arObjectManager!.onInitialize();
     arAnchorManager!.initGoogleCloudAnchorMode();
 
@@ -134,13 +141,14 @@ class ArchivesController extends GetxController {
       arSessionManager!.onError(error.toString());
     });
   }
-
+ 
   void onModelSelected(AvailableModel model) {
     selectedModel = model;
     arSessionManager!.onError(model.name! + " selected");
 
-    modelChoiceActive = false;
+    modelChoiceActive.value = false;
   }
+  
 
   Future<void> onRemoveEverythinh() async {
     for (var anchor in anchors) {
@@ -148,11 +156,11 @@ class ArchivesController extends GetxController {
     }
     anchors = [];
     if (lastUploadedAnchor != "") {
-      readyToDownload = true;
-      readyToUpload = false;
+      readyToDownload.value = true;
+      readyToUpload.value = false;
     } else {
-      readyToDownload = true;
-      readyToUpload = false;
+      readyToDownload.value = true;
+      readyToUpload.value = false;
     }
   }
 
@@ -175,15 +183,15 @@ class ArchivesController extends GetxController {
       var newNode = ARNode(
           type: NodeType.webGLB,
           uri: selectedModel.uri!,
-          scale: VectorMath.Vector3(0.2, 0.2, 0.2),
-          position: VectorMath.Vector3(0.0, 0.0, 0.0),
-          rotation: VectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
+          scale: vectorMath.Vector3(0.2, 0.2, 0.2),
+          position: vectorMath.Vector3(0.0, 0.0, 0.0),
+          rotation: vectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
           data: {"onTapText": "I am a " + selectedModel.name!});
 
       bool? didAddNodeToAnchor =
           await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
       nodes.add(newNode);
-      readyToUpload = true;
+      readyToUpload.value = true;
     } else {
       arSessionManager!.onError("Adding Anchor failed");
     }
@@ -191,7 +199,7 @@ class ArchivesController extends GetxController {
 
   Future<void> onUploadButtonPressed() async {
     arAnchorManager!.uploadAnchor(anchors.last);
-    readyToUpload = false;
+    readyToUpload.value = false;
   }
 
   onAnchorUploaded(ARAnchor anchor) {
@@ -203,8 +211,8 @@ class ArchivesController extends GetxController {
             nodes.firstWhere((element) => element.name == nodeName));
       }
     }
-    readyToDownload = true;
-    readyToUpload = false;
+    readyToDownload.value = true;
+    readyToUpload.value = false;
 
     arSessionManager!.onError("Upload successful");
   }
@@ -232,7 +240,7 @@ class ArchivesController extends GetxController {
         // anchorsInDownloadProgress![cloudAnchorId] = snapshot.data();
         arAnchorManager!.downloadAnchor(cloudAnchorId);
       }, arLocationManager!.currentLocation, 0.1);
-      readyToDownload = false;
+      readyToDownload.value = false;
     } else {
       arSessionManager!
           .onError("Location updates not running, can't donwload anchors");

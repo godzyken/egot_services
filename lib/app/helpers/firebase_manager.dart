@@ -19,7 +19,6 @@ class FirebaseManager {
   Future<bool> initializeFlutterFire() async {
     try {
       // Wait for Firebase to initialize
-      await Firebase.initializeApp();
       geo = Geoflutterfire();
       firestore = FirebaseFirestore.instance;
       anchorCollection = FirebaseFirestore.instance.collection('anchors');
