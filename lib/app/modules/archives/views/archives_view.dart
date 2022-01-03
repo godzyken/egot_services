@@ -1,8 +1,11 @@
+import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
+import 'package:ar_flutter_plugin/widgets/ar_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
 import '../controllers/archives_controller.dart';
+import 'model_selection_widget.dart';
 
 class ArchivesView extends GetView<ArchivesController> {
   const ArchivesView({Key? key}) : super(key: key);
@@ -16,7 +19,7 @@ class ArchivesView extends GetView<ArchivesController> {
           body: Stack(
             fit: StackFit.expand,
             children: [
-         /*     ARView(
+              ARView(
                 showPlatformType: _.modelChoiceActive.value,
                 onARViewCreated: _.onARViewCreated,
                 permissionPromptDescription:
@@ -67,7 +70,7 @@ class ArchivesView extends GetView<ArchivesController> {
                       onTap: _.onModelSelected,
                       firebaseManager: _.firebaseManager),
                 ),
-              ),*/
+              ),
               _.anchorWasFound.value
                   ? Container()
                   : Padding(

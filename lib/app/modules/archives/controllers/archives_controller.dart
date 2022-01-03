@@ -56,8 +56,8 @@ class ArchivesController extends GetxController {
 
   @override
   void onReady() {
-    /*onARViewCreated(
-        arSessionManager, arObjectManager, arAnchorManager, arLocationManager);*/
+    onARViewCreated(
+        arSessionManager, arObjectManager, arAnchorManager, arLocationManager);
 
     super.onReady();
   }
