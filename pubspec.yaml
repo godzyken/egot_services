@@ -8,7 +8,7 @@ environment:
 dependencies: 
   cupertino_icons: ^1.0.4
   get: ^4.6.1
-  getxfire: ^0.3.1
+  getxfire: ^0.3.2
   firebase_storage: any
   animated_text_kit: 4.2.1
   flutter_signin_button: 2.0.0
@@ -60,6 +60,7 @@ flutter:
     - assets/lottie/models/umano_digitale.png
     - assets/lottie/models/myimages.imgdb
     - assets/lottie/models/topolino.jpg
+    - assets/lottie/models/santa_maria_madalena/
     - assets/lottie/models/
   uses-material-design: true
 

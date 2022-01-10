@@ -92,11 +92,11 @@ class FirebaseManager {
 
   void downloadAnchorsByChannel() {}
 
-  void getObjectsFromAnchor(ARPlaneAnchor anchor, FirebaseListener listener) {
+  void getObjectsFromAnchor(ARPlaneAnchor? anchor, FirebaseListener? listener) {
     objectCollection!
-        .where("name", whereIn: anchor.childNodes)
+        .where("name", whereIn: anchor?.childNodes)
         .get()
-        .then((value) => listener(value))
+        .then((value) => listener!(value))
         .catchError((error) => print("Failed to download objects: $error"));
   }
 

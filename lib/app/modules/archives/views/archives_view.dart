@@ -20,7 +20,7 @@ class ArchivesView extends GetView<ArchivesController> {
             fit: StackFit.expand,
             children: [
               ARView(
-                showPlatformType: _.modelChoiceActive.value,
+                showPlatformType: true,
                 onARViewCreated: _.onARViewCreated,
                 permissionPromptDescription:
                     "Camera permission must be given to the app for AR functions to work",

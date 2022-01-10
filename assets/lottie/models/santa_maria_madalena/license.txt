@@ -1,0 +1,11 @@
+Model Information:
+* title:	Santa Maria Madalena
+* source:	https://sketchfab.com/3d-models/santa-maria-madalena-0b6e738ac9e8483e8fe13f615ac8b9bb
+* author:	Shahriar Shahrabi (https://sketchfab.com/shahriyarshahrabi)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Santa Maria Madalena" (https://sketchfab.com/3d-models/santa-maria-madalena-0b6e738ac9e8483e8fe13f615ac8b9bb) by Shahriar Shahrabi (https://sketchfab.com/shahriyarshahrabi) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

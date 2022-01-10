@@ -38,6 +38,8 @@ class AuthController extends GetxController {
     );
   }
 
+
+
   Future<bool?> connectToFirebase() async {
     try {
       var authInfo = await auth.app.options;
@@ -196,13 +198,12 @@ class AuthController extends GetxController {
         title: 'Register ok :',
         duration: const Duration(seconds: 30),
       );
-      ;
 
       await _registerServices?.firestore.updateData(
         collection: 'users',
         id: user!.uid,
         data: Get.find<UserController>().user!.toJson(),
-        onError: (message) => dialogError(message),
+        onError: (message) => dialogError(message.message),
         isErrorDialog: true,
       );
 

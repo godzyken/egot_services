@@ -15,26 +15,30 @@ import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
-import 'package:vector_math/vector_math_64.dart' as vectorMath;
+import 'package:vector_math/vector_math_64.dart' as vector_math;
 
 import 'package:egot_services/app/helpers/firebase_manager.dart';
 import 'package:egot_services/app/models/available_model.dart';
 
 class ArchivesController extends GetxController {
+  final _platformVersion = 'Unknown'.obs;
   Map<String, Map> anchorsInDownloadProgress = <String, Map>{};
+  Map<String, Map> arNodeInDownloadProgress = <String, Map>{};
   var error = false.obs;
   var readyToUpload = false.obs;
   var readyToDownload = false.obs;
   var modelChoiceActive = false.obs;
+  var didAddNodeToAnchor = false.obs;
+  var didAddAnchor = false.obs;
   var anchorWasFound = false.obs;
   var firebaseManager = FirebaseManager();
-  var _platformVersion;
-  var urlSketch ='https://app.sketchup.com/app';
+  var urlSketch = 'https://app.sketchup.com/app';
 
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
   ARAnchorManager? arAnchorManager;
   ARLocationManager? arLocationManager;
+  ARNode? localObjectNode;
 
   Timer? timer;
 
@@ -54,6 +58,13 @@ class ArchivesController extends GetxController {
     });
   }
 
+
+  @override
+  void dispose() {
+    super.dispose();
+    arSessionManager!.dispose();
+  }
+
   @override
   void onReady() {
     onARViewCreated(
@@ -63,20 +74,23 @@ class ArchivesController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    super.onClose();
+    arSessionManager!.dispose();
+  }
 
   Future<String> initPlatformState() async {
-    String platformVersion = 'Unknown';
+    String? platformVersion;
 
     try {
       platformVersion = await ArFlutterPlugin.platformVersion;
+
     } on PlatformException {
       platformVersion = "Failed to get platform version.";
     }
 
-    return _platformVersion = platformVersion;
+    return _platformVersion.value = platformVersion;
   }
-
 
   onARViewCreated(
     ARSessionManager? arSessionManager,
@@ -84,19 +98,24 @@ class ArchivesController extends GetxController {
     ARAnchorManager? arAnchorManager,
     ARLocationManager? arLocationManager,
   ) {
-    arSessionManager = arSessionManager;
-    arObjectManager = arObjectManager;
-    arAnchorManager = arAnchorManager;
-    arLocationManager = arLocationManager;
+    this.arSessionManager = arSessionManager;
+    this.arObjectManager = arObjectManager;
+    this.arAnchorManager = arAnchorManager;
+    this.arLocationManager = arLocationManager;
 
-    arSessionManager!.onInitialize();
-    arObjectManager!.onInitialize();
-    arAnchorManager!.initGoogleCloudAnchorMode();
+    this.arSessionManager!.onInitialize(
+      showFeaturePoints: false,
+      showPlanes: true,
+      customPlaneTexturePath: "assets/lottie/image/maison_indiv.png",
+      showWorldOrigin: true,
+    );
+    this.arObjectManager!.onInitialize();
+    this.arAnchorManager!.initGoogleCloudAnchorMode();
 
-    arSessionManager.onPlaneOrPointTap = onPlaneOrPointTapped;
-    arObjectManager.onNodeTap = onNodeTapped;
-    arAnchorManager.onAnchorUploaded = onAnchorUploaded;
-    arAnchorManager.onAnchorDownloaded = onAnchorDownloaded;
+    this.arSessionManager!.onPlaneOrPointTap = onPlaneOrPointTapped;
+    this.arObjectManager!.onNodeTap = onNodeTapped;
+    this.arAnchorManager!.onAnchorUploaded = onAnchorUploaded;
+    this.arAnchorManager!.onAnchorDownloaded = onAnchorDownloaded;
 
 /*
     arCoreController.onNodeTap = (nodeNames) => onNodeTapped([]);
@@ -141,21 +160,20 @@ class ArchivesController extends GetxController {
       arSessionManager!.onError(error.toString());
     });
   }
- 
-  void onModelSelected(AvailableModel model) {
-    selectedModel = model;
+
+  void onModelSelected(AvailableModel? model) {
+    selectedModel = model!;
     arSessionManager!.onError(model.name! + " selected");
 
     modelChoiceActive.value = false;
   }
-  
 
   Future<void> onRemoveEverythinh() async {
     for (var anchor in anchors) {
       arAnchorManager!.removeAnchor(anchor);
     }
     anchors = [];
-    if (lastUploadedAnchor != "") {
+    if (lastUploadedAnchor.isNotEmpty) {
       readyToDownload.value = true;
       readyToUpload.value = false;
     } else {
@@ -167,6 +185,8 @@ class ArchivesController extends GetxController {
   Future<void> onNodeTapped(List<String> nodeNames) async {
     var foregroundNode =
         nodes.firstWhere((element) => element.name == nodeNames.first);
+
+    arSessionManager!.onError(foregroundNode.data!["onTapText"]);
   }
 
   Future<void> onPlaneOrPointTapped(
@@ -177,23 +197,31 @@ class ArchivesController extends GetxController {
     if (singleHitTestResult != null) {
       var newAnchor = ARPlaneAnchor(
           transformation: singleHitTestResult.worldTransform, ttl: 2);
-      bool? didAddAnchor = await arAnchorManager!.addAnchor(newAnchor);
-      anchors.add(newAnchor);
+      didAddAnchor.value = (await arAnchorManager!.addAnchor(newAnchor))!;
 
-      var newNode = ARNode(
-          type: NodeType.webGLB,
-          uri: selectedModel.uri!,
-          scale: vectorMath.Vector3(0.2, 0.2, 0.2),
-          position: vectorMath.Vector3(0.0, 0.0, 0.0),
-          rotation: vectorMath.Vector4(1.0, 0.0, 0.0, 0.0),
-          data: {"onTapText": "I am a " + selectedModel.name!});
+      if (didAddAnchor.isTrue) {
+        anchors.add(newAnchor);
 
-      bool? didAddNodeToAnchor =
-          await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
-      nodes.add(newNode);
-      readyToUpload.value = true;
-    } else {
-      arSessionManager!.onError("Adding Anchor failed");
+        var newNode = ARNode(
+            type: NodeType.webGLB,
+            uri: selectedModel.uri!,
+            scale: vector_math.Vector3(0.2, 0.2, 0.2),
+            position: vector_math.Vector3(0.0, 0.0, 0.0),
+            rotation: vector_math.Vector4(1.0, 0.0, 0.0, 0.0),
+            data: {"onTapText": "I am a " + selectedModel.name!});
+
+        didAddNodeToAnchor.value =
+            (await arObjectManager!.addNode(newNode, planeAnchor: newAnchor))!;
+
+        if (didAddNodeToAnchor.isTrue) {
+          nodes.add(newNode);
+        } else {
+          arSessionManager!.onError("Adding Node to Anchor failed");
+        }
+        readyToUpload.value = true;
+      } else {
+        arSessionManager!.onError("Adding Anchor failed");
+      }
     }
   }
 
@@ -222,13 +250,15 @@ class ArchivesController extends GetxController {
     anchorsInDownloadProgress.remove(anchor.cloudanchorid);
     anchors.add(anchor);
 
-    /*   firebaseManager.getObjectsFromAnchor(anchor, (snapshot) {
+    firebaseManager.getObjectsFromAnchor(anchor, (snapshot) {
       for (var objectDoc in snapshot.docs) {
-        var object = ARNode.fromMap(objectDoc.data());
+        arNodeInDownloadProgress.containsValue(objectDoc.data());
+
+        var object = ARNode.fromMap(arNodeInDownloadProgress);
         arObjectManager!.addNode(object, planeAnchor: anchor);
         nodes.add(object);
       }
-    });*/
+    });
 
     return anchor;
   }
@@ -254,7 +284,7 @@ class ArchivesController extends GetxController {
       child: Text(cancelButtonText),
       onPressed: () {
         GetNavigator(
-          pages: [],
+          pages: const [],
         ).onPopPage;
       },
     );
@@ -285,5 +315,23 @@ class ArchivesController extends GetxController {
         return alert;
       },
     );
+  }
+
+  Future<void> onLocalObjectAtOriginButtonPressed() async {
+    if (localObjectNode != null) {
+      arObjectManager!.removeNode(localObjectNode!);
+      localObjectNode = null;
+    } else {
+      var newNode = ARNode(
+          type: NodeType.localGLTF2,
+          uri: "assets/lottie/models/santa_maria_madalena/scene.gltf",
+          scale: vector_math.Vector3(0.2, 0.2, 0.2),
+          position: vector_math.Vector3(0.0, 0.0, 0.0),
+          rotation: vector_math.Vector4(1.0, 0.0, 0.0, 0.0)
+      );
+
+      didAddAnchor.value = (await arObjectManager?.addNode(newNode))!;
+      localObjectNode = (didAddAnchor.value) ? newNode : null;
+    }
   }
 }

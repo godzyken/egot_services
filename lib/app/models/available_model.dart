@@ -1,3 +1,9 @@
+class RxModel {
+  final name= 'santa maria madalena';
+  final uri= 'https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb';
+  final image= 'assets/lottie/models/santa_maria_madalena/scene.gltf';
+}
+
 class AvailableModel {
   String? name;
   String? uri;

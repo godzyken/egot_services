@@ -81,7 +81,7 @@ class PresentationView extends GetView<PresentationController> {
                                         color: Colors.redAccent,
                                         width: 1.0,
                                         style: BorderStyle.solid)),
-                                // child: _avatarBody(context),
+                                child: _avatarBody(context),
                               ),
                             ),
                           )
