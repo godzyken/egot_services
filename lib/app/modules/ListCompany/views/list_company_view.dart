@@ -13,20 +13,20 @@ class ListCompanyView extends GetView<ListCompanyController> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
-          children: [
-            GetX<ListCompanyController>(
-              init: ListCompanyController(),
-              builder: (_) => _.userList == null
-                  ? const Text('loading...')
-                  : Expanded(
-                      child: ListView.builder(
-                      itemCount: _.userList!.value.length,
-                      itemBuilder: (_, index) => CompanyCardView(
-                          uid: controller.listController.userModel!.id,
-                          company: controller.userList!.value[index]),
-                    )),
-            ),
-          ],
-        ));
+      children: [
+        GetX<ListCompanyController>(
+          init: ListCompanyController(),
+          builder: (_) => _.userList == null
+              ? const Text('loading...')
+              : Expanded(
+                  child: ListView.builder(
+                  itemCount: _.userList!.value.length,
+                  itemBuilder: (_, index) => CompanyCardView(
+                      uid: controller.listController.userModel!.id,
+                      company: controller.userList!.value[index]),
+                )),
+        ),
+      ],
+    ));
   }
 }

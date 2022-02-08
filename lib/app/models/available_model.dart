@@ -1,15 +1,25 @@
-class RxModel {
-  final name= 'santa maria madalena';
-  final uri= 'https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb';
-  final image= 'assets/lottie/models/santa_maria_madalena/scene.gltf';
+import 'package:get/get.dart';
+
+class RxAvailableModel {
+  final name = 'santa maria madalena'.obs;
+  final uri =
+      'https://github.com/godzyken/egot_services/blob/master/assets/lottie/models/santa_maria_madalena/scene.gltf'
+          .obs;
+  final image = 'assets/lottie/models/santa_maria_madalena/scene.gltf'.obs;
 }
 
 class AvailableModel {
-  String? name;
-  String? uri;
-  String? image;
+  AvailableModel({image, name, uri});
+  final rx = RxAvailableModel();
 
-  AvailableModel({this.image, this.name, this.uri});
+  get image => rx.image.value;
+  set image(value) => rx.image.value = value;
+
+  get name => rx.name.value;
+  set name(value) => rx.name.value = value;
+
+  get uri => rx.uri.value;
+  set uri(value) => rx.uri.value = value;
 
   AvailableModel.fromJson(Map<String, dynamic> json) {
     image = json['image'];

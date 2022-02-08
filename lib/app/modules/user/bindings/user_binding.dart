@@ -10,7 +10,7 @@ class UserBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<UserController>(
-          () => UserController(Get.parameters['userId'] ?? ''),
+      () => UserController(Get.parameters['userId'] ?? ''),
     );
     Get.lazyPut<AuthController>(
       () => AuthController(),

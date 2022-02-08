@@ -70,8 +70,8 @@ class AddCompanyView extends GetView<AddCompanyController> {
           onPressed: () async {
             print('thheeee brrrooout1');
             if (await _.registerServices.updateUser(_.userModel)) {
-              return Get.rootDelegate.toNamed('/user',
-                  arguments: Get.arguments['userId']);
+              return Get.rootDelegate
+                  .toNamed('/user', arguments: Get.arguments['userId']);
             }
             // _.createNewUser();
           }),

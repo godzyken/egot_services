@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:getxfire/getxfire.dart';
 
+import 'package:egot_services/app/modules/avatar_body/views/avatar_body_view.dart';
 import 'package:egot_services/app/modules/presentation/controllers/presentation_controller.dart';
+
+import '../../user/views/user_view.dart';
 
 class PresentationView extends GetView<PresentationController> {
   const PresentationView({Key? key}) : super(key: key);
@@ -12,6 +16,7 @@ class PresentationView extends GetView<PresentationController> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: key,
+      extendBodyBehindAppBar: true,
       body: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
         child: LayoutBuilder(
@@ -80,8 +85,8 @@ class PresentationView extends GetView<PresentationController> {
                                     border: Border.all(
                                         color: Colors.redAccent,
                                         width: 1.0,
-                                        style: BorderStyle.solid)),
-                                child: _avatarBody(context),
+                                        style: BorderStyle.none)),
+                                child: const AvatarBodyView(),
                               ),
                             ),
                           )
@@ -94,14 +99,37 @@ class PresentationView extends GetView<PresentationController> {
                         children: [
                           Container(
                             key: key,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3.0),
+                                border: const Border.symmetric(
+                                    horizontal: BorderSide.none,
+                                    vertical: BorderSide.none),
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: const Offset(0, 1),
+                                    blurRadius: 5,
+                                    color: Colors.black.withOpacity(0.3),
+                                  ),
+                                ]),
                             child: Center(
                               child: Container(
+                                height: constraints.maxHeight * 0.24,
+                                width: constraints.maxWidth * 0.8,
                                 padding: const EdgeInsets.all(2.0),
                                 decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(3.0),
                                     border: Border.all(
-                                        color: Colors.redAccent,
+                                        color: Colors.transparent,
                                         width: 1.0,
-                                        style: BorderStyle.solid)),
+                                        style: BorderStyle.solid),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: const Offset(0, 1),
+                                        blurRadius: 5,
+                                        color: Colors.white.withOpacity(0.3),
+                                      ),
+                                    ]),
+                                child: const UserView(),
                               ),
                             ),
                           )
@@ -112,24 +140,9 @@ class PresentationView extends GetView<PresentationController> {
                 ),
         ),
       ),
-      backgroundColor: Colors.greenAccent,
-      floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => Get.rootDelegate.toNamed('/home'), label: const Text('Get Home')),
-    );
-  }
-
-  Widget _avatarBody(BuildContext context) {
-    return GetBuilder<PresentationController>(
-      assignId: true,
-      init: PresentationController(repository: controller.repository),
-      builder: (_) => _.user! == null
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : CircleAvatar(
-              radius: 70,
-              backgroundImage: NetworkImage(_.user!.photoURL!),
-            ),
+      backgroundColor: Colors.transparent,
+      // floatingActionButton: FloatingActionButton.extended(
+      //     onPressed: () => Get.rootDelegate.toNamed('/home'), label: const Text('Get Home')),
     );
   }
 }

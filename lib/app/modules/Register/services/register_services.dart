@@ -1,7 +1,6 @@
-import 'package:getxfire/getxfire.dart';
-
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
+import 'package:getxfire/getxfire.dart';
 
 class RegisterServices extends GetConnect {
   static RegisterServices get to => Get.find();

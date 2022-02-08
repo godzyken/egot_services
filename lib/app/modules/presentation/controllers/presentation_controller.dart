@@ -11,21 +11,18 @@ import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.
 import 'package:egot_services/app/modules/presentation/repository/repository.dart';
 
 class PresentationController extends SuperController<Store> {
+  PresentationController({required this.repository});
+  IStoreRepository? repository;
+  User? user;
   HomeController homeController = Get.find<HomeController>();
   StreamController<Store> streamController = StreamController<Store>();
-
-  PresentationController({required this.repository});
-
+  var userModel = UserModel().obs;
   var presentation = FirebaseFirestore.instance
       .collection("presentation")
       .doc('contact')
       .snapshots();
 
   var count = 0.obs;
-
-  final IStoreRepository repository;
-
-  User? user;
 
   String? _pickFirstNamedContact(Map<String, dynamic> data) {
     final List<dynamic>? connections = data['connections'];
@@ -63,6 +60,16 @@ class PresentationController extends SuperController<Store> {
     documentReference.update(contact);
   }
 
+  void addUser() {
+    userModel.update((val) {
+      val!.id = user!.uid;
+      val.companyName = user!.displayName;
+      val.email = user!.email;
+      val.createdAt = user!.refreshToken;
+      val.avatarUrl = user!.photoURL;
+    });
+  }
+
   @override
   void onInit() {
     user = homeController.firebaseAuthController.user;
@@ -85,11 +92,11 @@ class PresentationController extends SuperController<Store> {
   }
 
   Future<void> handleGetContact(User? user) async {
-    final response = await repository.getNews();
-    if (response.id != null) {
+    final response = await repository?.getNews();
+    if (response?.id != null) {
       print(
-          'People api gave a ${response.name} response. check logs for details.');
-      print('People API ${response.id} response: ${response.name}');
+          'People api gave a ${response?.name} response. check logs for details.');
+      print('People API ${response?.id} response: ${response?.name}');
       return;
     }
     final Map<String, dynamic> data = json.decode(response.toString());
@@ -103,7 +110,7 @@ class PresentationController extends SuperController<Store> {
   }
 
   Future<void> getNewStorage() async {
-    append(() => repository.getNews);
+    append(() => repository!.getNews);
   }
 
   @override

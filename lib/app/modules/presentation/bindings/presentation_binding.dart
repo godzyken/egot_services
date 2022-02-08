@@ -13,6 +13,5 @@ class PresentationBinding extends Bindings {
     Get.lazyPut<IPresentationProvider>(() => PresentationProvider());
     Get.lazyPut<IStoreRepository>(() => StoreRepository(provider: Get.find()));
     Get.put(PresentationController(repository: Get.find()));
-    Get.lazyPut(() => PresentationController(repository: Get.find()));
   }
 }

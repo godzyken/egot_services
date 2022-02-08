@@ -10,9 +10,7 @@ class AuthController extends GetxController {
   final auth = GetxFire.auth;
   final _user = Rxn<User?>();
   RegisterServices? _registerServices;
-
   User? get user => _user.value;
-
   var isSignIn = false.obs;
 
   @override
@@ -37,8 +35,6 @@ class AuthController extends GetxController {
       middleText: msg!,
     );
   }
-
-
 
   Future<bool?> connectToFirebase() async {
     try {

@@ -19,7 +19,7 @@ final menus = [
   ),
   Menu(
     icon: const Icon(Icons.architecture_sharp, size: 40.0),
-    title: 'Réalisation',
+    title: 'Realisation',
     subtitle: 'Nos archives !',
     routeName: '/archives',
   ),

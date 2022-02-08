@@ -19,7 +19,8 @@ class RegisterBinding extends Bindings {
     Get.lazyPut<AddCompanyController>(() => AddCompanyController(),
         fenix: true);
     Get.lazyPut<UserProvider>(() => UserProvider());
-    Get.lazyPut<UserController>(() => UserController(Get.parameters['userId'] ?? ''));
+    Get.lazyPut<UserController>(
+        () => UserController(Get.parameters['userId'] ?? ''));
     Get.lazyPut<AssuranceProvider>(() => AssuranceProvider());
     Get.lazyPut<RegisterServices>(() => RegisterServices(), fenix: true);
   }

@@ -23,6 +23,7 @@ class AddCompanyBinding extends Bindings {
     Get.lazyPut<RegisterController>(() => RegisterController());
     Get.lazyPut<AssuranceProvider>(() => AssuranceProvider());
     Get.lazyPut(() => RegisterServices());
-    Get.lazyPut<UserController>(() => UserController(Get.parameters['userId'] ?? ''));
+    Get.lazyPut<UserController>(
+        () => UserController(Get.parameters['userId'] ?? ''));
   }
 }

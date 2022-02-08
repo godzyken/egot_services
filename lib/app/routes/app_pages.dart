@@ -33,6 +33,8 @@ import 'package:egot_services/app/modules/archives/bindings/archives_binding.dar
 import 'package:egot_services/app/modules/archives/views/archives_view.dart';
 import 'package:egot_services/app/modules/auth/bindings/auth_binding.dart';
 import 'package:egot_services/app/modules/auth/views/auth_view.dart';
+import 'package:egot_services/app/modules/avatar_body/bindings/avatar_body_binding.dart';
+import 'package:egot_services/app/modules/avatar_body/views/avatar_body_view.dart';
 import 'package:egot_services/app/modules/presentation/bindings/presentation_binding.dart';
 import 'package:egot_services/app/modules/presentation/views/presentation_view.dart';
 import 'package:egot_services/app/modules/root/bindings/root_binding.dart';
@@ -106,6 +108,11 @@ class AppPages {
                         page: () => const PresentationView(),
                         binding: PresentationBinding(),
                         children: [
+                          GetPage(
+                            name: _Paths.AVATAR_BODY,
+                            page: () => AvatarBodyView(),
+                            binding: AvatarBodyBinding(),
+                          ),
                           GetPage(
                             title: 'Mention Legals',
                             name: _Paths.MENTIONS_LEGALS,

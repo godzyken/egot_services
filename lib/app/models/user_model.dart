@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:getxfire/getxfire.dart';
 
 class RxUserModel {

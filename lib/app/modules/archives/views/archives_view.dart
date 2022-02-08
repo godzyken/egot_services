@@ -1,7 +1,7 @@
-import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
-import 'package:ar_flutter_plugin/widgets/ar_view.dart';
 import 'package:flutter/material.dart';
 
+import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
+import 'package:ar_flutter_plugin/widgets/ar_view.dart';
 import 'package:get/get.dart';
 
 import '../controllers/archives_controller.dart';

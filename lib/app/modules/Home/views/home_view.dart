@@ -1,9 +1,9 @@
-import 'package:egot_services/app/modules/snap_scroll/views/snap_scroll_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
 import 'package:egot_services/app/modules/GodzyLogo/views/godzy_logo_view.dart';
+import 'package:egot_services/app/modules/snap_scroll/views/snap_scroll_view.dart';
 import 'package:egot_services/app/themes/app_theme_data.dart';
 
 import '../controllers/home_controller.dart';
@@ -37,9 +37,9 @@ class HomeView extends GetView<HomeController> {
                     alignment: AlignmentDirectional.topEnd,
                     clipBehavior: Clip.hardEdge,
                     fit: StackFit.loose,
-                    children: <Widget>[
+                    children: const <Widget>[
                       SnapScrollView(),
-                      const DraggableListMenu()
+                      DraggableListMenu()
                     ],
                   ));
             }),
@@ -77,7 +77,7 @@ class DraggableListMenu extends GetView<HomeController> {
                 builder: (BuildContext buildContext, _) {
                   return ListView.builder(
                     controller: c.scrollController,
-                    itemCount: c.menuList.value.length + 2,
+                    itemCount: c.menuList.length + 2,
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         return const SizedBox(height: 15.0);
@@ -95,6 +95,7 @@ class DraggableListMenu extends GetView<HomeController> {
                             border: Border.all(color: Colors.black26),
                           ),
                           child: Obx(() => ListTile(
+                                style: ListTileStyle.list,
                                 leading: c.menuList[index - 1].icon,
                                 title: Text(
                                   c.menuList[index - 1].title,
@@ -125,7 +126,7 @@ class DraggableListMenu extends GetView<HomeController> {
                                 enabled: true,
                                 tileColor: Colors.yellowAccent,
                                 onLongPress: () => delegate.toNamed(
-                                    "${c.menuList.value.elementAt(index - 1).routeName}"),
+                                    "${c.menuList.elementAt(index - 1).routeName}"),
                               )),
                         );
                       }

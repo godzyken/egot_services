@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import 'package:egot_services/app/models/use_x_models.dart';
@@ -7,7 +8,7 @@ class UserController extends SuperController<List<UserModel>> {
   UserController(this.userId);
 
   final userProvider = UserProvider();
-  final _userModel = UserModel().obs;
+  final Rx<UserModel> _userModel = UserModel().obs;
   String? userId;
 
   var running = false.obs;
@@ -19,6 +20,8 @@ class UserController extends SuperController<List<UserModel>> {
   Stream<UserModel?> userStream() async* {
     while (running.value) {
       await findAllUsers();
+
+      update();
     }
   }
 
@@ -29,12 +32,14 @@ class UserController extends SuperController<List<UserModel>> {
 
   @override
   void onReady() async {
-    // findAllUsers();
+    findAllUsers();
     super.onReady();
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    super.onClose();
+  }
 
   @override
   void onDetached() {
@@ -58,15 +63,19 @@ class UserController extends SuperController<List<UserModel>> {
 
   void clear() {
     _userModel.value = UserModel();
+
+    update();
   }
 
   findAllUsers() async {
     userProvider.getAllUsers().then((result) {
-      List<UserModel>? data = result.body;
+      List<UserModel>? data = result.sublist(listeners);
 
       change(data, status: RxStatus.success());
 
-      return data!.toList();
+      update();
+
+      return data.toList();
     }, onError: (err) {
       change(null, status: RxStatus.error(err.toString()));
       return err;
@@ -80,7 +89,9 @@ class UserController extends SuperController<List<UserModel>> {
 
     update();
 
-    print('New company name: ${_userModel.value.email}');
+    if (kDebugMode) {
+      print('New company name: ${_userModel.value.email}');
+    }
   }
 
   updateUserCompanyName(String? newValue) {
@@ -90,7 +101,9 @@ class UserController extends SuperController<List<UserModel>> {
 
     update();
 
-    print('New company name: ${_userModel.value.companyName}');
+    if (kDebugMode) {
+      print('New company name: ${_userModel.value.companyName}');
+    }
   }
 
   updateUserCompanyActivity(String? newValue) {
@@ -100,7 +113,9 @@ class UserController extends SuperController<List<UserModel>> {
 
     update();
 
-    print('New company activity: ${_userModel.value.activity}');
+    if (kDebugMode) {
+      print('New company activity: ${_userModel.value.activity}');
+    }
   }
 
   updateUserCompanySpeciality(String? newValue) {
@@ -112,7 +127,9 @@ class UserController extends SuperController<List<UserModel>> {
 
     update();
 
-    print('New company spéciality: ${_userModel.value.specialisation}');
+    if (kDebugMode) {
+      print('New company spéciality: ${_userModel.value.specialisation}');
+    }
   }
 
   updateUserCompanyIdentity(String? newValue) {
@@ -124,7 +141,9 @@ class UserController extends SuperController<List<UserModel>> {
 
     update();
 
-    print('New company identity: ${_userModel.value.matriculation}');
+    if (kDebugMode) {
+      print('New company identity: ${_userModel.value.matriculation}');
+    }
   }
 
   updateUserCompanyLocation(String? newValue) {
@@ -136,7 +155,9 @@ class UserController extends SuperController<List<UserModel>> {
 
     update();
 
-    print('New company localisation: ${_userModel.value.location}');
+    if (kDebugMode) {
+      print('New company localisation: ${_userModel.value.location}');
+    }
   }
 
   updateUserCompanyStatus(String? newValue) {
@@ -148,7 +169,9 @@ class UserController extends SuperController<List<UserModel>> {
 
     update();
 
-    print('New company status: ${_userModel.value.status}');
+    if (kDebugMode) {
+      print('New company status: ${_userModel.value.status}');
+    }
   }
 
   updateUserCompanyLength(int? newValue) {
@@ -160,7 +183,9 @@ class UserController extends SuperController<List<UserModel>> {
 
     update();
 
-    print('New number of personnes: ${_userModel.value.length}');
+    if (kDebugMode) {
+      print('New number of personnes: ${_userModel.value.length}');
+    }
   }
 
   updateUserCompanyAssurance(String? newValue) {
@@ -172,6 +197,8 @@ class UserController extends SuperController<List<UserModel>> {
 
     update();
 
-    print('New company assurance: ${_userModel.value.assurance}');
+    if (kDebugMode) {
+      print('New company assurance: ${_userModel.value.assurance}');
+    }
   }
 }

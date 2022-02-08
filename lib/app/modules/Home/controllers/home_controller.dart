@@ -19,8 +19,6 @@ class HomeController extends GetxController {
 
   var firebaseAuthController = SignInController();
 
-
-
   @override
   void onInit() {
     super.onInit();
