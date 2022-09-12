@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:ar_flutter_plugin/models/ar_anchor.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:getxfire/getxfire.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 typedef FirebaseListener = void Function(QuerySnapshot snapshot);
 typedef FirebaseDocumentStreamListener = void Function(
@@ -11,9 +15,11 @@ typedef FirebaseDocumentStreamListener = void Function(
 class FirebaseManager {
   FirebaseFirestore? firestore;
   Geoflutterfire? geo;
-  CollectionReference? anchorCollection;
-  CollectionReference? objectCollection;
-  CollectionReference? modelCollection;
+  WebSocketChannel? webSocketChannel;
+  CollectionReference<Map<String, dynamic>>? anchorCollection;
+  CollectionReference<Map<String, dynamic>>? objectCollection;
+  CollectionReference<Map<String, dynamic>>? modelCollection;
+  CollectionReference<Map<String, dynamic>>? channelCollection;
 
   // Firebase initialization function
   Future<bool> initializeFlutterFire() async {
@@ -21,11 +27,14 @@ class FirebaseManager {
       // Wait for Firebase to initialize
       geo = Geoflutterfire();
       firestore = FirebaseFirestore.instance;
-      anchorCollection = FirebaseFirestore.instance.collection('anchors');
-      objectCollection = FirebaseFirestore.instance.collection('objects');
-      modelCollection = FirebaseFirestore.instance.collection('models');
+      anchorCollection = firestore!.collection('anchors');
+      objectCollection = firestore!.collection('objects');
+      modelCollection = firestore!.collection('models');
+      channelCollection = firestore!.collection('channels');
+
       return true;
     } catch (e) {
+      print('initializeFlutterFire error: $e');
       return false;
     }
   }
@@ -84,13 +93,16 @@ class FirebaseManager {
         .within(center: center, radius: radius, field: 'position');
 
     stream.listen((List<DocumentSnapshot> documentList) {
-      documentList.forEach((element) {
+      for (var element in documentList) {
         listener(element);
-      });
+      }
     });
   }
 
-  void downloadAnchorsByChannel() {}
+  void downloadAnchorsByChannel(FirebaseDocumentStreamListener? listener,
+      IOWebSocketChannel? channel, ARUnkownAnchor? anchorFromJson) {
+    webSocketChannel!.sink.addStream(channel!.stream);
+  }
 
   void getObjectsFromAnchor(ARPlaneAnchor? anchor, FirebaseListener? listener) {
     objectCollection!
@@ -106,16 +118,21 @@ class FirebaseManager {
         .where("expirationTime",
             isLessThan: DateTime.now().millisecondsSinceEpoch / 1000)
         .get()
-        .then((anchorSnapshot) => anchorSnapshot.docs.forEach((anchorDoc) {
-              // Delete all objects attached to the expired anchor
-              objectCollection!
-                  .where("name", arrayContainsAny: anchorDoc.get("childNodes"))
-                  .get()
-                  .then((objectSnapshot) => objectSnapshot.docs.forEach(
-                      (objectDoc) => batch.delete(objectDoc.reference)));
-              // Delete the expired anchor
-              batch.delete(anchorDoc.reference);
-            }));
+        .then((anchorSnapshot) {
+      for (var anchorDoc in anchorSnapshot.docs) {
+        objectCollection!
+            .where("name", arrayContainsAny: anchorDoc.get("childNodes"))
+            .get()
+            .then((objectSnapshot) {
+          for (var objectDoc in objectSnapshot.docs) {
+            batch.delete(objectDoc.reference);
+          }
+        });
+
+        // Delete the expired anchor
+        batch.delete(anchorDoc.reference);
+      }
+    });
     batch.commit();
   }
 

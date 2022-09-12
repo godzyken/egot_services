@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:convert' show json;
 
-import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
-
-import 'package:egot_services/app/models/store_model.dart';
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/Home/controllers/home_controller.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/modules/presentation/repository/repository.dart';
+import 'package:flutter/foundation.dart';
+import 'package:getxfire/getxfire.dart';
 
 class PresentationController extends SuperController<Store> {
   PresentationController({required this.repository});
@@ -94,18 +92,26 @@ class PresentationController extends SuperController<Store> {
   Future<void> handleGetContact(User? user) async {
     final response = await repository?.getNews();
     if (response?.id != null) {
-      print(
-          'People api gave a ${response?.name} response. check logs for details.');
-      print('People API ${response?.id} response: ${response?.name}');
+      if (kDebugMode) {
+        print(
+            'People api gave a ${response?.name} response. check logs for details.');
+      }
+      if (kDebugMode) {
+        print('People API ${response?.id} response: ${response?.name}');
+      }
       return;
     }
     final Map<String, dynamic> data = json.decode(response.toString());
 
     final String? namedContact = _pickFirstNamedContact(data);
     if (namedContact != null) {
-      print('I see you know $namedContact!');
+      if (kDebugMode) {
+        print('I see you know $namedContact!');
+      }
     } else {
-      print('No contacts to display.');
+      if (kDebugMode) {
+        print('No contacts to display.');
+      }
     }
   }
 
@@ -116,25 +122,33 @@ class PresentationController extends SuperController<Store> {
   @override
   void onDetached() {
     // TODO: implement onDetached
-    print('onDetached called');
+    if (kDebugMode) {
+      print('onDetached called');
+    }
   }
 
   @override
   void onInactive() {
     // TODO: implement onInactive
-    print('onInactive called');
+    if (kDebugMode) {
+      print('onInactive called');
+    }
   }
 
   @override
   void onPaused() {
     // TODO: implement onPaused
-    print('onPaused called');
+    if (kDebugMode) {
+      print('onPaused called');
+    }
   }
 
   @override
   void onResumed() {
     // TODO: implement onResumed
-    print('onResume called');
+    if (kDebugMode) {
+      print('onResume called');
+    }
   }
 
 /*  Future<void> driveConnectionToMedia() async {

@@ -1,15 +1,16 @@
-import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
-
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:egot_services/app/modules/Register/views/register_view.dart';
 import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
+import 'package:get/get.dart';
+import 'package:getxfire/getxfire.dart';
 
 class AuthController extends GetxController {
   final auth = GetxFire.auth;
   final _user = Rxn<User?>();
   RegisterServices? _registerServices;
+  FirebaseApp? service;
+
   User? get user => _user.value;
   var isSignIn = false.obs;
 
