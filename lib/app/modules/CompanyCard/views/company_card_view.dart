@@ -1,10 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
-
 import 'package:egot_services/app/models/user_model.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../controllers/company_card_controller.dart';
 
@@ -84,17 +80,17 @@ class CompanyCardView extends GetView<CompanyCardController> {
                             ),
                           ),
                           TableCell(
-                            verticalAlignment:
-                                TableCellVerticalAlignment.middle,
-                            child: Container(
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              child: Container(
                                 height: 32,
                                 width: 32,
                                 alignment: Alignment.center,
                                 child: Text(
                                   '${_.userModel.value.companyName}',
                                   style: textStyleName,
-                                )),
-                          ),
+                                ),
+                              )),
                           Container(
                             height: 64,
                             color: Colors.transparent,

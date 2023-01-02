@@ -1,13 +1,152 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:egot_services/app/models/contact_state.dart';
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
-import 'package:getxfire/getxfire.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 
 class RegisterServices extends GetConnect {
   static RegisterServices get to => Get.find();
-  final firestore = GetxFire.firestore;
+  final ContactState state = ContactState();
+  final storage = FirebaseFirestore.instance;
+  final userToken = UserModel().refreshToken;
 
   // Section ['Users']
   Future<bool> createNewUser(UserModel? userModel) async {
+    DocumentReference documentReference =
+        storage.doc(userModel!.id).collection('users').doc();
+
+    final data = UserModel();
+
+    try {
+      await documentReference
+          .set(data)
+          .whenComplete(() => print('Utilisateur ajouté à la bdd avec succés'))
+          .onError((error, stackTrace) =>
+              print('Error : $error, StackTrace : $stackTrace'));
+      return true;
+    } on Exception catch (e) {
+      // TODO
+      print("Erreur lors de la creation de l'utilisateur : $e");
+      return false;
+    }
+  }
+
+  Stream<QuerySnapshot> readUsers() {
+    CollectionReference usersRef = storage
+        .collection('users')
+        .withConverter<UserModel>(
+            fromFirestore: (snapshots, _) =>
+                UserModel.fromJson(snapshots.data()!),
+            toFirestore: (userModel, _) => UserModel().toJson());
+    return usersRef.snapshots();
+  }
+
+  Future<void> updateUser(UserModel? userModel) async {
+    userModel!.id = AuthController().user?.uid;
+
+    DocumentReference documentReference =
+        storage.doc(userModel.id).collection('users').doc(userModel.id);
+
+    await documentReference
+        .update(UserModel().toJson())
+        .whenComplete(() => print("l'utilisateur a été mise à jour"))
+        .catchError((e) => print(e));
+  }
+
+  Future<UserModel> getUser(String? uid) async {
+    try {
+      var _doc = await storage.collection("users").doc(uid).get();
+
+      return UserModel.fromDocumentSnapshot(_doc);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Stream<List<UserModel>> usersStream(String uid) {
+    return storage
+        .collection("users")
+        .doc(uid)
+        .collection("agents")
+        .orderBy("dateCreated", descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<UserModel> retVal = []..length = 500;
+      for (var element in query.docs) {
+        retVal.add(UserModel.fromDocumentSnapshot(element));
+      }
+      return retVal;
+    });
+  }
+
+  Future<void> addAgent(String? content, String? uid) async {
+    try {
+      await storage.collection("users").doc(uid).collection("agents").add({
+        'dateCreated': Timestamp.now(),
+        'content': content,
+        'done': false,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      rethrow;
+    }
+  }
+
+  // Section ['Contacts']
+  Future<void> addContact(String? content, String? uid) async {
+    try {
+      await storage.collection("users").doc(uid).collection("contacts").add({
+        'dateCreated': Timestamp.now(),
+        'content': content,
+        'done': false,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> updateContact(
+      bool? newContact, String? uid, String? contactId) async {
+    try {
+      await storage
+          .collection("users")
+          .doc(uid)
+          .collection("contacts")
+          .doc(contactId)
+          .update({"done": newContact!});
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      rethrow;
+    }
+  }
+
+  asyncLoadAllContact() async {
+    var contact = await storage
+        .collection("users")
+        .where("id", isEqualTo: userToken)
+        .withConverter(
+            fromFirestore: (snapshots, _) =>
+                UserModel.fromJson(snapshots.data()!),
+            toFirestore: (UserModel userModel, _) => UserModel().toJson())
+        .get();
+
+    for (var doc in contact.docs) {
+      state.contactList.add(doc.data());
+    }
+  }
+
+// getxFire lost
+// final firestore = GetxFire.firestore;
+/*  Future<bool> createNewUser(UserModel? userModel) async {
     try {
       return await firestore
           .createData(
@@ -44,9 +183,9 @@ class RegisterServices extends GetConnect {
           duration: const Duration(seconds: 10));
       return false;
     }
-  }
+  }*/
 
-  Future<bool> updateUser(UserModel? userModel) async {
+/*  Future<bool> updateUser(UserModel? userModel) async {
     try {
       userModel?.id = AuthController().user?.uid;
 
@@ -67,84 +206,42 @@ class RegisterServices extends GetConnect {
           duration: const Duration(seconds: 10));
       return false;
     }
-  }
+  }*/
 
-  Future<UserModel> getUserDetail(String? uid) async {
+/*  Future<UserModel> getUserDetail(String? uid) async {
     try {
-      var _doc = await firestore.getDetail(collection: "users", id: uid!);
+      var doc = await firestore.getDetail(collection: "users", id: uid!);
 
-      return UserModel.fromDocumentSnapshot(_doc);
+      return UserModel.fromDocumentSnapshot(doc);
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       rethrow;
     }
-  }
+  }*/
 
-  Future<UserModel> getUser(String? uid) async {
-    try {
-      var _doc =
-          await FirebaseFirestore.instance.collection("users").doc(uid).get();
-
-      return UserModel.fromDocumentSnapshot(_doc);
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
-
-  Stream<QuerySnapshot<Object?>> streamGetUsers(String? uid) {
+/*  Stream<QuerySnapshot<Object?>> streamGetUsers(String? uid) {
     return firestore.streamData(
       collection: "users",
       collectionChild: "agents",
       idChild: uid!,
     );
-  }
+  }*/
 
-  Stream<List<UserModel>> usersStream(String uid) {
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid)
-        .collection("agents")
-        .orderBy("dateCreated", descending: true)
-        .snapshots()
-        .map((QuerySnapshot query) {
-      List<UserModel> retVal = []..length = 500;
-      for (var element in query.docs) {
-        retVal.add(UserModel.fromDocumentSnapshot(element));
-      }
-      return retVal;
-    });
-  }
-
-  Future<void> addAgent(String? content, String? uid) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(uid)
-          .collection("agents")
-          .add({
-        'dateCreated': Timestamp.now(),
-        'content': content,
-        'done': false,
-      });
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
-
-  Future<void> updateAgent(bool newAgent, String? uid, String? agentId) async {
+/*  Future<void> updateAgent(bool newAgent, String? uid, String? agentId) async {
     try {
       await firestore.updateData(
           collection: "users/agents", id: uid, data: UserModel().toJson());
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       rethrow;
     }
-  }
+  }*/
 
-  // Section ['Contacts']
-  Future<bool> createContact(ContactModel? contactModel) async {
+/*  Future<bool> createContact(ContactModel? contactModel) async {
     try {
       await firestore.createData(
           collection: "contacts",
@@ -152,45 +249,15 @@ class RegisterServices extends GetConnect {
           id: contactModel!.id);
       return true;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return false;
-    }
-  }
-
-  Future<void> addContact(String? content, String? uid) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(uid)
-          .collection("contacts")
-          .add({
-        'dateCreated': Timestamp.now(),
-        'content': content,
-        'done': false,
-      });
-    } catch (e) {
-      print(e);
-      rethrow;
     }
   }
 
   Stream<QuerySnapshot<Object?>> streamContact(String? uid) {
     return firestore.streamData(
         collection: "users", collectionChild: "contacts", idChild: uid);
-  }
-
-  Future<void> updateContact(
-      bool? newContact, String? uid, String? contactId) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(uid)
-          .collection("contacts")
-          .doc(contactId)
-          .update({"done": newContact!});
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
-  }
+  }*/
 }

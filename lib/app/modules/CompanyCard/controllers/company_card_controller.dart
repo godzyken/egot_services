@@ -7,6 +7,7 @@ class CompanyCardController extends GetxController {
   final userModel = UserModel().obs;
 
   final count = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -19,5 +20,6 @@ class CompanyCardController extends GetxController {
 
   @override
   void onClose() {}
+
   void increment() => count.value++;
 }

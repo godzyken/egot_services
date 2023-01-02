@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+
+import 'package:get/get.dart';
+
 import 'package:egot_services/app/models/store_model.dart';
 import 'package:egot_services/app/modules/presentation/services/base_service_provider.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 
 abstract class IPresentationProvider {
   FutureOr<Response<Store?>> getNews();

@@ -1,6 +1,5 @@
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
 
 class AvatarBodyController extends GetxController {
   final userModel = UserModel().obs;

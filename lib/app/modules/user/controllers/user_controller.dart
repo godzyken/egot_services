@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
-
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/user/providers/user_provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 
 class UserController extends SuperController<List<UserModel>> {
   UserController(this.userId);
@@ -68,8 +67,8 @@ class UserController extends SuperController<List<UserModel>> {
   }
 
   findAllUsers() async {
-    userProvider.getAllUsers().then((result) {
-      List<UserModel>? data = result.sublist(listeners);
+    await userProvider.getAllUsers().then((result) {
+      List<UserModel>? data = []..sublist(result.length);
 
       change(data, status: RxStatus.success());
 
@@ -77,6 +76,9 @@ class UserController extends SuperController<List<UserModel>> {
 
       return data.toList();
     }, onError: (err) {
+      if (kDebugMode) {
+        print('youuuuouuu!!!: $err');
+      }
       change(null, status: RxStatus.error(err.toString()));
       return err;
     });
@@ -184,7 +186,7 @@ class UserController extends SuperController<List<UserModel>> {
     update();
 
     if (kDebugMode) {
-      print('New number of personnes: ${_userModel.value.length}');
+      print('New number of persons: ${_userModel.value.length}');
     }
   }
 

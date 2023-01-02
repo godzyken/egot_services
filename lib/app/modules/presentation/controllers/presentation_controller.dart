@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert' show json;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/Home/controllers/home_controller.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/modules/presentation/repository/repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:getxfire/getxfire.dart';
+import 'package:get/get.dart';
 
 class PresentationController extends SuperController<Store> {
   PresentationController({required this.repository});
@@ -70,7 +72,7 @@ class PresentationController extends SuperController<Store> {
 
   @override
   void onInit() {
-    user = homeController.firebaseAuthController.user;
+    user = homeController.firebaseAuthController.firebaseAuth.currentUser;
     super.onInit();
   }
 

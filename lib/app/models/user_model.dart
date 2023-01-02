@@ -1,4 +1,5 @@
-import 'package:getxfire/getxfire.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 class RxUserModel {
   final id = 0.obs;
@@ -93,7 +94,7 @@ class UserModel {
 
   set siteAdmin(value) => rx.siteAdmin.value = value;
 
-  get providerData => rx.providerData.value;
+  get providerData => rx.providerData;
 
   set providerData(value) => rx.providerData.value = value;
 

@@ -1,11 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
-
-import 'package:getxfire/getxfire.dart';
-
 import 'package:egot_services/app/modules/avatar_body/views/avatar_body_view.dart';
 import 'package:egot_services/app/modules/presentation/controllers/presentation_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../user/views/user_view.dart';
 

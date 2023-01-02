@@ -1,28 +1,27 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:getxfire/getxfire.dart';
-
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/AddCompany/controllers/add_company_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class RegisterController extends GetxController {
   static RegisterController? get to => Get.find();
 
   AddCompanyController? addCompanyC;
-  final _registerServices = RegisterServices();
+  final RegisterServices _registerServices = RegisterServices();
 
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
   final firebaseAuthController = SignInController().obs;
 
   final authC = AuthController();
+
   UserModel? get userModel => Get.find<UserController>().user;
 
   final Map<String, String> _dataUserCompany = {
@@ -101,41 +100,53 @@ class RegisterController extends GetxController {
       if (await authC
           .connectToFirebase()
           .then((value) => isSignIn.value = value!)) {
-        await authC.createUser(userModel!.companyName,
-            emailController.value.text, passwordController.value.text);
+        UserCredential userCredential = await authC.createUser(
+            userModel!.companyName,
+            emailController.value.text,
+            passwordController.value.text);
+        return onSuccess(userCredential);
       } else {
         print('error de connection!');
         return;
       }
     } on FirebaseAuthException catch (code, e) {
       print('Register error code: $e');
-      GetxFire.openDialog.messageError(
+/*      GetxFire.openDialog.messageError(
         "Error creating Account : ${code.code}",
         title: 'Register Error : ${code.code}',
         duration: const Duration(seconds: 30),
-      );
+      );*/
+      return onErrorCatch(code, e);
     }
   }
 
   onErrorCatch(code, message) {
     if (code == 'email-already-in-use') {
-      GetxFire.openDialog.messageError(message!);
+      // GetxFire.openDialog.messageError(message!);
+      print('Erreur message $message');
       Get.rootDelegate.toNamed('/sign-in');
     } else {
-      GetxFire.openDialog.messageError(code);
+      // GetxFire.openDialog.messageError(code);
+      print('Erreur code $code');
+      Get.rootDelegate.toNamed('/sign-in');
     }
     if (code == 'invalid-email') {
-      GetxFire.openDialog.messageError('Elooot: $message');
-      GetxFire.currentUser?.delete();
+      // GetxFire.openDialog.messageError('Elooot: $message');
+      // GetxFire.currentUser?.delete();
+      print('Erreur code $code, message: $message');
+      Get.rootDelegate.toNamed('/sign-in');
     } else {
-      GetxFire.openDialog.messageError(code);
+      // GetxFire.openDialog.messageError(code);
+      print('Yessssssssssssseuh !!');
     }
   }
 
-  onSuccess(userCredential) async {
+  onSuccess(UserCredential? userCredential) async {
     if (userCredential!.user != null) {
       isSignIn.value = true;
-      GetxFire.openDialog.messageSuccess(userCredential);
+      print('succés login');
+/*      GetxFire.openDialog.messageSuccess('userCredential add',
+          duration: const Duration(seconds: 3), title: 'UserCred is Load !');*/
 
       /*  await GetxFire.firestore.createData(
         collection: 'users',

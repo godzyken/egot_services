@@ -1,6 +1,4 @@
-import 'package:getxfire/getxfire.dart';
-
-import 'package:egot_services/app/models/use_x_models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ContactModel {
   String? id, name, email, number, role, status;

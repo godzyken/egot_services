@@ -1,11 +1,8 @@
-import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
-
 import 'package:egot_services/app/modules/SignIn/views/anonymously_sign_in_section_view.dart';
 import 'package:egot_services/app/modules/SignIn/views/other_providers_sign_in_section_view.dart';
 import 'package:egot_services/app/modules/SignIn/views/user_info_card_view.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../controllers/sign_in_controller.dart';
 import 'email_password_form_view.dart';

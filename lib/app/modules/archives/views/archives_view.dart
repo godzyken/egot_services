@@ -15,6 +15,32 @@ class ArchivesView extends GetView<ArchivesController> {
     return GetBuilder<ArchivesController>(
       init: ArchivesController(),
       builder: (_) {
+        if (_.error.isTrue) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                children: [
+                  const Text('Firebase initialization failed'),
+                  ElevatedButton(
+                      onPressed: () => _.initialize, child: const Text('Retry'))
+                ],
+              ),
+            ),
+          );
+        }
+
+        if (_.initialize.isFalse) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                children: const [
+                  CircularProgressIndicator(),
+                  Text('Firebase initialization failed'),
+                ],
+              ),
+            ),
+          );
+        }
         return Scaffold(
           body: Stack(
             fit: StackFit.expand,

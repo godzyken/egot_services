@@ -1,10 +1,8 @@
+import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:get/get.dart';
-
-import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 
 class EmailPasswordFormView extends GetView<SignInController> {
   const EmailPasswordFormView({Key? key}) : super(key: key);
@@ -52,7 +50,7 @@ class EmailPasswordFormView extends GetView<SignInController> {
                           text: 'Sign In',
                           onPressed: () async {
                             if (_.formKey.currentState!.validate()) {
-                              await _.signInWithEmailAndPassword();
+                              await _.signInWithOtherProvider();
                             }
                           },
                         )),

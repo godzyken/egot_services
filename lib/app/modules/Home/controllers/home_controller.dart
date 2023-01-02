@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
-
-import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
-
 import 'package:egot_services/app/models/menus_model.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/routes/app_pages.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 
 class HomeController extends GetxController {
   var isLoading = true.obs;

@@ -1,17 +1,15 @@
+import 'package:egot_services/app/modules/AddCompany/controllers/assurance_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:get/get.dart';
 
-import 'package:egot_services/app/modules/AddCompany/controllers/assurance_controller.dart';
-
 import '../../../models/assurance_model.dart';
+import '../../../models/user_model.dart';
 import '../controllers/add_company_controller.dart';
 
 class AddCompanyView extends GetView<AddCompanyController> {
-  const AddCompanyView({Key? key}) : super(key: key);
+  const AddCompanyView({Key? key, uid, UserModel? userModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +67,11 @@ class AddCompanyView extends GetView<AddCompanyController> {
           // onPressed: () => Get.to(const RegisterView())),
           onPressed: () async {
             print('thheeee brrrooout1');
-            if (await _.registerServices.updateUser(_.userModel)) {
+            if (_.userModel!.id) {
+              await _.registerServices.updateUser(_.userModel);
               return Get.rootDelegate
                   .toNamed('/user', arguments: Get.arguments['userId']);
             }
-            // _.createNewUser();
           }),
     );
   }

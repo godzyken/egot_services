@@ -1,11 +1,8 @@
-import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
-
 import 'package:egot_services/app/modules/Register/bindings/register_binding.dart';
 import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:egot_services/app/routes/app_pages.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class EnsureAuthMiddleware extends GetMiddleware {
   static final middlewares = [

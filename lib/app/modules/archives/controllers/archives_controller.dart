@@ -17,7 +17,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:getxfire/getxfire.dart';
 import 'package:vector_math/vector_math_64.dart' as vector_math;
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -138,11 +137,13 @@ class ArchivesController extends GetxController {
     Stream stream = IOWebSocketChannel(webSocket!).stream;
     stream.listen((event) {
       for (var ev in event) {
-        return print('ques paso: $ev');
+        if (kDebugMode) {
+          return print('ques paso: $ev');
+        }
       }
     });
     var ws = webSocketChannel!.sink.addStream(stream);
-    print('Comment ta : $ws');
+    if (kDebugMode) print('Comment ta : $ws');
   }
 
   onARViewCreated(
@@ -328,7 +329,7 @@ class ArchivesController extends GetxController {
   }
 
   Future<void> onDownloadButtonPressed() async {
-    if (arLocationManager!.currentLocation != null) {
+    if (arLocationManager?.currentLocation != null) {
       firebaseManager.downloadAnchorsByLocation((snapshot) {
         final cloudAnchorId = snapshot.get("cloudanchorid");
         // anchorsInDownloadProgress![cloudAnchorId] = snapshot.data();
