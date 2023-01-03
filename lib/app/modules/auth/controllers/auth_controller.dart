@@ -13,6 +13,7 @@ class AuthController extends GetxController {
 
   User? get user => _user.value;
   var isSignIn = false.obs;
+  var userToken = ''.obs;
 
   @override
   onInit() {
@@ -35,6 +36,13 @@ class AuthController extends GetxController {
       cancelOnError: true,
       onDone: () => print('id token change !!'),
     );
+
+    auth.userChanges().listen((event) {
+      isSignIn.value = event != null;
+    },
+        onError: (err) => dialogError(err),
+        cancelOnError: true,
+        onDone: () => print('User is changed and signed in !'));
 
     super.onInit();
   }
@@ -104,7 +112,9 @@ class AuthController extends GetxController {
 
   signOut() async {
     try {
-      await auth.signOut().then((value) => Get.rootDelegate.toNamed('/Register'));
+      await auth
+          .signOut()
+          .then((value) => Get.rootDelegate.toNamed('/Register'));
       Get.find<UserController>().clear();
     } catch (e) {
       Get.snackbar(
@@ -114,5 +124,4 @@ class AuthController extends GetxController {
       );
     }
   }
-
 }

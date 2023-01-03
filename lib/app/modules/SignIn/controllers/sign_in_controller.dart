@@ -1,6 +1,5 @@
 import 'package:egot_services/app/helpers/show_loading.dart';
 import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
-import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +131,6 @@ class SignInController extends GetxController {
   logout() async {
     try {
       await firebaseAuth.signOut();
-      Get.find<UserController>().clear();
     } on FirebaseAuthException catch (code, e) {
       print('Code Error logout: $code, message : $e');
     }
