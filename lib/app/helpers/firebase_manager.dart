@@ -33,8 +33,9 @@ class FirebaseManager {
       channelCollection = firestore!.collection('channels');
 
       return true;
-    } catch (e) {
-      print('initializeFlutterFire error: $e');
+    } on FirebaseException catch (code, message) {
+      print('initializeFlutterFire error code: $code\n');
+      print('firebase error message: $message\n');
       return false;
     }
   }

@@ -5,6 +5,8 @@ import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart'
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
+import '../../../helpers/dialog_error.dart';
+
 class RegisterServices extends GetConnect {
   static RegisterServices get to => Get.find();
   final ContactState state = ContactState();
@@ -22,12 +24,10 @@ class RegisterServices extends GetConnect {
       await documentReference
           .set(data)
           .whenComplete(() => print('Utilisateur ajouté à la bdd avec succés'))
-          .onError((error, stackTrace) =>
-              print('Error : $error, StackTrace : $stackTrace'));
+          .onError((error, stackTrace) => getDialogError(error, stackTrace));
       return true;
-    } on Exception catch (e) {
-      // TODO
-      print("Erreur lors de la creation de l'utilisateur : $e");
+    } on FirebaseException catch (code, e) {
+      getDialogError(code, e);
       return false;
     }
   }
@@ -51,7 +51,7 @@ class RegisterServices extends GetConnect {
     await documentReference
         .update(UserModel().toJson())
         .whenComplete(() => print("l'utilisateur a été mise à jour"))
-        .catchError((e) => print(e));
+        .catchError((code, e) => getDialogError(code, e));
   }
 
   Future<UserModel> getUser(String? uid) async {

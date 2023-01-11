@@ -1,9 +1,11 @@
+import 'dart:developer';
+
+import 'package:egot_services/app/helpers/dialog_error.dart';
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/AddCompany/controllers/add_company_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
-import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,7 @@ class RegisterController extends GetxController {
 
   final authC = AuthController();
 
-  UserModel? get userModel => Get.find<UserController>().user;
+  UserModel? userModel;
 
   final Map<String, String> _dataUserCompany = {
     'email': 'isgodzy@gmail.com',
@@ -64,7 +66,12 @@ class RegisterController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    authC.onClose();
+    emailController.close();
+    passwordController.close();
+    firebaseAuthController.close();
+  }
 
   void dialogError(String? msg) {
     Get.defaultDialog(
@@ -101,61 +108,53 @@ class RegisterController extends GetxController {
           .connectToFirebase()
           .then((value) => isSignIn.value = value!)) {
         UserCredential userCredential = await authC.createUser(
-            userModel!.companyName,
+            userModel?.companyName,
             emailController.value.text,
             passwordController.value.text);
+        Get.toNamed('/home');
         return onSuccess(userCredential);
       } else {
-        print('error de connection!');
+        log('error connection');
         return;
       }
     } on FirebaseAuthException catch (code, e) {
-      print('Register error code: $e');
-/*      GetxFire.openDialog.messageError(
-        "Error creating Account : ${code.code}",
-        title: 'Register Error : ${code.code}',
-        duration: const Duration(seconds: 30),
-      );*/
       return onErrorCatch(code, e);
     }
   }
 
   onErrorCatch(code, message) {
     if (code == 'email-already-in-use') {
-      // GetxFire.openDialog.messageError(message!);
-      print('Erreur message $message');
+      getDialogError(code, message);
       Get.rootDelegate.toNamed('/sign-in');
     } else {
-      // GetxFire.openDialog.messageError(code);
-      print('Erreur code $code');
+      getDialogError(code, message);
       Get.rootDelegate.toNamed('/sign-in');
     }
     if (code == 'invalid-email') {
-      // GetxFire.openDialog.messageError('Elooot: $message');
-      // GetxFire.currentUser?.delete();
-      print('Erreur code $code, message: $message');
+      getDialogError(code, message);
       Get.rootDelegate.toNamed('/sign-in');
     } else {
-      // GetxFire.openDialog.messageError(code);
-      print('Yessssssssssssseuh !!');
+      getDialogError(code, message);
     }
   }
 
   onSuccess(UserCredential? userCredential) async {
-    if (userCredential!.user != null) {
+    if (userCredential!.user != null && !userCredential.user!.isAnonymous) {
       isSignIn.value = true;
-      print('succés login');
-/*      GetxFire.openDialog.messageSuccess('userCredential add',
-          duration: const Duration(seconds: 3), title: 'UserCred is Load !');*/
+      log('success login: ${userCredential.credential}');
 
-      /*  await GetxFire.firestore.createData(
-        collection: 'users',
-        id: AddCompanyController().userModel.value.id,
-        data: UserModel().toJson(),
-        onError: (message) => dialogError(message),
-        isErrorDialog: true,
-      );*/
+      var newUser = UserModel(
+        id: userCredential.user?.uid,
+        email: userCredential.user!.email,
+        companyName: userCredential.user!.displayName,
+        refreshToken: userCredential.user!.refreshToken,
+        avatarUrl: userCredential.user!.photoURL,
+        emailVerified: userCredential.user!.emailVerified,
+        tenantId: userCredential.user!.tenantId,
+        phoneNumber: userCredential.user!.phoneNumber,
+      );
 
+      await _registerServices.createNewUser(newUser);
       update();
     } else {
       isSignIn.value = false;
@@ -171,7 +170,7 @@ class RegisterController extends GetxController {
     }
   }
 
-  void login(String? companyname, String? email, String? password,
+  void login(String? companyName, String? email, String? password,
       String? rememberme) {
     if (email != '' && password != '') {
       if (GetUtils.isEmail(email!)) {
@@ -183,6 +182,7 @@ class RegisterController extends GetxController {
               "email": email,
               "password": password,
               "rememberme": rememberme,
+              "companyName": companyName
             });
             box.write('dataUserCompany', {
               "email": email,

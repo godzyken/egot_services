@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
 import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
@@ -7,7 +9,7 @@ import 'package:get/get.dart';
 
 class AuthController extends GetxController {
   final auth = FirebaseAuth.instance;
-  final _user = Rxn<User?>();
+  late Rx<User?> _user;
   RegisterServices? _registerServices;
   FirebaseApp? service;
 
@@ -17,6 +19,9 @@ class AuthController extends GetxController {
 
   @override
   onInit() {
+    ever(_user, _setInitialScreen);
+
+    _user = Rx<User?>(auth.currentUser);
     _user.bindStream(auth.authStateChanges());
 
     auth.authStateChanges().listen(
@@ -25,7 +30,7 @@ class AuthController extends GetxController {
       },
       onError: (err) => dialogError(err),
       cancelOnError: true,
-      onDone: () => print('auth state change !!'),
+      onDone: () => log('auth state change !!'),
     );
 
     auth.idTokenChanges().listen(
@@ -34,15 +39,8 @@ class AuthController extends GetxController {
       },
       onError: (err) => dialogError(err),
       cancelOnError: true,
-      onDone: () => print('id token change !!'),
+      onDone: () => log('id token change !!'),
     );
-
-    auth.userChanges().listen((event) {
-      isSignIn.value = event != null;
-    },
-        onError: (err) => dialogError(err),
-        cancelOnError: true,
-        onDone: () => print('User is changed and signed in !'));
 
     super.onInit();
   }
@@ -64,12 +62,14 @@ class AuthController extends GetxController {
     try {
       var authInfo = auth.app.options;
       if (authInfo.storageBucket != null) {
+        log('FirebaseFireStore connected successful : $authInfo');
         return true;
       } else {
+        log('FirebaseFireStore connected failed : $authInfo');
         return false;
       }
     } on FirebaseAuthException catch (code, e) {
-      print('Code erreur: $code, message erreur: $e');
+      log('Code erreur: $code, message erreur: $e');
       return false;
     }
   }
@@ -77,6 +77,7 @@ class AuthController extends GetxController {
   createUser(String? name, String? email, String? password) async {
     await auth.createUserWithEmailAndPassword(
         email: email!.trim(), password: password!);
+    auth.currentUser?.updateDisplayName(name);
   }
 
   login(String email, String password) async {
@@ -116,6 +117,7 @@ class AuthController extends GetxController {
           .signOut()
           .then((value) => Get.rootDelegate.toNamed('/Register'));
       Get.find<UserController>().clear();
+      userToken.close();
     } catch (e) {
       Get.snackbar(
         "Error signing out",
@@ -123,5 +125,33 @@ class AuthController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     }
+  }
+
+  _setInitialScreen(User? user) {
+    if (user?.uid.isNotEmpty == null) {
+      Get.offAllNamed('/sign-in');
+    } else {
+      Get.offAllNamed('/home');
+    }
+  }
+
+  @override
+  void onReady() {
+    auth.userChanges().listen((event) {
+      isSignIn.value = event != null;
+    },
+        onError: (err) => dialogError(err),
+        cancelOnError: true,
+        onDone: () => log('User is changed and signed in !'));
+
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    signOut();
+    _user.close();
+    _registerServices!.onClose();
+    service!.delete();
   }
 }

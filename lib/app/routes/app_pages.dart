@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../middleswares/auth_middleware.dart';
 import '../modules/AddCompany/bindings/add_company_binding.dart';
 import '../modules/AddCompany/views/add_company_view.dart';
 import '../modules/Atelier/bindings/atelier_binding.dart';
@@ -52,7 +51,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.PRESENTATION;
+  static const INITIAL = Routes.HOME;
 
   static final routes = [
     GetPage(
@@ -60,7 +59,6 @@ class AppPages {
         page: () => const RootView(),
         binding: RootBinding(),
         participatesInRootNavigator: true,
-        preventDuplicates: true,
         children: [
           GetPage(
             name: _Paths.HOME,
@@ -71,7 +69,6 @@ class AppPages {
             preventDuplicates: true,
             opaque: true,
             maintainState: true,
-            middlewares: [EnsureAuthMiddleware(), EnsureProfileMiddleware()],
             children: [
               GetPage(
                   name: _Paths.SNAP_SCROLL,
@@ -83,6 +80,7 @@ class AppPages {
                         name: _Paths.EGOT_SERVICES,
                         page: () => EgotServicesView(),
                         binding: EgotServicesBinding(),
+                        participatesInRootNavigator: true,
                         transition: Transition.zoom,
                         children: [
                           GetPage(
@@ -97,6 +95,7 @@ class AppPages {
                         name: _Paths.ATELIER,
                         page: () => AtelierView(),
                         binding: AtelierBinding(),
+                        participatesInRootNavigator: true,
                         children: [
                           GetPage(
                             title: 'Sketch My Wishes',
@@ -110,6 +109,7 @@ class AppPages {
                         name: _Paths.PRESENTATION,
                         page: () => const PresentationView(),
                         binding: PresentationBinding(),
+                        participatesInRootNavigator: true,
                         children: [
                           GetPage(
                             name: _Paths.AVATAR_BODY,
@@ -142,17 +142,18 @@ class AppPages {
                                 ),
                               ]),
                           GetPage(
-                            title: 'Goki works',
-                            name: _Paths.GODZY_LOGO,
-                            page: () => GodzyLogoView(),
-                            binding: GodzyLogoBinding(),
-                          ),
+                              title: 'Goki works',
+                              name: _Paths.GODZY_LOGO,
+                              page: () => const GodzyLogoView(),
+                              binding: GodzyLogoBinding(),
+                              participatesInRootNavigator: true),
                         ]),
                     GetPage(
                         title: 'Company Card',
                         name: _Paths.COMPANY_CARD,
                         page: () => const CompanyCardView(),
                         binding: CompanyCardBinding(),
+                        participatesInRootNavigator: true,
                         children: [
                           GetPage(
                             title: 'Add your Company',
@@ -172,6 +173,7 @@ class AppPages {
                 name: _Paths.CHAT,
                 page: () => const ChatView(),
                 binding: ChatBinding(),
+                participatesInRootNavigator: true,
               ),
             ],
             popGesture: true,
@@ -179,26 +181,30 @@ class AppPages {
           GetPage(
               title: 'Authentication',
               name: _Paths.AUTH,
-              page: () => AuthView(),
+              page: () => const AuthView(),
               binding: AuthBinding(),
+              participatesInRootNavigator: true,
               children: [
                 GetPage(
                   title: 'Profile',
                   name: _Paths.USER,
                   page: () => const UserView(),
                   binding: UserBinding(),
+                  participatesInRootNavigator: true,
                 ),
                 GetPage(
                   title: 'Sign in',
                   name: _Paths.SIGN_IN,
                   page: () => const SignInView(),
                   binding: SignInBinding(),
+                  participatesInRootNavigator: true,
                 ),
                 GetPage(
                   title: 'Register',
                   name: _Paths.REGISTER,
                   page: () => const RegisterView(),
                   binding: RegisterBinding(),
+                  participatesInRootNavigator: true,
                 ),
               ]),
         ]),

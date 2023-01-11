@@ -1,6 +1,8 @@
+import 'dart:developer';
+
+import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/AddCompany/controllers/assurance_controller.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
-import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,9 +11,10 @@ class AddCompanyController extends GetxController {
   static AddCompanyController? get to => Get.find();
   AssuranceController? assuranceC;
 
+  UserModel? userModel;
+
   final registerServices = RegisterServices();
   final formKeys = <GlobalKey<FormState>>[].obs;
-  final userModel = UserController(Get.arguments['userId']).user;
 
   final pageController =
       PageController(initialPage: 0, viewportFraction: 1.0, keepPage: true);
@@ -69,7 +72,7 @@ class AddCompanyController extends GetxController {
   validateInputs() {
     for (int i = 0; i < formKeys.length; i++) {
       if (kDebugMode) {
-        print('formky lengh ${formKeys.length}');
+        log('formky lengh ${formKeys.length}');
       }
       if (formKeys[i].currentState!.validate()) {
         formKeys[i].currentState!.save();

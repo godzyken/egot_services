@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../helpers/images_assets.dart';
 import '../controllers/godzy_logo_controller.dart';
 
 class GodzyLogoView extends GetView<GodzyLogoController> {
@@ -13,7 +14,7 @@ class GodzyLogoView extends GetView<GodzyLogoController> {
         child: Container(
           decoration: const BoxDecoration(
               image: DecorationImage(
-            image: ExactAssetImage("assets/lottie/image/godzy_logo.png"),
+            image: ExactAssetImage(ImagesAssets.godzyLogo),
             fit: BoxFit.fill,
           )),
         ),

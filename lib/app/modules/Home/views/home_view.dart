@@ -1,9 +1,10 @@
-import 'package:egot_services/app/modules/GodzyLogo/views/godzy_logo_view.dart';
+import 'package:egot_services/app/modules/Register/views/register_view.dart';
 import 'package:egot_services/app/modules/snap_scroll/views/snap_scroll_view.dart';
 import 'package:egot_services/app/themes/app_theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../helpers/images_assets.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -11,46 +12,40 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return GetRouterOutlet.builder(
-      routerDelegate: GetDelegate(
-        backButtonPopMode: PopMode.History,
-        preventDuplicateHandlingMode:
-            PreventDuplicateHandlingMode.ReorderRoutes,
-      ),
-      builder: (context, delegate, currentRoute) => Scaffold(
-        body: GetBuilder<HomeController>(
-            init: HomeController(),
-            builder: (_) {
-              return Container(
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                    image: ExactAssetImage(
-                        "assets/lottie/image/carrelage_background.jpg"),
-                    colorFilter:
-                        ColorFilter.mode(Colors.white30, BlendMode.softLight),
-                    opacity: 0.5,
-                    fit: BoxFit.fill,
-                  )),
-                  child: Stack(
-                    alignment: AlignmentDirectional.topEnd,
-                    clipBehavior: Clip.hardEdge,
-                    fit: StackFit.loose,
-                    children: const <Widget>[
-                      SnapScrollView(),
-                      DraggableListMenu()
-                    ],
-                  ));
-            }),
-        backgroundColor: Colors.transparent,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Get.offAndToNamed('/godzy-logo'),
+    return Scaffold(
+      body: GetBuilder<HomeController>(
+          init: HomeController(),
+          builder: (_) {
+            return _.isSignIn.isTrue
+                ? Container(
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                      image: ExactAssetImage(ImagesAssets.carrelageBackground),
+                      colorFilter:
+                          ColorFilter.mode(Colors.white30, BlendMode.softLight),
+                      opacity: 0.5,
+                      fit: BoxFit.fill,
+                    )),
+                    child: Stack(
+                      alignment: AlignmentDirectional.topEnd,
+                      clipBehavior: Clip.hardEdge,
+                      fit: StackFit.loose,
+                      children: const <Widget>[
+                        SnapScrollView(),
+                        DraggableListMenu()
+                      ],
+                    ))
+                : const RegisterView();
+          }),
+      backgroundColor: Colors.transparent,
+      /*  floatingActionButton: FloatingActionButton(
+          onPressed: () => {Get.to(() => const GodzyLogoView())},
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
             clipBehavior: Clip.hardEdge,
-            child: GodzyLogoView(),
+            child: const GodzyLogoView(),
           ),
-        ),
-      ),
+        ),*/
     );
   }
 }
@@ -123,7 +118,7 @@ class DraggableListMenu extends GetView<HomeController> {
                                   VisualDensity.adaptivePlatformDensity,
                               enabled: true,
                               tileColor: Colors.yellowAccent,
-                              onLongPress: () => delegate.toNamed(
+                              onLongPress: () => Get.rootDelegate.toNamed(
                                   "${c.menuList.elementAt(index - 1).routeName}"))),
                         );
                       }

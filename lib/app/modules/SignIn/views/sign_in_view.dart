@@ -1,11 +1,7 @@
-import 'package:egot_services/app/modules/SignIn/views/anonymously_sign_in_section_view.dart';
-import 'package:egot_services/app/modules/SignIn/views/other_providers_sign_in_section_view.dart';
-import 'package:egot_services/app/modules/SignIn/views/user_info_card_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/sign_in_controller.dart';
-import 'email_password_form_view.dart';
 
 class SignInView extends GetView<SignInController> {
   const SignInView({Key? key}) : super(key: key);
@@ -19,7 +15,7 @@ class SignInView extends GetView<SignInController> {
           appBar: AppBar(
             title: const Text('Sign In'),
             centerTitle: true,
-            actions: <Widget>[
+            /*actions: <Widget>[
               Builder(builder: (BuildContext context) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 8.0),
@@ -37,15 +33,15 @@ class SignInView extends GetView<SignInController> {
                   ),
                 );
               })
-            ],
+            ],*/
           ),
           body: ListView(
             padding: const EdgeInsets.all(8),
-            children: <Widget>[
-              const UserInfoCardView(),
-              const EmailPasswordFormView(),
+            children: const <Widget>[
+              /*          UserInfoCardView(),
+              EmailPasswordFormView(),
               AnonymouslySignInSectionView(),
-              const OtherProvidersSignInSectionView(),
+              OtherProvidersSignInSectionView(),*/
             ],
           ),
         );
