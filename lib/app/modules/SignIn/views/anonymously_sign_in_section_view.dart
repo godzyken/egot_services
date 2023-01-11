@@ -1,10 +1,10 @@
+import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
-import 'package:egot_services/app/modules/SignIn/controllers/sign_in_controller.dart';
-
 class AnonymouslySignInSectionView extends GetView {
+  const AnonymouslySignInSectionView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SignInController>(builder: (_) {

@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-
-import 'package:flutter_signin_button/button_builder.dart';
-import 'package:get/get.dart';
-
 import 'package:egot_services/app/modules/AddCompany/controllers/add_company_controller.dart';
 import 'package:egot_services/app/modules/CompanyCard/views/company_card_view.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter_signin_button/button_builder.dart';
+import 'package:get/get.dart';
 
 import '../controllers/register_controller.dart';
 
@@ -16,89 +14,82 @@ class RegisterView extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetBuilder<RegisterController>(
-          init: RegisterController(),
-          initState: (state) => RegisterServices(),
-          autoRemove: true,
-          builder: (_) {
-            return Form(
-              // key: _.formKey,
-              onChanged: () => _.addCompanyC!.validateInputs,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              onWillPop: () async {
-                return await _.onWillPop();
-              },
-              child: Card(
-                key: key,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.start,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () => Get.rootDelegate.toNamed('/add-company',
-                            arguments: Get.arguments['userId']),
-                        child: buildNewCompanyCard(),
-                      ),
-                      TextFormField(
-                        controller: _.emailController.value,
-                        decoration: const InputDecoration(labelText: 'Email'),
-                        validator: (value) => _.validateEmail(value!),
-                        onEditingComplete: () =>
-                            GetUtils.isEmail(_.emailController.value.text)
-                                ? "Email OK!"
-                                : "this isn't a valid email",
-                        onSaved: (value) {
-                          _.userModel!.email = value;
-                        },
-                      ),
-                      TextFormField(
-                        controller: _.passwordController.value,
-                        decoration:
-                            const InputDecoration(labelText: 'Password'),
-                        onSaved: (value) =>
-                            _.passwordController.value.text = value!,
-                        validator: (value) => _.validatePassword(value!),
-                        obscureText: true,
-                      ),
-                      Obx(() {
-                        return CheckboxListTile(
-                          value: _.rememberme.value,
-                          onChanged: (value) => _.rememberme.toggle(),
-                          title: const Text('Remember me'),
-                          controlAffinity: ListTileControlAffinity.leading,
-                        );
-                      }),
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        alignment: Alignment.center,
-                        child: SignInButtonBuilder(
-                          icon: Icons.add_business,
-                          backgroundColor: Colors.blueGrey,
-                          text: 'Register',
-                          onPressed: () async {
-                            if (_.userModel!.companyName != '') {
-                              return await _.register();
-                            } else {
-                              return Get.rootDelegate.toNamed('/add-company');
-                            }
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.indigoAccent,
+      body: SingleChildScrollView(
+        child: GetBuilder<RegisterController>(
+            init: RegisterController(),
+            initState: (state) => RegisterServices(),
+            autoRemove: true,
+            builder: (_) {
+              return Form(
+                // key: _.formKey,
+                onChanged: () => _.addCompanyC?.validateInputs,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                onWillPop: () async {
+                  return await _.onWillPop();
+                },
+                child: Card(
+                  key: key,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () => Get.rootDelegate.toNamed('/add-company',
+                              arguments: Get.arguments['userId']),
+                          child: buildNewCompanyCard(),
+                        ),
+                        TextFormField(
+                          controller: _.emailController.value,
+                          decoration: const InputDecoration(labelText: 'Email'),
+                          validator: (value) => _.validateEmail(value!),
+                          onSaved: (value) {
+                            _.userModel?.email = value;
                           },
                         ),
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        child: Text(_.isSignIn.isFalse
-                            ? ''
-                            : (_.isSignIn.isTrue
-                                ? 'Successfully registered ${_.userModel!.email}'
-                                : 'Registration failed')),
-                      )
-                    ],
+                        TextFormField(
+                          controller: _.passwordController.value,
+                          decoration:
+                              const InputDecoration(labelText: 'Password'),
+                          onSaved: (value) =>
+                              _.passwordController.value.text = value!,
+                          validator: (value) => _.validatePassword(value!),
+                          obscureText: true,
+                        ),
+                        Obx(() {
+                          return CheckboxListTile(
+                            value: _.rememberme.value,
+                            onChanged: (value) => _.rememberme.toggle(),
+                            title: const Text('Remember me'),
+                            controlAffinity: ListTileControlAffinity.leading,
+                          );
+                        }),
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          alignment: Alignment.center,
+                          child: SignInButtonBuilder(
+                            icon: Icons.add_business,
+                            backgroundColor: Colors.blueGrey,
+                            text: 'Register',
+                            onPressed: () async {
+                              if (_.userModel?.companyName != '') {
+                                Get.rootDelegate.toNamed('/home');
+                                return await _.register();
+                              } else {
+                                return Get.rootDelegate.toNamed('/add-company');
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+      ),
     );
   }
 
@@ -125,13 +116,11 @@ class RegisterView extends GetView<RegisterController> {
         assignId: true,
         init: AddCompanyController(),
         builder: (_) {
-          return Obx(() {
-            return Container(
-                color: Colors.transparent,
-                child: _.userModel!.id.toString() != null
-                    ? modelCard(_)
-                    : CompanyCardView(company: _.userModel!.companyName));
-          });
+          return Container(
+              color: Colors.transparent,
+              child: _.userModel?.id.toString() != null
+                  ? modelCard(_)
+                  : CompanyCardView(company: _.userModel?.companyName));
         });
   }
 
@@ -172,7 +161,7 @@ class RegisterView extends GetView<RegisterController> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 0.5, horizontal: 0.5),
                     child: Text(
-                      '${_.userModel!.matriculation}',
+                      '${_.userModel?.matriculation}',
                       style: textStyleName,
                     ),
                   ),
@@ -183,7 +172,7 @@ class RegisterView extends GetView<RegisterController> {
                         width: 32,
                         alignment: Alignment.center,
                         child: Text(
-                          '${_.userModel!.companyName}',
+                          '${_.userModel?.companyName}',
                           style: textStyleName,
                         )),
                   ),
@@ -212,7 +201,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel!.activity}',
+                      child: Text('${_.userModel?.activity}',
                           style: textStyleName),
                     ),
                   ),
@@ -242,7 +231,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel!.specialisation}',
+                      child: Text('${_.userModel?.specialisation}',
                           style: textStyleName),
                     ),
                   ),
@@ -272,7 +261,7 @@ class RegisterView extends GetView<RegisterController> {
                       width: 32,
                       alignment: Alignment.center,
                       child:
-                          Text('${_.userModel!.status}', style: textStyleName),
+                          Text('${_.userModel?.status}', style: textStyleName),
                     ),
                   ),
                 ]),
@@ -300,7 +289,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel!.location}',
+                      child: Text('${_.userModel?.location}',
                           style: textStyleName),
                     ),
                   ),
@@ -329,7 +318,7 @@ class RegisterView extends GetView<RegisterController> {
                       height: 32,
                       width: 32,
                       alignment: Alignment.center,
-                      child: Text('${_.userModel!.assurance}',
+                      child: Text('${_.userModel?.assurance}',
                           style: textStyleName),
                     ),
                   ),
@@ -359,7 +348,7 @@ class RegisterView extends GetView<RegisterController> {
                       width: 32,
                       alignment: Alignment.center,
                       child:
-                          Text('${_.userModel!.length}', style: textStyleName),
+                          Text('${_.userModel?.length}', style: textStyleName),
                     ),
                   ),
                 ]),

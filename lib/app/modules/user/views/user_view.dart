@@ -8,6 +8,14 @@ class UserView extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Get.rootDelegate
+          .toNamed('/:user', arguments: Get.parameters['userId']),
+      child: buildNewUserView,
+    );
+  }
+
+  GetBuilder<UserController> get buildNewUserView {
     return GetBuilder<UserController>(
         assignId: true,
         init: UserController(Get.parameters['userID']),

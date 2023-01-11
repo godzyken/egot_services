@@ -25,7 +25,7 @@ class CompanyCardView extends GetView<CompanyCardController> {
 
   TextStyle get textStyleCell {
     return const TextStyle(
-      color: Colors.white,
+      color: Colors.black87,
       fontStyle: FontStyle.normal,
       fontWeight: FontWeight.bold,
       fontSize: 16.5,
@@ -121,6 +121,8 @@ class CompanyCardView extends GetView<CompanyCardController> {
                               height: 32,
                               width: 32,
                               alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 0.5, horizontal: 0.5),
                               child: Text('${_.userModel.value.activity}',
                                   style: textStyleName),
                             ),
@@ -155,6 +157,8 @@ class CompanyCardView extends GetView<CompanyCardController> {
                               height: 32,
                               width: 32,
                               alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 0.5, horizontal: 0.5),
                               child: Text('${_.userModel.value.specialisation}',
                                   style: textStyleName),
                             ),

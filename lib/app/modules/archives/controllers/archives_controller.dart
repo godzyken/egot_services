@@ -19,7 +19,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:vector_math/vector_math_64.dart' as vector_math;
 import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/status.dart' as status;
 
 import '../../../../socket_channel.dart';
 
@@ -35,7 +34,6 @@ class ArchivesController extends GetxController {
   var didAddNodeToAnchor = false.obs;
   var didAddAnchor = false.obs;
   var anchorWasFound = false.obs;
-  var firebaseManager = FirebaseManager();
   var urlSketch = 'https://app.sketchup.com/app';
   var nodes = <ARNode>[];
   var anchors = <ARAnchor>[];
@@ -50,6 +48,7 @@ class ArchivesController extends GetxController {
   Timer? timer;
   IOWebSocketChannel? webSocketChannel;
   StreamSubscription? getSubscription;
+  FirebaseManager? firebaseManager;
 
   String? objectSelected;
   WebSocket? webSocket;
@@ -61,14 +60,30 @@ class ArchivesController extends GetxController {
     arSessionManager?.snapshot();
     getSubscription?.cancel();
 
+    firebaseManager = FirebaseManager();
+
     webSocketChannel = IOWebSocketChannel.connect(
         Uri.parse('wss://socketsbay.com/wss/v2/$apikey/'));
     // IOWebSocketChannel.connect('wss://socketsbay.com/wss/v2/2/egotservices/');
 
-    firebaseManager.initializeFlutterFire().then((value) {
+    update();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    webSocketChannel!.sink.close();
+    arSessionManager!.dispose();
+  }
+
+  @override
+  void onReady() {
+    firebaseManager!.initializeFlutterFire();
+    /*     .then((value) {
       initialize.value = !value;
       error.value = !value;
       getSubscription = webSocketChannel!.stream.listen((message) {
+        initialize.isTrue;
         // Is never fired?
         if (kDebugMode) {
           print("Got live message");
@@ -94,21 +109,8 @@ class ArchivesController extends GetxController {
             print(error.value);
           }
         });
-    });
-
-    update();
-    arSessionManager?.dispose();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    webSocketChannel!.sink.close();
-    arSessionManager!.dispose();
-  }
-
-  @override
-  void onReady() {
+    });*/
+    webSocketChannel!.cast();
     onARViewCreated(
         arSessionManager, arObjectManager, arAnchorManager, arLocationManager);
 
@@ -119,6 +121,7 @@ class ArchivesController extends GetxController {
   void onClose() {
     super.onClose();
     arSessionManager?.dispose();
+    firebaseManager?.firestore!.terminate();
   }
 
   Future<String> initPlatformState() async {
@@ -292,11 +295,11 @@ class ArchivesController extends GetxController {
   }
 
   onAnchorUploaded(ARAnchor anchor) {
-    firebaseManager.uploadAnchor(anchor,
+    firebaseManager!.uploadAnchor(anchor,
         currentLocation: arLocationManager!.currentLocation);
     if (anchor is ARPlaneAnchor) {
       for (var nodeName in anchor.childNodes) {
-        firebaseManager.uploadObject(
+        firebaseManager!.uploadObject(
             nodes.firstWhere((element) => element.name == nodeName));
 
         update();
@@ -313,7 +316,7 @@ class ArchivesController extends GetxController {
     anchorsInDownloadProgress.remove(anchor.cloudanchorid);
     anchors.add(anchor);
 
-    firebaseManager.getObjectsFromAnchor(anchor, (snapshot) {
+    firebaseManager!.getObjectsFromAnchor(anchor, (snapshot) {
       for (var objectDoc in snapshot.docs) {
         arNodeInDownloadProgress.containsValue(objectDoc.data());
 
@@ -330,7 +333,7 @@ class ArchivesController extends GetxController {
 
   Future<void> onDownloadButtonPressed() async {
     if (arLocationManager?.currentLocation != null) {
-      firebaseManager.downloadAnchorsByLocation((snapshot) {
+      firebaseManager!.downloadAnchorsByLocation((snapshot) {
         final cloudAnchorId = snapshot.get("cloudanchorid");
         // anchorsInDownloadProgress![cloudAnchorId] = snapshot.data();
         arAnchorManager!.downloadAnchor(cloudAnchorId);

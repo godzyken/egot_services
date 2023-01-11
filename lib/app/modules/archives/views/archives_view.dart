@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
 import 'package:ar_flutter_plugin/widgets/ar_view.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/archives_controller.dart';
@@ -20,7 +19,7 @@ class ArchivesView extends GetView<ArchivesController> {
             body: Center(
               child: Column(
                 children: [
-                  const Text('Firebase initialization failed'),
+                  const Text('Firebase initialization error'),
                   ElevatedButton(
                       onPressed: () => _.initialize, child: const Text('Retry'))
                 ],
@@ -94,7 +93,7 @@ class ArchivesView extends GetView<ArchivesController> {
                   visible: _.modelChoiceActive.value,
                   child: ModelSelectionWidget(
                       onTap: _.onModelSelected,
-                      firebaseManager: _.firebaseManager),
+                      firebaseManager: _.firebaseManager!),
                 ),
               ),
               _.anchorWasFound.value
