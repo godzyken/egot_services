@@ -39,6 +39,7 @@ class DefaultFirebaseOptions {
   static FirebaseOptions get android => FirebaseOptions(
       apiKey: firebaseOptions.apiKey,
       appId: firebaseOptions.appId,
+      androidClientId: firebaseOptions.androidClientId,
       messagingSenderId: firebaseOptions.messagingSenderId,
       projectId: firebaseOptions.projectId,
       databaseURL: firebaseOptions.databaseURL,
@@ -47,6 +48,7 @@ class DefaultFirebaseOptions {
   static FirebaseOptions get ios => FirebaseOptions(
       apiKey: firebaseOptions.apiKey,
       appId: firebaseOptions.appId,
+      iosClientId: firebaseOptions.iosClientId,
       messagingSenderId: firebaseOptions.messagingSenderId,
       projectId: firebaseOptions.projectId,
       databaseURL: firebaseOptions.databaseURL,
@@ -88,13 +90,15 @@ class DefaultFirebaseOptions {
 FirebaseOptions get firebaseOptions {
   return FirebaseOptions(
       apiKey: Env.fbApiKey,
-      appId: '1:55611526582:android:d50936ec4e0738a5080517',
+      appId: '1:55611526582:web:2a0e8e8467473ffe080517',
+      androidClientId: '1:55611526582:android:d50936ec4e0738a5080517',
+      iosClientId: '1:55611526582:ios:e07534dc5f90e67c080517',
       messagingSenderId: '55611526582',
       projectId: 'egoteback',
       authDomain: 'https://storage.googleapis.com',
       storageBucket: 'egoteback.appspot.com',
       databaseURL:
-          'https://egoteback-default-rtdb.europe-west1.firebasedatabase.app/',
+          'https://egoteback-default-rtdb.europe-west1.firebasedatabase.app',
       deepLinkURLScheme:
           'https://console.cloud.google.com/storage/browser/egoteback.appspot.com');
 }
