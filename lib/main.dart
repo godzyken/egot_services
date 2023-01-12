@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:egot_services/app/modules/root/controllers/root_controller.dart';
 import 'package:egot_services/app/routes/app_pages.dart';
 import 'package:egot_services/app/themes/app_theme_data.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -21,6 +22,7 @@ Future<void> main() async {
 
   if (kDebugMode) {
     try {
+      RootController.analytics.appInstanceId;
       FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
       await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
     } catch (e) {
@@ -44,5 +46,9 @@ Future<void> main() async {
     defaultTransition: Transition.fade,
     enableLog: true,
     themeMode: AppThemeData.INITIAL,
+    navigatorObservers: [
+      RootController.observer,
+      RootController.to.routeObserver,
+    ],
   ));
 }

@@ -30,6 +30,7 @@ dependencies:
   file_picker: 5.2.4
   geoflutterfire: 3.0.3
   geolocator: 9.0.2
+  firebase_analytics: 10.1.0
   flutter: 
     sdk: flutter
 
