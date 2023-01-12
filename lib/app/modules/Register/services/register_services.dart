@@ -1,7 +1,8 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:egot_services/app/models/contact_state.dart';
 import 'package:egot_services/app/models/use_x_models.dart';
-import 'package:egot_services/app/modules/auth/controllers/auth_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -9,21 +10,48 @@ import '../../../helpers/dialog_error.dart';
 
 class RegisterServices extends GetConnect {
   static RegisterServices get to => Get.find();
+  late final FirebaseFirestore _storage;
+  late final CollectionReference _ref;
   final ContactState state = ContactState();
-  final storage = FirebaseFirestore.instance;
   final userToken = UserModel().refreshToken;
+  String host = defaultTargetPlatform == TargetPlatform.android
+      ? '10.0.2.2:9055'
+      : 'localhost:9095';
+
+  RegisterServices() {
+    FirebaseFirestore.instance.settings =
+        Settings(host: host, sslEnabled: false, persistenceEnabled: true);
+    _storage = FirebaseFirestore.instance;
+
+    _ref = _storage.collection('users');
+  }
+
+  Stream<List<UserModel>> getUsers() {
+    Stream<QuerySnapshot> snap = _ref.snapshots(includeMetadataChanges: false);
+
+    return snap.map((list) =>
+        list.docs.map((doc) => UserModel.fromDocumentSnapshot(doc)).toList());
+  }
+
+  Future<void> addUsers(UserModel userModel) {
+    return _ref.add(userModel.toJson());
+  }
+
+  Future<void> deleteUser(String id) {
+    return _ref.doc(id).delete();
+  }
 
   // Section ['Users']
   Future<bool> createNewUser(UserModel? userModel) async {
     DocumentReference documentReference =
-        storage.doc(userModel!.id).collection('users').doc();
+        _storage.doc(userModel!.id).collection('users').doc();
 
     final data = UserModel();
 
     try {
       await documentReference
           .set(data)
-          .whenComplete(() => print('Utilisateur ajouté à la bdd avec succés'))
+          .whenComplete(() => log('Utilisateur ajouté à la bdd avec succés'))
           .onError((error, stackTrace) => getDialogError(error, stackTrace));
       return true;
     } on FirebaseException catch (code, e) {
@@ -33,7 +61,7 @@ class RegisterServices extends GetConnect {
   }
 
   Stream<QuerySnapshot> readUsers() {
-    CollectionReference usersRef = storage
+    CollectionReference usersRef = _storage
         .collection('users')
         .withConverter<UserModel>(
             fromFirestore: (snapshots, _) =>
@@ -42,31 +70,23 @@ class RegisterServices extends GetConnect {
     return usersRef.snapshots();
   }
 
-  Future<void> updateUser(UserModel? userModel) async {
-    userModel!.id = AuthController().user?.uid;
-
-    DocumentReference documentReference =
-        storage.doc(userModel.id).collection('users').doc(userModel.id);
-
-    await documentReference
-        .update(UserModel().toJson())
-        .whenComplete(() => print("l'utilisateur a été mise à jour"))
-        .catchError((code, e) => getDialogError(code, e));
+  Future<void> updateUser(UserModel userModel) async {
+    return _ref.doc(userModel.id).set(userModel.toJson());
   }
 
   Future<UserModel> getUser(String? uid) async {
     try {
-      var _doc = await storage.collection("users").doc(uid).get();
+      var _doc = await _storage.collection("users").doc(uid).get();
 
       return UserModel.fromDocumentSnapshot(_doc);
     } catch (e) {
-      print(e);
+      log('getUser error: $e');
       rethrow;
     }
   }
 
   Stream<List<UserModel>> usersStream(String uid) {
-    return storage
+    return _storage
         .collection("users")
         .doc(uid)
         .collection("agents")
@@ -83,7 +103,7 @@ class RegisterServices extends GetConnect {
 
   Future<void> addAgent(String? content, String? uid) async {
     try {
-      await storage.collection("users").doc(uid).collection("agents").add({
+      await _storage.collection("users").doc(uid).collection("agents").add({
         'dateCreated': Timestamp.now(),
         'content': content,
         'done': false,
@@ -99,7 +119,7 @@ class RegisterServices extends GetConnect {
   // Section ['Contacts']
   Future<void> addContact(String? content, String? uid) async {
     try {
-      await storage.collection("users").doc(uid).collection("contacts").add({
+      await _storage.collection("users").doc(uid).collection("contacts").add({
         'dateCreated': Timestamp.now(),
         'content': content,
         'done': false,
@@ -115,7 +135,7 @@ class RegisterServices extends GetConnect {
   Future<void> updateContact(
       bool? newContact, String? uid, String? contactId) async {
     try {
-      await storage
+      await _storage
           .collection("users")
           .doc(uid)
           .collection("contacts")
@@ -130,7 +150,7 @@ class RegisterServices extends GetConnect {
   }
 
   asyncLoadAllContact() async {
-    var contact = await storage
+    var contact = await _storage
         .collection("users")
         .where("id", isEqualTo: userToken)
         .withConverter(

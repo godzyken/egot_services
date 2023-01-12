@@ -9,12 +9,72 @@ class AuthView extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text(
-          'AuthView is working',
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
+      body: GetBuilder<AuthController>(
+          init: AuthController(),
+          builder: (_) {
+            return ListView(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: TextButton(
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text("Anonyme"),
+                    ),
+                    style: TextButton.styleFrom(
+                        foregroundColor: Colors.white70,
+                        backgroundColor: Colors.grey.shade900),
+                    onPressed: () async {
+                      try {
+                        await _.auth.signInAnonymously();
+                        Get.snackbar('Success', 'Authentication réussie');
+                        Get.toNamed('/home');
+                      } catch (e) {
+                        Get.snackbar('Failed', e.toString());
+                      }
+                    },
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: TextButton(
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text("Google"),
+                    ),
+                    style: TextButton.styleFrom(
+                        foregroundColor: Colors.white70,
+                        backgroundColor: Colors.grey.shade900),
+                    onPressed: () async {
+                      try {
+                        await _.authService?.signInAnonymously();
+                        Get.snackbar('Success', 'Authentication réussie');
+                        Get.toNamed('/home');
+                      } catch (e) {
+                        Get.snackbar('Failed', e.toString());
+                      }
+                    },
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: TextButton(
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text("Email / Password"),
+                    ),
+                    style: TextButton.styleFrom(
+                        foregroundColor: Colors.white70,
+                        backgroundColor: Colors.grey.shade900),
+                    onPressed: () => Get.toNamed('/sign-in'),
+                  ),
+                ),
+              ],
+            );
+          }),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:egot_services/app/modules/AddCompany/controllers/assurance_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +34,7 @@ class AddCompanyView extends GetView<AddCompanyController> {
                     pageSnapping: true,
                     onPageChanged: (value) {
                       _.pageChanged.value = value;
-                      print('Page numero: ${_.pageChanged.value}');
+                      log('Page numero: ${_.pageChanged.value}');
                     },
                     children: [
                       buildCompanyName(_),
@@ -66,9 +68,9 @@ class AddCompanyView extends GetView<AddCompanyController> {
           text: 'save',
           // onPressed: () => Get.to(const RegisterView())),
           onPressed: () async {
-            print('thheeee brrrooout1');
-            if (_.userModel!.id) {
-              await _.registerServices.updateUser(_.userModel);
+            log('thheeee brrrooout1');
+            if (_.userModel?.id) {
+              await _.registerServices.updateUser(_.userModel!);
               return Get.rootDelegate
                   .toNamed('/user', arguments: Get.arguments['userId']);
             }

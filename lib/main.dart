@@ -22,9 +22,15 @@ Future<void> main() async {
 
   if (kDebugMode) {
     try {
+      String host = defaultTargetPlatform == TargetPlatform.android
+          ? '10.0.2.2:9055'
+          : 'localhost:9095';
+
       RootController.analytics.appInstanceId;
-      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-      await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
+      FirebaseFirestore.instance.settings =
+          Settings(host: host, sslEnabled: false, persistenceEnabled: true);
+      FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
+      await FirebaseAuth.instance.useAuthEmulator(host, 9099);
     } catch (e) {
       log('Firebase error: $e');
     }

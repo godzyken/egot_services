@@ -326,6 +326,24 @@ class UserModel {
     providerData = documentSnapshot["providerData"];
   }
 
+/*
+  factory UserModel.fromFirestore(DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic>? data = documentSnapshot.data();
+
+    return UserModel(
+      id: documentSnapshot.id,
+      companyName: data?['companyName'] ?? '',
+      phoneNumber: data?['phoneNumber'] ?? '',
+      phoneNumber: data?['phoneNumber'] ?? '',
+      phoneNumber: data?['phoneNumber'] ?? '',
+      phoneNumber: data?['phoneNumber'] ?? '',
+      phoneNumber: data?['phoneNumber'] ?? '',
+      phoneNumber: data?['phoneNumber'] ?? '',
+      phoneNumber: data?['phoneNumber'] ?? '',
+    );
+  }
+*/
+
   Map<String, dynamic> toJson() => {
         'hireable': hireable,
         'bio': bio,

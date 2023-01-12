@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:egot_services/app/models/use_x_models.dart';
 import 'package:egot_services/app/modules/Register/services/register_services.dart';
+import 'package:egot_services/app/modules/auth/services/auth_services.dart';
 import 'package:egot_services/app/modules/user/controllers/user_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +13,7 @@ class AuthController extends GetxController {
   late Rx<User?> _user;
   RegisterServices? _registerServices;
   FirebaseApp? service;
+  AuthService? authService;
 
   User? get user => _user.value;
   var isSignIn = false.obs;
@@ -20,6 +22,8 @@ class AuthController extends GetxController {
   @override
   onInit() {
     ever(_user, _setInitialScreen);
+
+    authService = AuthService();
 
     _user = Rx<User?>(auth.currentUser);
     _user.bindStream(auth.authStateChanges());

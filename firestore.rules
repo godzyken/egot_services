@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+    match /admin/{document=**} {
+      allow read: if request.auth.uid == resource.data.ownerUID;
+    }
+    
+    match /{document=**}{
+      allow read, write, create, update, delete: if true;
+    }
+    
+    match /users/{document=**} {
+      allow read, write: if isUser(userId);
+    }
+   
+    match /users/{userId} {
+    	allow read, write: if // that is, 'allow read, write: if'
+      get(/databases/$(database)/documents/users/$(userID))
+      .data.ownerUID == request.auth.uid;
+    }
+    
+    match /chats/{chatsId} {
+      allow read; // Users can read items
+      // Never do this in production
+      allow create;
+    }
+    
+    function isUser(userId) {
+    	return request.auth.uid == userId;
+    }
+  }
+}

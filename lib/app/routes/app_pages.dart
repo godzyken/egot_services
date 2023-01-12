@@ -1,3 +1,4 @@
+import 'package:egot_services/app/modules/auth/services/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -63,7 +64,9 @@ class AppPages {
           GetPage(
             name: _Paths.HOME,
             title: null,
-            page: () => const HomeView(),
+            page: () => AuthService().getUser == null
+                ? const AuthView()
+                : const HomeView(),
             binding: HomeBinding(),
             participatesInRootNavigator: true,
             preventDuplicates: true,
